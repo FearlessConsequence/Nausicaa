@@ -1,4 +1,4 @@
-C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.exe
+git remote add origin https://github.com/ТВОЙ_ЛОГИН/CourseWork.gitC:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.exe
 C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
 C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
 C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.dll

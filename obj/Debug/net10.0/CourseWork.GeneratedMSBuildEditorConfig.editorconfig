@@ -17,86 +17,89 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CourseWork
-build_property.ProjectDir = C:\Users\ggg84\Downloads\CourseWork\
+build_property.ProjectDir = c:\Users\ggg84\Downloads\CourseWork\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/ggg84/Downloads/CourseWork/AdministrativeInspectorWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/AdministrativeInspectorWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/App.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Controls/LeftPanel.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Controls/LeftPanel.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Controls/NotificationsControl.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Controls/NotificationsControl.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/JudgeWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/heygit.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/MedicalExpertWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/JudgeWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/CitizenCardWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/MedicalExpertWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/CitizenDocumentWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/CitizenCardWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/DocumentViewerWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/CitizenDocumentWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/DraftsWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/DocumentViewerWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/FavouritesWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/DraftsWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/LoginActivity.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/FavouritesWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/MainWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/LoginActivity.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/NewAdministrativeProtocol.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/NewAppel.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/NewAdministrativeProtocol.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/NewExaminationReport.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/NewAppel.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/NewExplanationProtocol.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/NewExaminationReport.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/NewStatement.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/NewExplanationProtocol.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/OtherDocumentsWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/NewStatement.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/RecentsWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/OtherDocumentsWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/ReferenceBooksWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/RecentsWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/RequestWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/ReferenceBooksWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/SearchCitizensWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/RequestWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/SelectCitizenWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/SearchCitizensWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/SelectDealWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/SelectCitizenWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/ggg84/Downloads/CourseWork/Views/YourDocumentsWindow.axaml]
+[c:/Users/ggg84/Downloads/CourseWork/Views/SelectDealWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[c:/Users/ggg84/Downloads/CourseWork/Views/YourDocumentsWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
