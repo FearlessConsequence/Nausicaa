@@ -283,3 +283,4 @@ C:\Users\ggg84\Downloads\CourseWork\obj\Debug\net10.0\refint\CourseWork.dll
 C:\Users\ggg84\Downloads\CourseWork\obj\Debug\net10.0\CourseWork.pdb
 C:\Users\ggg84\Downloads\CourseWork\obj\Debug\net10.0\CourseWork.genruntimeconfig.cache
 C:\Users\ggg84\Downloads\CourseWork\obj\Debug\net10.0\ref\CourseWork.dll
+C:\Users\ggg84\Downloads\CourseWork\obj\Debug\net10.0\CourseWork.sourcelink.json

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CourseWork.Controls;
 using CourseWork.Data;
@@ -20,9 +21,7 @@ public partial class CitizenDocumentsWindow : Window
     private readonly DatabaseHelper _db;
     
     private List<MyDocument> _allDocuments = new();
-    private List<MyDocument> _currentDocuments = new();
     private string _selectedFilterType = "Все";
-    private string _searchText = "";
 
     // Конструктор
     public CitizenDocumentsWindow(int currentUserId, int citizenId, string citizenFullName, Window? parent = null)
@@ -42,15 +41,20 @@ public partial class CitizenDocumentsWindow : Window
         txtTitle.Text = "Документы гражданина";
         txtSubtitle.Text = citizenFullName;
         
-        // ✅ Настройка кнопок фильтрации
+        // Настройка кнопок фильтрации
         SetupFilterButtons();
         
-        // ✅ Подписка на кнопки
+        // Подписка на кнопки
         btnBack.Click += BtnBack_Click;
         btn_search.Click += BtnSearch_Click;
+        
+        // Подписка на фильтры даты (авто-применение)
+        dp_date_from.SelectedDateChanged += (s, e) => ApplyFilters();
+        dp_date_to.SelectedDateChanged += (s, e) => ApplyFilters();
+        txt_search.TextChanged += (s, e) => ApplyFilters();
     }
 
-    // ✅ Настройка кнопок фильтрации
+    // Настройка кнопок фильтрации
     private void SetupFilterButtons()
     {
         btn_filter_all.Click += (s, e) => SelectFilter("Все");
@@ -63,15 +67,15 @@ public partial class CitizenDocumentsWindow : Window
         UpdateFilterButtonsUI("Все");
     }
     
-    // ✅ Выбор фильтра
+    // Выбор фильтра
     private void SelectFilter(string filterType)
     {
         _selectedFilterType = filterType;
         UpdateFilterButtonsUI(filterType);
-        _ = PerformSearch();
+        ApplyFilters();  // ✅ авто-применение фильтра
     }
     
-    // ✅ Обновление UI кнопок фильтра
+    // Обновление UI кнопок фильтра
     private void UpdateFilterButtonsUI(string filterType)
     {
         var activeColor = new SolidColorBrush(Color.Parse("#0F4B5E"));
@@ -104,26 +108,37 @@ public partial class CitizenDocumentsWindow : Window
         }
     }
 
-    // Загрузка документов гражданина
+    // Загрузка из БД (тяжёлая)
     private async Task LoadDocumentsAsync()
     {
         try
         {
-            var documents = await _db.GetUserDocumentsAsync(_currentUserId);
-            _allDocuments = documents.Where(d => d.CitizenId == _citizenId).ToList();
+            var docs = await _db.GetCitizenDocumentsAsync(_citizenId);
             
-            await PerformSearch();
+            // ✅ Отладка через уведомление
+            NotificationsControl.ShowInfo("Отладка", 
+                $"CitizenId: {_citizenId}\n" +
+                $"Документов получено: {docs?.Count ?? 0}\n" +
+                $"Тип результата: {docs?.GetType()}");
+            
+            _allDocuments = docs ?? new List<MyDocument>();
+            
+            if (_allDocuments.Count == 0)
+            {
+                NotificationsControl.ShowWarning("Нет документов", 
+                    $"Для гражданина ID {_citizenId} не найдено документов");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] LoadDocumentsAsync: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"LoadDocumentsAsync: {ex.Message}");
         }
     }
 
-    // Поиск и фильтрация
-    private async Task PerformSearch()
+    // Фильтрация (лёгкая, по памяти)
+    private void ApplyFilters()
     {
-        _searchText = txt_search.Text?.Trim() ?? "";
+        if (_allDocuments.Count == 0) return;
         
         var filtered = _allDocuments;
         
@@ -133,14 +148,14 @@ public partial class CitizenDocumentsWindow : Window
             filtered = filtered.Where(d => d.DocumentType == _selectedFilterType).ToList();
         }
         
-        // Фильтр по дате от
+        // Фильтр по дате "от"
         if (dp_date_from.SelectedDate.HasValue)
         {
             var dateFrom = dp_date_from.SelectedDate.Value.Date;
             filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom).ToList();
         }
         
-        // Фильтр по дате до
+        // Фильтр по дате "до"
         if (dp_date_to.SelectedDate.HasValue)
         {
             var dateTo = dp_date_to.SelectedDate.Value.Date;
@@ -148,39 +163,44 @@ public partial class CitizenDocumentsWindow : Window
         }
         
         // Текстовый поиск
-        if (!string.IsNullOrWhiteSpace(_searchText))
+        var searchText = txt_search.Text?.Trim() ?? "";
+        if (!string.IsNullOrWhiteSpace(searchText))
         {
             filtered = filtered.Where(d => 
-                (d.Number?.ToString().Contains(_searchText) ?? false) ||
-                d.Content?.ToLower().Contains(_searchText.ToLower()) == true ||
-                d.DocumentType?.ToLower().Contains(_searchText.ToLower()) == true
+                (d.Number?.ToString().Contains(searchText) ?? false) ||
+                d.Content?.ToLower().Contains(searchText.ToLower()) == true ||
+                d.DocumentType?.ToLower().Contains(searchText.ToLower()) == true
             ).ToList();
         }
         
-        _currentDocuments = filtered;
+        documentsContainer.ItemsSource = filtered;
+        txtNoDocuments.IsVisible = filtered.Count == 0;
         
-        documentsContainer.ItemsSource = _currentDocuments;
-        txtNoDocuments.IsVisible = _currentDocuments.Count == 0;
-        
-        await Task.Delay(100);
-        SubscribeToButtons();
+        // Переподписываем кнопки после обновления списка
+        Task.Delay(100).ContinueWith(_ => 
+        {
+            Dispatcher.UIThread.InvokeAsync(() => SubscribeToButtons());
+        });
     }
 
-    // ✅ Обработчик кнопки "Назад" — возврат в поиск граждан
+    // Обработчик кнопки "Назад"
     private void BtnBack_Click(object? sender, RoutedEventArgs e)
     {
-        // Открываем окно поиска с текущим пользователем
         var searchWindow = new SearchCitizensWindow(_currentUserId);
         searchWindow.Show();
-        
-        // Закрываем текущее окно
         this.Close();
     }
 
-    // Поиск по документам
+    // Кнопка "Найти" — загружает из БД и применяет фильтры
     private async void BtnSearch_Click(object? sender, RoutedEventArgs e)
     {
-        await PerformSearch();
+        await LoadDocumentsAsync();
+        ApplyFilters();
+        
+        if (_allDocuments.Count == 0)
+        {
+            txtNoDocuments.IsVisible = true;
+        }
     }
 
     // Подписка на кнопки "Открыть"
@@ -206,7 +226,6 @@ public partial class CitizenDocumentsWindow : Window
             try
             {
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                // ✅ Передаем citizenId и citizenFullName
                 var viewer = new DocumentViewerWindow(
                     _currentUserId, 
                     fullDoc, 
