@@ -1,0 +1,212 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:CourseWork.Controls"
+        x:Class="CourseWork.Views.SearchCitizensWindow"
+        Title="Граждане"
+        WindowState="Maximized"
+        Background="#F5F7FA">
+
+    <Grid RowDefinitions="*, Auto" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                            Grid.Column="0" 
+                            Grid.Row="0" 
+                            Grid.RowSpan="2"/>
+
+        <ScrollViewer Grid.Column="1" Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <Border Background="#F8F9FA" Padding="30">
+                
+                <StackPanel Spacing="20">
+                    
+                    <StackPanel Margin="0,0,0,10">
+                        <TextBlock Text="Поиск граждан" 
+                                   FontSize="28" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#1E2A3A"/>
+                        <TextBlock Text="Введите данные для поиска граждан" 
+                                   FontSize="14" 
+                                   Foreground="#6C757D"
+                                   Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <Border Background="White"
+                            CornerRadius="12"
+                            BorderBrush="#E9ECEF"
+                            BorderThickness="1"
+                            Padding="20">
+                        
+                        <StackPanel Spacing="15">
+                            
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="ФИО" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                
+                                <Grid ColumnDefinitions="1.2*, 1*, 1*" ColumnSpacing="10">
+                                    <TextBox x:Name="txt_last_name" 
+                                             Height="40" 
+                                             Watermark="Фамилия"
+                                             FontSize="13"/>
+                                    <TextBox Grid.Column="1"
+                                             x:Name="txt_first_name" 
+                                             Height="40" 
+                                             Watermark="Имя"
+                                             FontSize="13"/>
+                                    <TextBox Grid.Column="2"
+                                             x:Name="txt_patronymic" 
+                                             Height="40" 
+                                             Watermark="Отчество"
+                                             FontSize="13"/>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Дата рождения" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <DatePicker x:Name="dp_birthday" 
+                                            Height="40"
+                                            Width="200"
+                                            HorizontalAlignment="Left"
+                                            FontSize="13"/>
+                            </StackPanel>
+                            
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Место проживания" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBox x:Name="txt_address" 
+                                         Height="40" 
+                                         Watermark="г. Москва, ул. Пушкина, д. 32"
+                                         FontSize="13"/>
+                            </StackPanel>
+                            
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Телефон" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBox x:Name="txt_phone" 
+                                         Height="40" 
+                                         Watermark="+7 999 123-45-67"
+                                         FontSize="13"/>
+                            </StackPanel>
+                            
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Паспортные данные" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBox x:Name="txt_passport" 
+                                         Height="40" 
+                                         Watermark="4501 123456"
+                                         FontSize="13"/>
+                            </StackPanel>
+                            
+                            <Button Content="Найти" 
+                                    Height="39" 
+                                    Width="80"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Background="#0F4B5E" 
+                                    Foreground="White"
+                                    FontSize="14"
+                                    FontWeight="SemiBold"
+                                    CornerRadius="8"
+                                    Margin="0,8,0,0"
+                                    x:Name="btn_search"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <TextBlock Text="Результаты поиска:"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="#0F4B5E"
+                               Margin="0,10,0,5"/>
+                    
+                    <ItemsControl x:Name="citizensContainer">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- ✅ Стиль карточки как в YourDocumentsWindow -->
+                                <Border Background="White"
+                                        CornerRadius="12"
+                                        BorderBrush="#E9ECEF"
+                                        BorderThickness="1"
+                                        Padding="20,16"
+                                        Margin="0,0,0,12"
+                                        Cursor="Hand">
+                                    
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        
+                                        <StackPanel Grid.Column="0" Spacing="12">
+                                            
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <Border Background="#0F4B5E" CornerRadius="4" Padding="8,4">
+                                                    <TextBlock Text="Гражданин" 
+                                                               FontSize="11" 
+                                                               FontWeight="Bold" 
+                                                               Foreground="White"/>
+                                                </Border>
+                                                <TextBlock Text="{Binding Birthday, StringFormat='dd.MM.yyyy'}"
+                                                           FontSize="12"
+                                                           Foreground="#6C757D"/>
+                                            </StackPanel>
+                                            
+                                            <TextBlock Text="{Binding FullName}"
+                                                       FontSize="15"
+                                                       FontWeight="Medium"
+                                                       Foreground="#1E2A3A"/>
+                                            
+                                            <StackPanel Orientation="Horizontal" Spacing="15">
+                                                <TextBlock Text="{Binding Phone, StringFormat='📞 {0}'}"
+                                                           FontSize="12"
+                                                           Foreground="#6C757D"
+                                                           IsVisible="{Binding Phone, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                            </StackPanel>
+                                            
+                                            <TextBlock Text="{Binding Address}"
+                                                       FontSize="12"
+                                                       Foreground="#495057"
+                                                       TextWrapping="Wrap"
+                                                       MaxHeight="50"/>
+                                        </StackPanel>
+                                        
+                                        <!-- ✅ Кнопка "Подробнее" как в YourDocumentsWindow -->
+                                        <Button Grid.Column="1"
+                                                Content="Подробнее →"
+                                                Background="#0F4B5E"
+                                                Foreground="White"
+                                                CornerRadius="6"
+                                                Padding="15,8"
+                                                FontSize="12"
+                                                Tag="{Binding}"
+                                                Cursor="Hand"
+                                                VerticalAlignment="Center"
+                                                x:Name="btnViewCard"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    
+                    <Border Background="White"
+                            CornerRadius="12"
+                            BorderBrush="#E9ECEF"
+                            BorderThickness="1"
+                            Padding="40"
+                            IsVisible="False"
+                            x:Name="emptyStateBorder"
+                            VerticalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center" Spacing="15">
+                            <TextBlock Text="👥" FontSize="48" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Граждане не найдены" 
+                                       FontSize="16" 
+                                       Foreground="#6C757D"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Измените параметры поиска" 
+                                       FontSize="13" 
+                                       Foreground="#ADB5BD"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+        
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                                       Grid.Column="0" 
+                                       Grid.ColumnSpan="2"
+                                       Grid.Row="1"      
+                                       VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

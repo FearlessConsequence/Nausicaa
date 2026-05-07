@@ -1,0 +1,36 @@
+<StackPanel HorizontalAlignment = "Center" Spacing  =  "20" Margin  =   "0, 250, 0, 0">
+    <TextBox Watermark   = "Login" Width  = "400" Height  = "30"/>
+    <TextBox Watermark   = "Password" Width  = "400" Height  = "30"/>
+    <Button Content  = "Continue" Width  = "100" Height  = "30" 
+    HorizontalAlignment = "Center" HorizontalContentAlignment  = "Center" VerticalContentAlignment  = "Center"/>
+</StackPanel>
+
+
+
+
+
+
+
+
+
+
+
+<Grid RowDefinitions="100,200" 
+      ColumnDefinitions="150,250"> 
+    
+    <Border Grid.Row="0" Grid.Column="0" Background="Red">
+        <TextBlock Text="Ячейка 0,0"/>
+    </Border>
+    
+    <Border Grid.Row="0" Grid.Column="1" Background="Blue">
+        <TextBlock Text="Ячейка 0,1"/>
+    </Border>
+    
+    <Border Grid.Row="1" Grid.Column="0" Background="Green">
+        <TextBlock Text="Ячейка 1,0"/>
+    </Border>
+    
+    <Border Grid.Row="1" Grid.Column="1" Background="Yellow">
+        <TextBlock Text="Ячейка 1,1"/>
+    </Border>
+</Grid>

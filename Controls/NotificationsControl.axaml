@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CourseWork.Controls.NotificationsControl"
+             xmlns:models="using:CourseWork.Models">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Border Grid.Column="0" Background="#0F4B5E"/>
+        
+        <Border Grid.Column="1" 
+                Background="White" 
+                BorderBrush="#E9ECEF" 
+                BorderThickness="1,0,0,0"
+                Padding="20,12">
+            
+            <StackPanel Orientation="Horizontal" Spacing="16">
+                <TextBlock Text="Уведомления" 
+                           FontSize="14" 
+                           FontWeight="SemiBold" 
+                           Foreground="#0F4B5E"
+                           VerticalAlignment="Center"/>
+                
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        
+                        <ItemsControl x:Name="NotificationsList">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="12"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{Binding BorderColor}"
+                                            Background="{Binding BackgroundColor}"
+                                            CornerRadius="8" 
+                                            Padding="12,8"
+                                            BorderThickness="1,1,1,3">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{Binding Icon}" FontSize="14" VerticalAlignment="Center"/>
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <TextBlock Text="{Binding Title}" 
+                                                               FontSize="12" 
+                                                               FontWeight="SemiBold" 
+                                                               Foreground="#0F4B5E"/>
+                                                    <TextBlock Text="{Binding Date}" 
+                                                               FontSize="10" 
+                                                               Foreground="#6C757D"/>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Message}" 
+                                                           FontSize="11" 
+                                                           Foreground="#495057"
+                                                           MaxWidth="250"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        
+                        <TextBlock x:Name="txt_empty" 
+                                   Text="Нет уведомлений" 
+                                   FontSize="12" 
+                                   Foreground="#6C757D"
+                                   VerticalAlignment="Center"
+                                   IsVisible="False"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

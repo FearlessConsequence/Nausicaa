@@ -1,0 +1,190 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CourseWork.Views.NewAppel"
+        Title="Создание обращения"
+        WindowState="Maximized"
+        xmlns:controls="using:CourseWork.Controls"
+        Background="#F5F7FA">
+
+    <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                        Grid.Column="0" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="2"/>
+
+        <ScrollViewer Grid.Column="1" 
+                      Grid.Row="0"
+                      VerticalScrollBarVisibility="Auto">
+            <Border Background="#F8F9FA" Padding="40">
+                
+                <StackPanel Spacing="32" 
+                            MaxWidth="700" 
+                            HorizontalAlignment="Left">
+                    
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Новое обращение" 
+                                   FontSize="32" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#1E2A3A"
+                                   HorizontalAlignment="Left"/>
+                        <TextBlock Text="Заполните форму для создания нового обращения гражданина" 
+                                   FontSize="14" 
+                                   Foreground="#6C757D"
+                                   HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Гражданин *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"
+                                   HorizontalAlignment="Left"/>
+                        
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12" HorizontalAlignment="Left">
+                            <TextBox x:Name="txt_citizen" 
+                                     Height="44" 
+                                     Watermark="Гражданин не выбран..."
+                                     FontSize="14"
+                                     IsReadOnly="True"
+                                     Background="White"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"
+                                     Grid.Column="0"/>
+                            
+                            <Button Content="Выбрать гражданина" 
+                                    Height="44" 
+                                    Background="#0F4B5E" 
+                                    VerticalContentAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Foreground="White"
+                                    FontSize="13"
+                                    CornerRadius="8"
+                                    Grid.Column="1"
+                                    Padding="20,0"
+                                    x:Name="btn_select_citizen"/>
+                        </Grid>
+                        
+                        <TextBlock x:Name="txt_citizen_error" 
+                                   Text="⚠️ Необходимо выбрать гражданина" 
+                                   Foreground="#DC3545" 
+                                   FontSize="12"
+                                   IsVisible="False"
+                                   HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Номер документа" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"
+                                   HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txt_number" 
+                                 Height="44" 
+                                 Watermark="Например: 2001"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"
+                                 HorizontalAlignment="Left"
+                                 Width="300"/>
+                        <TextBlock Text="Необязательное поле" 
+                                   FontSize="11" 
+                                   Foreground="#6C757D"
+                                   HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Дата и время *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"
+                                   HorizontalAlignment="Left"/>
+                        
+                        <Grid ColumnDefinitions="Auto, Auto" ColumnSpacing="16" HorizontalAlignment="Left">
+                            <DatePicker x:Name="dp_date" 
+                                        Grid.Column="0"
+                                        Height="44"
+                                        FontSize="14"
+                                        CornerRadius="8"
+                                        Width="200"/>
+                            
+                            <TimePicker x:Name="tp_time" 
+                                        Grid.Column="1"
+                                        Height="44"
+                                        FontSize="14"
+                                        ClockIdentifier="24HourClock"
+                                        CornerRadius="8"
+                                        Width="200"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Содержание обращения *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"
+                                   HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txt_content" 
+                                 Height="200" 
+                                 Width="500"
+                                 Watermark="Введите текст обращения..."
+                                 FontSize="14"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"
+                                 HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Left" 
+                                Spacing="16"
+                                Margin="0,16,0,0">
+                        
+                        <Button Content="Отмена" 
+                                Width="120" 
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                Height="44" 
+                                Background="#6C757D" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                x:Name="btn_cancel"/>
+                        
+                        <Button Content="Сохранить как черновик" 
+                                Width="195" 
+                                Height="44" 
+                                Background="#6C757D" 
+                                Foreground="White"
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                x:Name="btn_save_draft"/>
+                        
+                        <Button Content="Создать" 
+                                Width="120" 
+                                Height="44" 
+                                Background="#0F4B5E" 
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                x:Name="btn_create"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                               Grid.Column="0" 
+                               Grid.ColumnSpan="2"
+                               Grid.Row="1"      
+                               VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

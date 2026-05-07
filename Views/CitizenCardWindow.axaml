@@ -1,0 +1,140 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:CourseWork.Controls"
+        x:Class="CourseWork.Views.CitizenCardWindow"
+        Title="Карточка гражданина"
+        Width="650" 
+        Height="700"
+        WindowStartupLocation="CenterOwner"
+        Background="#F5F7FA">
+
+    <Border Background="White" CornerRadius="12" Padding="25" Margin="10">
+        <Grid RowDefinitions="Auto, *, Auto">
+            
+            <!-- Заголовок -->
+            <TextBlock x:Name="txtTitle" 
+                       Text="Карточка гражданина" 
+                       FontSize="22" 
+                       FontWeight="Bold" 
+                       Foreground="#0F4B5E"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
+            
+            <!-- Контент -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="20">
+                    
+                    <!-- Блок 1: Личные данные -->
+                    <Border Background="#F8F9FA" CornerRadius="10" Padding="15">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="📋 Личные данные" FontSize="15" FontWeight="Bold" Foreground="#0F4B5E"/>
+                            <Border Height="1" Background="#E0E0E0"/>
+                            
+                            <Grid ColumnDefinitions="120, *" 
+                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                                  RowSpacing="10" ColumnSpacing="15">
+                                
+                                <TextBlock Text="Фамилия:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtLastName" Grid.Column="1" Foreground="#1E2A3A" TextWrapping="Wrap"/>
+                                
+                                <TextBlock Grid.Row="1" Text="Имя:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtFirstName" Grid.Row="1" Grid.Column="1" Foreground="#1E2A3A" TextWrapping="Wrap"/>
+                                
+                                <TextBlock Grid.Row="2" Text="Отчество:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtPatronymic" Grid.Row="2" Grid.Column="1" Foreground="#1E2A3A" TextWrapping="Wrap"/>
+                                
+                                <TextBlock Grid.Row="3" Text="Дата рождения:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtBirthday" Grid.Row="3" Grid.Column="1" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="4" Text="Возраст:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtAge" Grid.Row="4" Grid.Column="1" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="5" Text="Гражданство:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtCitizenship" Grid.Row="5" Grid.Column="1" Foreground="#1E2A3A"/>
+                                
+                                <!-- ✅ НОВОЕ: Должность -->
+                                <TextBlock Grid.Row="6" Text="Должность:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtPosition" Grid.Row="6" Grid.Column="1" Foreground="#1E2A3A"/>
+                                
+                                <!-- ✅ НОВОЕ: Судимости -->
+                                <TextBlock Grid.Row="7" Text="Судимости:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtConvictions" Grid.Row="7" Grid.Column="1" Foreground="#DC3545" TextWrapping="Wrap"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Блок 2: Контактные данные -->
+                    <Border Background="#F8F9FA" CornerRadius="10" Padding="15">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="📞 Контактные данные" FontSize="15" FontWeight="Bold" Foreground="#0F4B5E"/>
+                            <Border Height="1" Background="#E0E0E0"/>
+                            
+                            <Grid ColumnDefinitions="120, *" 
+                                  RowDefinitions="Auto,Auto,Auto"
+                                  RowSpacing="10" ColumnSpacing="15">
+                                <TextBlock Text="Телефон:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtPhone" Grid.Column="1" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="1" Text="Адрес:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtAddress" Grid.Row="1" Grid.Column="1" Foreground="#1E2A3A" TextWrapping="Wrap"/>
+                                
+                                <TextBlock Grid.Row="2" Text="Паспорт:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtPassport" Grid.Row="2" Grid.Column="1" Foreground="#1E2A3A"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Блок 3: Работа и образование -->
+                    <Border Background="#F8F9FA" CornerRadius="10" Padding="15">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="💼 Работа и образование" FontSize="15" FontWeight="Bold" Foreground="#0F4B5E"/>
+                            <Border Height="1" Background="#E0E0E0"/>
+                            
+                            <Grid ColumnDefinitions="120, *" 
+                                  RowDefinitions="Auto,Auto,Auto"
+                                  RowSpacing="10" ColumnSpacing="15">
+                                <TextBlock Text="Место работы:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtWorkPlace" Grid.Column="1" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="1" Text="Образование:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtEducation" Grid.Row="1" Grid.Column="1" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="2" Text="Семейное положение:" FontWeight="SemiBold" Foreground="#0F4B5E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="txtFamilyStatus" Grid.Row="2" Grid.Column="1" Foreground="#1E2A3A"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- ✅ НОВАЯ КНОПКА: Посмотреть документы -->
+                    <Button Content="📄 Посмотреть документы" 
+                            Height="40"
+                            Background="#0F4B5E" 
+                            Foreground="White"
+                            CornerRadius="8"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            x:Name="btnViewDocuments"/>
+                    
+                </StackPanel>
+            </ScrollViewer>
+            
+            <!-- Кнопка закрытия -->
+            <Button Grid.Row="2" 
+                    Content="Закрыть" 
+                    Height="40"
+                    Width="120"
+                    HorizontalAlignment="Center"
+                    Margin="0,20,0,0"
+                    Background="#6C757D" 
+                    Foreground="White"
+                    CornerRadius="8"
+                    FontSize="14"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    x:Name="btnClose"/>
+                    
+        </Grid>
+    </Border>
+</Window>

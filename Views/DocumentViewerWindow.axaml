@@ -1,0 +1,104 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CourseWork.Views.DocumentViewerWindow"
+        Title="Просмотр документа"
+        WindowState="Maximized"
+        xmlns:controls="using:CourseWork.Controls"
+        Background="#F5F7FA">
+
+    <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                        Grid.Column="0" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="2"/>
+                        
+        <Border Grid.Column="1" Background="#F8F9FA" Padding="40">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel MaxWidth="900" Spacing="20">
+                    
+                    <StackPanel Spacing="8">
+                        <Border Background="#0F4B5E" CornerRadius="8" Padding="20,14" HorizontalAlignment="Left">
+                            <TextBlock x:Name="txt_docType" Text="Тип документа" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                        </Border>
+                        <TextBlock x:Name="txt_docNumber" Text="№ документа" FontSize="14" Foreground="#6C757D"/>
+                    </StackPanel>
+
+                    <Border Background="White" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="20">
+                        <StackPanel Spacing="16">
+                            <TextBlock Text="Основная информация" FontSize="16" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto" RowSpacing="12" ColumnSpacing="12">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата составления:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" x:Name="txt_docDate" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Гражданин:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" x:Name="txt_citizenName" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Дело №:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" x:Name="txt_dealNumber" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Статья:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" x:Name="txt_article" Foreground="#1E2A3A"/>
+                                
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Сотрудник:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1" x:Name="txt_officer" Foreground="#1E2A3A"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="20">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Описание правонарушения" FontSize="16" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <Border Background="#F8F9FA" CornerRadius="8" Padding="16" BorderBrush="#E9ECEF" BorderThickness="1">
+                                <TextBlock x:Name="txt_description" TextWrapping="Wrap" LineHeight="24" FontSize="14" Foreground="#1E2A3A"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="20">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Дополнительная информация" FontSize="16" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <Border Background="#F8F9FA" CornerRadius="8" Padding="16" BorderBrush="#E9ECEF" BorderThickness="1">
+                                <TextBlock x:Name="txt_otherInfo" TextWrapping="Wrap" LineHeight="24" FontSize="14" Foreground="#1E2A3A"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="20">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Понятые" FontSize="16" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                                <StackPanel Grid.Column="0" Spacing="6">
+                                    <TextBlock Text="Первый понятый:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                    <TextBlock x:Name="txt_firstWitness" Foreground="#1E2A3A"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="6">
+                                    <TextBlock Text="Второй понятый:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                    <TextBlock x:Name="txt_secondWitness" Foreground="#1E2A3A"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="20">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Подписи" FontSize="16" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <StackPanel Orientation="Horizontal" Spacing="20">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <CheckBox x:Name="chk_signature" IsEnabled="False"/>
+                                    <TextBlock Text="С протоколом ознакомлен" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Content="← Назад" Width="140" Height="44" Background="#6C757D" HorizontalContentAlignment="Center"
+                        Foreground="White" FontSize="14" CornerRadius="8" x:Name="btn_back" VerticalContentAlignment="Center"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>

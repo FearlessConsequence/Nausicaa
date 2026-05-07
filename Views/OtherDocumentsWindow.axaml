@@ -1,0 +1,179 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CourseWork.Views.OtherDocumentsWindow"
+        Title="Иные документы"
+        xmlns:controls="using:CourseWork.Controls"
+        WindowState="Maximized"
+        Background="#F5F7FA">
+
+    <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                        Grid.Column="0" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="2"/>
+
+        <Border Grid.Column="1" Grid.Row="0" Background="#F8F9FA" Padding="30">
+            
+            <Grid RowDefinitions="Auto, Auto, Auto, Auto, *">
+                
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                    <TextBlock Text="Иные документы" 
+                               FontSize="28" 
+                               FontWeight="SemiBold"
+                               Foreground="#1E2A3A"/>
+                    <TextBlock Text="Документы других сотрудников (доступ по запросу)" 
+                               FontSize="14" 
+                               Foreground="#6C757D"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+                
+                    <Border Grid.Row="1"
+                            Background="White"
+                            CornerRadius="12"
+                            BorderBrush="#E9ECEF"
+                            BorderThickness="1"
+                            Padding="16"
+                            Margin="0,0,0,16">
+                        
+                        <StackPanel Spacing="16">
+                            <TextBlock Text="Поиск документов" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Дело *" FontSize="12" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <TextBox x:Name="txt_deal" 
+                                            Height="38" 
+                                            Width="280"
+                                            Watermark="Дело не выбрано..."
+                                            FontSize="13"
+                                            IsReadOnly="True"
+                                            Background="White"
+                                            BorderBrush="#E0E0E0"
+                                            CornerRadius="6"/>
+                                    <Button Content="Выбрать дело" 
+                                            Height="38" 
+                                            Width="110"
+                                            VerticalContentAlignment="Center"
+                                            HorizontalContentAlignment="Center"
+                                            Background="#0F4B5E" 
+                                            Foreground="White"
+                                            FontSize="12"
+                                            CornerRadius="6"
+                                            x:Name="btn_select_deal"/>
+                                </StackPanel>
+                            </StackPanel>
+                            
+                            <Button Content="Найти документы" 
+                                    Height="38"
+                                    VerticalContentAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150"
+                                    Background="#0F4B5E" 
+                                    Foreground="White"
+                                    FontSize="13"
+                                    CornerRadius="6"
+                                    HorizontalAlignment="Left"
+                                    x:Name="btn_search"/>
+                        </StackPanel>
+                    </Border>
+                
+                <Border Grid.Row="2"
+                        Background="White"
+                        CornerRadius="12"
+                        BorderBrush="#E9ECEF"
+                        BorderThickness="1"
+                        Padding="16"
+                        Margin="0,0,0,16">
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Результаты поиска" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                    </StackPanel>
+                </Border>
+                
+                <ScrollViewer Grid.Row="3" 
+                              VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="documentsContainer">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White"
+                                        CornerRadius="12"
+                                        BorderBrush="#E9ECEF"
+                                        BorderThickness="1"
+                                        Padding="20,16"
+                                        Margin="0,0,0,12">
+                                    
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        
+                                        <StackPanel Grid.Column="0" Spacing="12">
+                                            
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <Border Background="#0F4B5E" CornerRadius="4" Padding="8,4">
+                                                    <TextBlock Text="{Binding DocumentType}" 
+                                                               FontSize="11" 
+                                                               FontWeight="Bold" 
+                                                               Foreground="White"/>
+                                                </Border>
+                                                <TextBlock Text="{Binding CreatedAt, StringFormat='dd.MM.yyyy HH:mm'}"
+                                                           FontSize="12"
+                                                           Foreground="#6C757D"/>
+                                            </StackPanel>
+                                            
+                                            <TextBlock Text="{Binding MaskedNumber}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="#0F4B5E"/>
+                                            
+                                            <TextBlock Text="{Binding DealInfo}"
+                                                       FontSize="12"
+                                                       Foreground="#6C757D"/>
+                                        </StackPanel>
+                                        
+                                        <Button Grid.Column="1"
+                                                Content="📄 Запросить доступ"
+                                                Background="#0F4B5E"
+                                                Foreground="White"
+                                                CornerRadius="6"
+                                                Padding="15,10"
+                                                FontSize="12"
+                                                Tag="{Binding}"
+                                                Cursor="Hand"
+                                                x:Name="RequestButton"
+                                                VerticalAlignment="Center"
+                                                Click="OnRequestClick"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                
+                <Border Grid.Row="3"
+                        Background="White"
+                        IsVisible="False"
+                        x:Name="emptyStateBorder"
+                        VerticalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"
+                                Spacing="16">
+                        <TextBlock Text="📋" FontSize="64" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Документы не найдены" 
+                                   FontSize="18" 
+                                   Foreground="#6C757D"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Выберите дело и нажмите 'Найти документы'" 
+                                   FontSize="14" 
+                                   Foreground="#ADB5BD"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+                
+            </Grid>
+        </Border>
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                               Grid.Column="0" 
+                               Grid.ColumnSpan="2"
+                               Grid.Row="1"      
+                               VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

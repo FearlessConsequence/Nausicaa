@@ -1,0 +1,171 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="CourseWork.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        xmlns:controls="using:CourseWork.Controls"
+        Title="Курсовой проект"
+        WindowState="Maximized">
+
+    <Grid RowDefinitions="850, *" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                    Grid.Column="0" 
+                    Grid.Row="0" 
+                    Grid.RowSpan="2"/>
+
+        <Border Grid.Column="1" Grid.Row="0" Background="White" BorderBrush="#eae9ef" BorderThickness="0, 0, 0, 1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Margin="0, 50">
+                    <TextBlock Text="Быстрое создание документа:" VerticalAlignment="Top" 
+                    HorizontalAlignment="Center" Foreground="#0F4B5E" FontWeight="SemiBold" 
+                    Margin="20, 20, 20, 20" FontSize="18"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Width="130" x:Name="btn_newAppel" Height="130" Margin="8" 
+                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
+                            <TextBlock Text="Обращение" FontWeight="SemiBold" FontSize="15" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button Width="130" x:Name="btn_newStatement" Height="130" Margin="8"
+                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
+                            <TextBlock Text="Заявление" FontWeight="SemiBold" FontSize="15" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button Width="130" x:Name="btn_newExplanationProtocol" Height="130" Margin="8" 
+                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
+                            <TextBlock Text="Протокол объяснения" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button Width="130" x:Name="btn_newExaminationReport" Height="130" Margin="8" 
+                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
+                            <TextBlock Text="Направление на мед. освид." FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button Width="130" x:Name="btn_newAdministrativeProtocol" Height="130" Margin="8" 
+                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
+                            <TextBlock Text="Адм. протокол" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                
+                <Border Grid.Row="1" Background="White" BorderBrush="LightGray" 
+                BorderThickness="1" BoxShadow="0 0 15 3 #80808080" CornerRadius="4" 
+                Margin="20,0,20,0" VerticalAlignment="Top" Height="115" 
+                HorizontalAlignment="Stretch" Padding="10,8">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Поиск дел и протоколов" FontWeight="Bold" FontSize="17" Margin="0,0,0,10" Foreground="#0F4B5E"/>
+                        <Grid ColumnDefinitions="*,*,*,*,*,Auto" ColumnSpacing="10">
+                            <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="2">
+                                <TextBlock Text="Серия/Номер:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
+                                <TextBox Height="28" Watermark="00 00 123456" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="2">
+                                <TextBlock Text="ФИО / Дата рожд.:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
+                                <TextBox Height="28" Watermark="Иванов Иван / 01.01.1985" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Orientation="Vertical" Spacing="2">
+                                <TextBlock Text="Дело №:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
+                                <TextBox Height="28" Watermark="2026-000123" FontSize="12" x:Name="txbx_deal"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Orientation="Vertical" Spacing="2">
+                                <TextBlock Text="Телефон:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
+                                <TextBox Height="28" Watermark="+7 999 123-45-67" FontSize="12"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Orientation="Vertical" Spacing="2">
+                                <TextBlock Text="Место проживания:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
+                                <TextBox Height="28" Watermark="Москва, Пушкина 32" FontSize="12"/>
+                            </StackPanel>
+                            <Button Grid.Column="5" Content="Поиск" Width="80" Height="32" Background="#0F4B5E" Foreground="White" CornerRadius="4" FontSize="14" VerticalAlignment="Bottom" VerticalContentAlignment="Center" x:Name="btn_searchMain" HorizontalContentAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Grid Grid.Row="1" Margin="20,130,20,20" VerticalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="White" 
+                    BorderBrush="LightGray" BorderThickness="1" 
+                    BoxShadow="0 0 15 3 #80808080" CornerRadius="8" Padding="15">
+                        <Grid RowDefinitions="Auto, *">
+                            <TextBlock Grid.Row="0" Text="Недавние документы" FontWeight="Bold" FontSize="17" Foreground="#0F4B5E" Margin="0,0,0,15"/>
+                            
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                                <StackPanel>
+                                    <ItemsControl x:Name="recentDocumentsList">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#F8F9FA" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                                        <TextBlock Text="{Binding DocumentTypeIcon}" FontSize="16"/>
+                                                        <TextBlock Text="{Binding DocumentName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
+                                                        <TextBlock Text="{Binding LastOpenedDateFormatted}" FontSize="11" Foreground="#6C757D"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    
+                                    <TextBlock x:Name="txtNoRecent" 
+                                               Text="Нет недавних документов" 
+                                               FontSize="13" 
+                                               Foreground="#6C757D" 
+                                               HorizontalAlignment="Center"
+                                               Margin="0,20,0,0"
+                                               IsVisible="False"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="2" Background="White" 
+                    BorderBrush="LightGray" BorderThickness="1" 
+                    BoxShadow="0 0 15 3 #80808080" CornerRadius="8" Padding="15">
+                        <Grid RowDefinitions="Auto, *">
+                            <TextBlock Grid.Row="0" Text="Черновики" FontWeight="Bold" 
+                            FontSize="17" Foreground="#0F4B5E" Margin="0,0,0,15"/>
+                            
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                                <StackPanel>
+                                    <ItemsControl x:Name="draftsList">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#F8F9FA" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                                        <TextBlock Text="📄" FontSize="16"/>
+                                                        <TextBlock Text="{Binding TypeDisplayName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
+                                                        <TextBlock Text="{Binding DateFormatted}" FontSize="11" Foreground="#6C757D"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    
+                                    <TextBlock x:Name="txtNoDrafts" 
+                                               Text="Нет черновиков" 
+                                               FontSize="13" 
+                                               Foreground="#6C757D" 
+                                               HorizontalAlignment="Center"
+                                               Margin="0,20,0,0"
+                                               IsVisible="False"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                               Grid.Column="0" 
+                               Grid.ColumnSpan="2"
+                               Grid.Row="1"      
+                               VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

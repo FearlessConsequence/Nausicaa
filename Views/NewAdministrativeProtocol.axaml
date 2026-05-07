@@ -1,0 +1,303 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CourseWork.Views.NewAdministrativeProtocol"
+        Title="Создание административного протокола"
+        WindowState="Maximized"
+        xmlns:controls="using:CourseWork.Controls"
+        Background="#F5F7FA">
+    
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        
+        <Style Selector="DatePicker">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+        
+        <Style Selector="TimePicker">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+        
+        <Style Selector="CheckBox">
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+        
+       <controls:LeftPanel x:Name="LeftPanelControl" 
+                        Grid.Column="0" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="2"/>
+
+        <ScrollViewer Grid.Column="1" 
+                        Grid.Row="0"
+                        VerticalScrollBarVisibility="Auto" Height="930" VerticalAlignment="Top">
+            <Border Background="#F8F9FA" Padding="40">
+                
+                <StackPanel Spacing="32" MaxWidth="700" HorizontalAlignment="Left">
+                    
+        
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Административный протокол" 
+                                   FontSize="32" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#1E2A3A"/>
+                        <TextBlock Text="Заполните форму для создания административного протокола" 
+                                   FontSize="14" 
+                                   Foreground="#6C757D"/>
+                    </StackPanel>
+                    
+        
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Дело *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                            <TextBox x:Name="txt_deal" 
+                                     Height="44" 
+                                     Watermark="Дело не выбрано..."
+                                     FontSize="14"
+                                     IsReadOnly="True"
+                                     Background="White"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"
+                                     Grid.Column="0"/>
+                            
+                            <Button Content="Выбрать дело" 
+                                    Height="44" 
+                                    Background="#0F4B5E" 
+                                    Foreground="White"
+                                    FontSize="13"
+                                    CornerRadius="8"
+                                    Grid.Column="1"
+                                    Padding="20,0"
+                                    x:Name="btn_select_deal"/>
+                        </Grid>
+                        
+                        <TextBlock x:Name="txt_deal_error" 
+                                   Text="⚠️ Необходимо выбрать дело" 
+                                   Foreground="#DC3545" 
+                                   FontSize="12"
+                                   IsVisible="False"/>
+                    </StackPanel>
+
+        
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Номер протокола *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_protocol_number" 
+                                 Height="44" 
+                                 Watermark="Например: 001234"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                        <TextBlock Text="Уникальный номер протокола" 
+                                   FontSize="11" 
+                                   Foreground="#6C757D"/>
+                    </StackPanel>
+
+        
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Дата и время *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        
+                        <Grid ColumnDefinitions="*, *" ColumnSpacing="16">
+                            <DatePicker x:Name="dp_date" 
+                                        Grid.Column="0"
+                                        Height="44"
+                                        FontSize="14"
+                                        CornerRadius="8"/>
+                            
+                            <TimePicker x:Name="tp_time" 
+                                        Grid.Column="1"
+                                        Height="44"
+                                        FontSize="14"
+                                        ClockIdentifier="24HourClock"
+                                        CornerRadius="8"/>
+                        </Grid>
+                    </StackPanel>
+
+        
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Описание правонарушения *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_description" 
+                                 Height="150" 
+                                 Watermark="Введите описание административного правонарушения..."
+                                 FontSize="14"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+        
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Дополнительная информация" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_other_info" 
+                                 Height="100" 
+                                 Watermark="Любая дополнительная информация..."
+                                 FontSize="14"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                        <TextBlock Text="Необязательное поле" 
+                                   FontSize="11" 
+                                   Foreground="#6C757D"/>
+                    </StackPanel>
+
+        
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Свидетели" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        
+            
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Первый свидетель *" 
+                                       FontSize="12" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="#0F4B5E"/>
+                            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                                <TextBox x:Name="txt_witness1" 
+                                         Height="44" 
+                                         Watermark="Свидетель не выбран..."
+                                         FontSize="13"
+                                         IsReadOnly="True"
+                                         Background="White"
+                                         BorderBrush="#E9ECEF"
+                                         CornerRadius="8"
+                                         Grid.Column="0"/>
+                                
+                                <Button Content="Выбрать свидетеля" 
+                                        Height="44" 
+                                        Background="#0F4B5E" 
+                                        Foreground="White"
+                                        FontSize="14"
+                                        CornerRadius="8"
+                                        Grid.Column="1"
+                                        Padding="15,0"
+                                        x:Name="btn_select_witness1"/>
+                            </Grid>
+                            <TextBlock x:Name="txt_witness1_error" 
+                                       Text="⚠️ Необходимо выбрать свидетеля" 
+                                       Foreground="#DC3545" 
+                                       FontSize="11"
+                                       IsVisible="False"/>
+                        </StackPanel>
+                        
+            
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Второй свидетель" 
+                                       FontSize="12" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="#0F4B5E"/>
+                            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                                <TextBox x:Name="txt_witness2" 
+                                         Height="44" 
+                                         Watermark="Свидетель не выбран (необязательно)..."
+                                         FontSize="13"
+                                         IsReadOnly="True"
+                                         Background="White"
+                                         BorderBrush="#E9ECEF"
+                                         CornerRadius="8"
+                                         Grid.Column="0"/>
+                                
+                                <Button Content="Выбрать свидетеля" 
+                                        Height="44" 
+                                        Background="#0F4B5E" 
+                                        Foreground="White"
+                                        FontSize="14"
+                                        CornerRadius="8"
+                                        Grid.Column="1"
+                                        Padding="15,0"
+                                        x:Name="btn_select_witness2"/>
+                            </Grid>
+                            <TextBlock Text="Необязательное поле" 
+                                       FontSize="11" 
+                                       Foreground="#6C757D"/>
+                        </StackPanel>
+                    </StackPanel>
+
+        
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Подпись" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        
+                        <CheckBox x:Name="chk_signature" 
+                                  Content="Подпись ознакомления"
+                                  FontSize="13"/>
+                    </StackPanel>
+
+        
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
+                                Spacing="16"
+                                Margin="0,16,0,0">
+                        
+                        <Button Content="Отмена" 
+                                Width="120" 
+                                Height="44" 
+                                Background="#6C757D" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                x:Name="btn_cancel"/>
+                        
+                        <Button Content="Сохранить как черновик" 
+                                Width="195" 
+                                Height="44" 
+                                Background="#6C757D" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                x:Name="btn_save_draft"/>
+                        
+                        <Button Content="Создать" 
+                                Width="120" 
+                                Height="44" 
+                                Background="#0F4B5E" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                x:Name="btn_create"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                               Grid.Column="0" 
+                               Grid.ColumnSpan="2"
+                               Grid.Row="1"      
+                               VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

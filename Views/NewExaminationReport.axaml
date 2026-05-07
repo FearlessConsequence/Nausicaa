@@ -1,0 +1,123 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CourseWork.Views.NewExaminationReport"
+        Title="Направление на медицинское освидетельствование"
+        WindowState="Maximized"
+        xmlns:controls="using:CourseWork.Controls"
+        Background="#F5F7FA">
+
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style Selector="DatePicker">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+        <Style Selector="TimePicker">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+        
+       <controls:LeftPanel x:Name="LeftPanelControl" 
+                        Grid.Column="0" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="2"/>
+
+        <ScrollViewer Grid.Column="1" 
+                        Grid.Row="0"
+                        VerticalScrollBarVisibility="Auto" Height="930" VerticalAlignment="Top">
+            <Border Background="#F8F9FA" Padding="40">
+                
+                <StackPanel Spacing="32" MaxWidth="700" HorizontalAlignment="Left">
+                    
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Направление на медицинское освидетельствование" FontSize="28" FontWeight="SemiBold" Foreground="#1E2A3A" Width= "745" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Заполните форму для создания направления" FontSize="14" Foreground="#6C757D" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Правонарушитель *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E" HorizontalAlignment="Left"/>
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12" HorizontalAlignment="Left">
+                            <TextBox x:Name="txt_patient" Height="44" Watermark="Правонарушитель не выбран..." FontSize="14" Width= "240" IsReadOnly="True" Background="White" BorderBrush="#E9ECEF" CornerRadius="8" Grid.Column="0" HorizontalAlignment="Stretch"/>
+                            <Button Content="Выбрать гражданина" Height="44" Background="#0F4B5E" Foreground="White" FontSize="13" CornerRadius="8" Grid.Column="1" Padding="20,0" x:Name="btn_select_patient"/>
+                        </Grid>
+                        <TextBlock x:Name="txt_deal_error" Text="⚠️ Необходимо выбрать пациента" Foreground="#DC3545" FontSize="12" IsVisible="False" HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Дело" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E" HorizontalAlignment="Left"/>
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12" HorizontalAlignment="Left">
+                            <TextBox x:Name="txt_deal" Height="44" Watermark="Дело не выбрано..." FontSize="14" IsReadOnly="True" Background="White" BorderBrush="#E9ECEF" CornerRadius="8" Grid.Column="0" HorizontalAlignment="Stretch"/>
+                            <Button Content="Выбрать дело" Height="44" Background="#0F4B5E" Foreground="White" FontSize="13" CornerRadius="8" Grid.Column="1" Padding="20,0" x:Name="btn_select_deal"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Номер документа" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txt_number" Height="44" Watermark="Например: 2001" FontSize="14" BorderBrush="#E9ECEF" CornerRadius="8" HorizontalAlignment="Left" Width="300"/>
+                        <TextBlock Text="Необязательное поле" FontSize="11" Foreground="#6C757D" HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Тип освидетельствования *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E" HorizontalAlignment="Left"/>
+                        <ComboBox x:Name="cmb_report_type" Height="44" Width="300" FontSize="14" CornerRadius="8" HorizontalAlignment="Left">
+                            <ComboBoxItem Content="Судебно-медицинская экспертиза"/>
+                            <ComboBoxItem Content="Судебно-психиатрическая экспертиза"/>
+                            <ComboBoxItem Content="Судебно-наркологическая экспертиза"/>
+                            <ComboBoxItem Content="Медицинское освидетельствование на опьянение"/>
+                            <ComboBoxItem Content="Техническая экспертиза"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Дата и время *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E" HorizontalAlignment="Left"/>
+                        <Grid ColumnDefinitions="Auto, Auto" ColumnSpacing="16" HorizontalAlignment="Left">
+                            <DatePicker x:Name="dp_date" Grid.Column="0" Height="44" FontSize="14" CornerRadius="8" Width="200"/>
+                            <TimePicker x:Name="tp_time" Grid.Column="1" Height="44" FontSize="14" ClockIdentifier="24HourClock" CornerRadius="8" Width="200"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Содержание направления *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txt_content" Height="150" Width="500" Watermark="Введите содержание направления..." FontSize="14" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="#E9ECEF" CornerRadius="8" HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <TextBlock Text="Признаки опьянения *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txt_signs" Height="100" Width="500" Watermark="Запах алкоголя, неустойчивость позы..." FontSize="14" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="#E9ECEF" CornerRadius="8" HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="12" HorizontalAlignment="Left">
+                        <TextBlock Text="Подписи" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="chk_citizen_signature" Content="Подпись гражданина" FontSize="13" HorizontalAlignment="Left"/>
+                        <CheckBox x:Name="chk_officer_signature" Content="Подпись сотрудника полиции" FontSize="13" HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="16" Margin="0,16,0,0">
+                        <Button Content="Отмена" Width="120" Height="44" Background="#6C757D" Foreground="White" FontSize="14" FontWeight="Medium" CornerRadius="8" x:Name="btn_cancel"/>
+                        <Button Content="Сохранить как черновик" Width="195" Height="44" Background="#6C757D" Foreground="White" FontSize="14" FontWeight="Medium" CornerRadius="8" x:Name="btn_save_draft"/>
+                        <Button Content="Создать" Width="120" Height="44" Background="#0F4B5E" Foreground="White" FontSize="14" FontWeight="Medium" CornerRadius="8" x:Name="btn_create"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                               Grid.Column="0" 
+                               Grid.ColumnSpan="2"
+                               Grid.Row="1"      
+                               VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

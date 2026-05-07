@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CourseWork.Views.RequestReasonWindow"
+        Title="Запрос доступа"
+        Width="450" 
+        xmlns:controls="using:CourseWork.Controls"
+        Height="250"
+        WindowStartupLocation="CenterOwner"
+        Background="#F5F7FA">
+
+    <Border Background="White" CornerRadius="12" Padding="20">
+        <StackPanel Spacing="15">
+            <TextBlock Text="Укажите причину просмотра документа" 
+                       FontSize="16" 
+                       FontWeight="SemiBold"
+                       Foreground="#0F4B5E"/>
+            
+            <TextBlock Text="Ваш запрос будет сохранен в системе" 
+                       FontSize="12" 
+                       Foreground="#6C757D"/>
+            
+            <TextBox x:Name="txt_reason" 
+                     Height="80" 
+                     Watermark="Введите причину..."
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     FontSize="13"
+                     BorderBrush="#E0E0E0"
+                     CornerRadius="6"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Отмена" 
+                        Height="36"
+                        Background="#6C757D" 
+                        Foreground="White"
+                        FontSize="13"
+                        CornerRadius="6"
+                        x:Name="btn_cancel"/>
+                <Button Content="Отправить запрос" 
+                        Height="36"
+                        Background="#0F4B5E" 
+                        Foreground="White"
+                        FontSize="13"
+                        CornerRadius="6"
+                        x:Name="btn_submit" Margin="10,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

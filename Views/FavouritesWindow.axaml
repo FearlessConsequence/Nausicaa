@@ -1,0 +1,158 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="CourseWork.Views.FavouritesWindow"
+        Title="Избранные документы"
+        xmlns:controls="using:CourseWork.Controls"
+        WindowState="Maximized">
+
+    <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                        Grid.Column="0" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="2"/>
+
+        <Border Grid.Column="1" 
+                Grid.Row="0" 
+                Background="#F8F9FA" 
+                Padding="30">
+            
+            <Grid RowDefinitions="Auto, Auto, *">
+                
+                <StackPanel Grid.Row="0" 
+                            Margin="0,0,0,20">
+                    <TextBlock Text="Избранные документы" 
+                               FontSize="24" 
+                               FontWeight="Bold" 
+                               Foreground="#0F4B5E"/>
+                    <TextBlock Text="Документы, добавленные в избранное" 
+                               FontSize="14" 
+                               Foreground="#6C757D"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+                
+                <Border Grid.Row="1"
+                        Background="White"
+                        CornerRadius="12"
+                        BorderBrush="#E9ECEF"
+                        BorderThickness="1"
+                        Padding="12,10"
+                        Margin="0,0,0,24">
+                    <TextBox x:Name="txt_search" 
+                             Watermark="Поиск по номеру, содержанию или ФИО гражданина..."
+                             Background="Transparent"
+                             BorderThickness="0"
+                             FontSize="14">
+                        <TextBox.InnerLeftContent>
+                            <TextBlock Text="🔍 " FontSize="16" VerticalAlignment="Center"/>
+                        </TextBox.InnerLeftContent>
+                    </TextBox>
+                </Border>
+                
+                <ScrollViewer Grid.Row="2">
+                    <ItemsControl x:Name="documentsContainer" 
+                                  VerticalAlignment="Top">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White"
+                                        CornerRadius="12"
+                                        BorderBrush="#E9ECEF"
+                                        BorderThickness="1"
+                                        Padding="20,16"
+                                        Margin="0,0,0,16"
+                                        Cursor="Hand">
+                                    
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        
+                                        <StackPanel Grid.Column="0"
+                                                    Spacing="12">
+                                            
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <TextBlock Text="{Binding Number, StringFormat='№ \{0\}'}"
+                                                           FontSize="14"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#0F4B5E"/>
+                                                <TextBlock Text="{Binding CreatedAt, StringFormat='dd.MM.yyyy HH:mm'}"
+                                                           FontSize="12"
+                                                           Foreground="#6C757D"/>
+                                            </StackPanel>
+                                            
+                                            <TextBlock Text="{Binding CitizenFullName}"
+                                                       FontSize="16"
+                                                       FontWeight="Medium"
+                                                       Foreground="#1E2A3A"/>
+                                            
+                                            <TextBlock Text="{Binding Content}"
+                                                       FontSize="13"
+                                                       Foreground="#495057"
+                                                       TextWrapping="Wrap"
+                                                       MaxHeight="60"/>
+                                        </StackPanel>
+                                        
+                                        <StackPanel Grid.Column="1"
+                                                    Orientation="Horizontal"
+                                                    Spacing="16"
+                                                    VerticalAlignment="Center">
+                                            
+                                            <Button x:Name="FavoriteButton"
+                                                    Content="★"
+                                                    FontSize="24"
+                                                    Background="Transparent"
+                                                    Foreground="#FFB800"
+                                                    BorderThickness="0"
+                                                    Width="40"
+                                                    Height="40"
+                                                    Cursor="Hand"/>
+                                            
+                                            <Button x:Name="OpenButton"
+                                                    Content="→"
+                                                    FontSize="24"
+                                                    Background="#0F4B5E"
+                                                    Foreground="White"
+                                                    CornerRadius="8"
+                                                    Width="44"
+                                                    Height="44"
+                                                    Cursor="Hand"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                
+                <Border Grid.Row="2"
+                        Background="Transparent"
+                        IsVisible="False"
+                        x:Name="emptyStateBorder">
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"
+                                Spacing="16">
+                        <TextBlock Text="Нет избранных документов" 
+                                   FontSize="18" 
+                                   Foreground="#6C757D"
+                                   HorizontalAlignment="Center"/>
+                        <Button Content="Перейти к недавним документам"
+                                Background="#0F4B5E"
+                                Foreground="White"
+                                CornerRadius="8"
+                                Padding="20,10"
+                                HorizontalAlignment="Center"
+                                Margin="0,16,0,0"
+                                x:Name="btn_goToRecents"
+                                Cursor="Hand"/>
+                    </StackPanel>
+                </Border>
+                
+            </Grid>
+        </Border>
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                               Grid.Column="0" 
+                               Grid.ColumnSpan="2"
+                               Grid.Row="1"      
+                               VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

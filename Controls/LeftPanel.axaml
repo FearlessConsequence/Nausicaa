@@ -1,0 +1,145 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CourseWork.Controls.LeftPanel">
+    
+    <UserControl.Styles>
+        <!-- Стиль для кнопок меню -->
+        <Style Selector="Button.menu-button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+            <Setter Property="Width" Value="200"/>
+        </Style>
+        
+        <Style Selector="Button.menu-button:pointerover">
+            <Setter Property="Background" Value="#1A6B8A"/>
+        </Style>
+        
+        <Style Selector="Button.menu-button:pressed">
+            <Setter Property="Background" Value="#0D3D4D"/>
+        </Style>
+        
+        <!-- Стиль для кнопок в Popup -->
+        <Style Selector="Button.popup-button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+        
+        <Style Selector="Button.popup-button:pointerover">
+            <Setter Property="Background" Value="#1A6B8A"/>
+        </Style>
+        
+        <Style Selector="Button.popup-button:pressed">
+            <Setter Property="Background" Value="#0D3D4D"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Border Background="#0F4B5E" 
+            BorderBrush="#E9ECEF" 
+            BorderThickness="0, 0, 1, 0" 
+            Padding="0"
+            Width="200">
+        
+        <StackPanel>
+
+            <StackPanel Margin="0,50,0,0"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Stretch">
+
+                <Button Content="Главная"
+                        Classes="menu-button"
+                        x:Name="btn_main"/>
+
+                <Button Content="Создать"
+                        Classes="menu-button"
+                        x:Name="btn_createNewDocument"/>
+
+                <Popup x:Name="pop_documentType"
+                       PlacementTarget="{Binding #btn_createNewDocument}"
+                       Placement="Right"
+                       IsLightDismissEnabled="True"
+                       VerticalOffset="0"
+                       HorizontalOffset="0">
+                    <Border Background="#0F4B5E" 
+                            BorderBrush="#2A6B8A" 
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="5">
+                        <StackPanel Width="350">
+                                <Button Content="Обращение"
+                                        Classes="popup-button"
+                                        x:Name="pop_documentType_btn_appel"/>
+                                <Button Content="Заявление"
+                                        Classes="popup-button"
+                                        x:Name="pop_documentType_btn_statement"/>
+                                        <Button Content="Протокол объяснения"
+                                        Classes="popup-button"
+                                        x:Name="pop_documentType_btn_explanation_protocol"/>
+                                <Button Content="Направление на медицинское освидетельствование"
+                                        Classes="popup-button"
+                                        x:Name="pop_documentType_btn_examination_report"/>
+                                <Button Content="Административный протокол"
+                                        Classes="popup-button"
+                                        x:Name="pop_documentType_btn_administrative_protocol"/>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+
+                <Button Content="Избранные"
+                        Classes="menu-button"
+                        x:Name="btn_favorites"/>
+
+                <Button Content="Недавние"
+                        Classes="menu-button"
+                        x:Name="btn_recents"/>
+
+                <TextBlock Text="Поиск:"
+                           Margin="20,30,0,10"
+                           FontSize="14"
+                           Foreground="White"
+                           FontWeight="SemiBold"/>
+
+                <Button Content="Справочники"
+                        Classes="menu-button"
+                        x:Name="btn_referenceBooks"/>
+
+                <Button Content="Граждане"
+                        Classes="menu-button"
+                        x:Name="btn_citizens"/>
+
+                <TextBlock Text="Документы:"
+                           Margin="20,30,0,10"
+                           FontSize="14"
+                           Foreground="White"
+                           FontWeight="SemiBold"/>
+
+                <Button Content="Свои документы"
+                        Classes="menu-button"
+                        x:Name="btn_yourDocuments"/>
+
+                <Button Content="Иные документы"
+                        Classes="menu-button"
+                        x:Name="btn_otherDocuments"/>
+
+                <Button Content="Черновики"
+                        Classes="menu-button"
+                        x:Name="btn_drafts"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

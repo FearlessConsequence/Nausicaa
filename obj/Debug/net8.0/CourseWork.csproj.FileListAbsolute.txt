@@ -1,0 +1,866 @@
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.exe
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/Avalonia/resources
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.csproj.Up2Date
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/avalonia/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/CourseWork
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/CourseWork.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/Avalonia/resources
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.dll
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Json.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Npgsql.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/System.Text.Json.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/CourseWork.exe
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Json.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Npgsql.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/System.Text.Json.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/Avalonia/resources
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.csproj.Up2Date
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/CourseWork/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/CourseWork.exe
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Controls.DataGrid.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Json.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Npgsql.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/System.Text.Json.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/Avalonia/resources
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.csproj.Up2Date
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+C:/Users/ggg84/OneDrive/Desktop/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+/home/stud/Загрузки/CourseWork/bin/Debug/net8.0/Avalonia.Controls.DataGrid.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/CourseWork.exe
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.DataGrid.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Json.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Npgsql.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/System.Text.Json.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/Avalonia/resources
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.Up2Date
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+C:/Users/ggg84/OneDrive/Desktop/This Life/Me/Visual Studio Code/AvaloniaProjects/Course/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/CourseWork
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/CourseWork.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.DataGrid.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Json.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Npgsql.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/System.Text.Json.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+/home/stud/Загрузки/Course/CourseWork/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/Avalonia/resources
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CopyComplete
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.dll
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+/home/stud/Загрузки/Course/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/CourseWork.exe
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Controls.DataGrid.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Json.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Npgsql.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/System.Text.Json.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/Avalonia/resources
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.csproj.Up2Date
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+C:/Users/ggg84/Downloads/Curse/Course/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/CourseWork
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/CourseWork.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Controls.DataGrid.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Json.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Npgsql.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/System.Text.Json.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+/home/stud/Рабочий стол/CourseWork/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/Avalonia/resources
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CopyComplete
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.dll
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+/home/stud/Рабочий стол/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/CourseWork.exe
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/CourseWork.deps.json
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/CourseWork.runtimeconfig.json
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Base.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Controls.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.DesignerSupport.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Dialogs.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Markup.Xaml.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Markup.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Metal.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.MicroCom.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.OpenGL.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Vulkan.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Controls.ColorPicker.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Controls.DataGrid.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Desktop.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Diagnostics.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Fonts.Inter.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.FreeDesktop.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Native.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Remote.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Skia.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Fluent.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Themes.Simple.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Win32.Automation.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.Win32.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Avalonia.X11.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/CommunityToolkit.Mvvm.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/HarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/MicroCom.Runtime.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Json.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Npgsql.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/SkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/System.IO.Pipelines.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/System.Text.Json.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/Tmds.DBus.Protocol.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/av_libglesv2.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libAvaloniaNative.dylib
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-loongarch64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-riscv64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-x86/native/libHarfBuzzSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libHarfBuzzSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libHarfBuzzSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-arm/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-arm64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/linux-x64/native/libSkiaSharp.so
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.csproj.AssemblyReference.cache
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/Avalonia/Resources.Inputs.cache
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/Avalonia/resources
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfoInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.AssemblyInfo.cs
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.csproj.CoreCompileInputs.cache
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.csproj.Up2Date
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/refint/CourseWork.dll
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.pdb
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/CourseWork.genruntimeconfig.cache
+C:/Users/ggg84/OneDrive/Desktop/Difference/CourseWork/obj/Debug/net8.0/ref/CourseWork.dll
+/home/stud/Загрузки/CourseWork/obj/Debug/net8.0/CourseWork.csproj.Up2Date
