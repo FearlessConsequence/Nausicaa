@@ -8,53 +8,140 @@
 
     <Window.Resources>
         <DataTemplate x:Key="DraftCardTemplate" DataType="models:Draft">
-            <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
-                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="10">
-                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="10">
-                        <Border Background="#0F4B5E" CornerRadius="4" Padding="8,4">
-                            <TextBlock Text="{Binding TypeDisplayName}" FontSize="12" FontWeight="Bold" Foreground="White"/>
-                        </Border>
-                        <TextBlock Text="{Binding DateFormatted}" FontSize="12" Foreground="#6C757D" VerticalAlignment="Center"/>
+            <Border Background="White"
+                    CornerRadius="12"
+                    BorderBrush="#E9ECEF"
+                    BorderThickness="1"
+                    Padding="20,16"
+                    Margin="0,0,0,16">
+                
+                <Grid ColumnDefinitions="*, Auto">
+                    
+                    <StackPanel Grid.Column="0" Spacing="12">
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <!-- Тип документа -->
+                            <Border Background="#E8F4F8" 
+                                    CornerRadius="4" 
+                                    Padding="6,2">
+                                <TextBlock Text="{Binding TypeDisplayName}"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="#0F4B5E"/>
+                            </Border>
+                            
+                            <!-- Номер документа -->
+                            <TextBlock Text="{Binding Number, StringFormat='№ {0}'}"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="#1E2A3A"/>
+                            
+                            <!-- Дата создания -->
+                            <TextBlock Text="{Binding DateFormatted}"
+                                       FontSize="12"
+                                       Foreground="#6C757D"/>
+                        </StackPanel>
+                        
+                        <!-- ФИО гражданина -->
+                        <TextBlock Text="{Binding PersonName}"
+                                   FontSize="16"
+                                   FontWeight="Medium"
+                                   Foreground="#1E2A3A"/>
+                        
+                        <!-- Превью (краткое содержание) -->
+                        <TextBlock Text="{Binding Preview}"
+                                   FontSize="13"
+                                   Foreground="#495057"
+                                   TextWrapping="Wrap"
+                                   MaxHeight="60"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="8">
-                        <Button Content="✏️" Tag="{Binding Id}" Click="BtnEdit_Click" Width="30" Height="30" Background="#28A745" Foreground="White" BorderThickness="0" CornerRadius="4"/>
-                        <Button Content="🗑️" Tag="{Binding Id}" Click="BtnDelete_Click" Width="30" Height="30" Background="#DC3545" Foreground="White" BorderThickness="0" CornerRadius="4"/>
+                    
+                    <!-- Кнопки действий (текст вместо эмодзи) -->
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                Spacing="12"
+                                VerticalAlignment="Center">
+                        
+                        <Button Content="Изменить"
+                                Background="#28A745"
+                                Foreground="White"
+                                CornerRadius="6"
+                                Padding="15,8"
+                                FontSize="12"
+                                Tag="{Binding Id}"
+                                Cursor="Hand"
+                                x:Name="BtnEdit"/>
+                        
+                        <Button Content="Удалить"
+                                Background="#DC3545"
+                                Foreground="White"
+                                CornerRadius="6"
+                                Padding="15,8"
+                                FontSize="12"
+                                Tag="{Binding Id}"
+                                Cursor="Hand"
+                                x:Name="BtnDelete"/>
                     </StackPanel>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                               Text="{Binding PersonName}" 
-                               FontSize="12" 
-                               Foreground="#0F4B5E"
-                               TextWrapping="Wrap"/>
                 </Grid>
             </Border>
         </DataTemplate>
     </Window.Resources>
 
     <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+        
         <controls:LeftPanel x:Name="LeftPanelControl" 
                     Grid.Column="0" 
                     Grid.Row="0" 
                     Grid.RowSpan="2"/>
 
         <Border Grid.Column="1" Background="#F8F9FA" Padding="30">
-            <StackPanel Spacing="20">
-                <TextBlock Text="Черновики" FontSize="24" FontWeight="Bold" Foreground="#0F4B5E"/>
-                <TextBlock x:Name="txt_draftsCount" FontSize="14" Foreground="#6C757D"/>
-                <ComboBox x:Name="cmb_filterType" Width="200" SelectionChanged="CmbFilter_SelectionChanged">
-                    <ComboBoxItem Content="Все"/>
-                    <ComboBoxItem Content="Обращение"/>
-                    <ComboBoxItem Content="Заявление"/>
-                    <ComboBoxItem Content="Адм. протокол"/>
-                    <ComboBoxItem Content="Протокол объяснения"/>
-                    <ComboBoxItem Content="Направление на мед. освид."/>
-                </ComboBox>
-                <ScrollViewer MaxHeight="500">
+            
+            <Grid RowDefinitions="Auto, Auto, Auto, *">
+                
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                    <TextBlock Text="Черновики" FontSize="24" FontWeight="Bold" Foreground="#0F4B5E"/>
+                    <TextBlock Text="Сохранённые, но не отправленные документы" 
+                               FontSize="14" 
+                               Foreground="#6C757D"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+                
+                <TextBlock Grid.Row="1" x:Name="txt_draftsCount" FontSize="14" Foreground="#6C757D" Margin="0,0,0,10"/>
+                
+                <Border Grid.Row="2"
+                        Background="White"
+                        CornerRadius="12"
+                        BorderBrush="#E9ECEF"
+                        BorderThickness="1"
+                        Padding="12,10"
+                        Margin="0,0,0,24">
+                    <ComboBox x:Name="cmb_filterType" Width="200" SelectionChanged="CmbFilter_SelectionChanged">
+                        <ComboBoxItem Content="Все"/>
+                        <ComboBoxItem Content="Обращение"/>
+                        <ComboBoxItem Content="Заявление"/>
+                        <ComboBoxItem Content="Адм. протокол"/>
+                        <ComboBoxItem Content="Протокол объяснения"/>
+                        <ComboBoxItem Content="Направление на мед. освид."/>
+                    </ComboBox>
+                </Border>
+                
+                <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="draftsList" 
-                    ItemTemplate="{StaticResource DraftCardTemplate}"/>
+                                  ItemTemplate="{StaticResource DraftCardTemplate}"/>
                 </ScrollViewer>
-                <TextBlock x:Name="txt_empty" Text="Нет черновиков" IsVisible="False" HorizontalAlignment="Center" Foreground="#999"/>
-            </StackPanel>
+                
+                <TextBlock x:Name="txt_empty" 
+                           Grid.Row="3"
+                           Text="Нет черновиков" 
+                           IsVisible="False" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"
+                           Foreground="#6C757D"
+                           FontSize="14"/>
+                
+            </Grid>
         </Border>
+        
         <controls:NotificationsControl x:Name="NotificationsControl" 
                                Grid.Column="0" 
                                Grid.ColumnSpan="2"

@@ -21,7 +21,9 @@ public partial class CitizenDocumentsWindow : Window
     private readonly DatabaseHelper _db;
     
     private List<MyDocument> _allDocuments = new();
+    private List<MyDocument> _currentDocuments = new();
     private string _selectedFilterType = "Все";
+    private string _searchText = "";
 
     // Конструктор
     public CitizenDocumentsWindow(int currentUserId, int citizenId, string citizenFullName, Window? parent = null)
@@ -41,17 +43,17 @@ public partial class CitizenDocumentsWindow : Window
         txtTitle.Text = "Документы гражданина";
         txtSubtitle.Text = citizenFullName;
         
-        // Настройка кнопок фильтрации
+        // Настройка кнопок фильтрации (только меняют UI, не вызывают поиск)
         SetupFilterButtons();
         
         // Подписка на кнопки
         btnBack.Click += BtnBack_Click;
         btn_search.Click += BtnSearch_Click;
         
-        // Подписка на фильтры даты (авто-применение)
-        dp_date_from.SelectedDateChanged += (s, e) => ApplyFilters();
-        dp_date_to.SelectedDateChanged += (s, e) => ApplyFilters();
-        txt_search.TextChanged += (s, e) => ApplyFilters();
+        // ❌ Убрана авто-применение фильтров даты и текста
+        // dp_date_from.SelectedDateChanged += (s, e) => ApplyFilters();
+        // dp_date_to.SelectedDateChanged += (s, e) => ApplyFilters();
+        // txt_search.TextChanged += (s, e) => ApplyFilters();
     }
 
     // Настройка кнопок фильтрации
@@ -67,12 +69,11 @@ public partial class CitizenDocumentsWindow : Window
         UpdateFilterButtonsUI("Все");
     }
     
-    // Выбор фильтра
+    // Выбор фильтра (только меняет тип, НЕ вызывает поиск)
     private void SelectFilter(string filterType)
     {
         _selectedFilterType = filterType;
         UpdateFilterButtonsUI(filterType);
-        ApplyFilters();  // ✅ авто-применение фильтра
     }
     
     // Обновление UI кнопок фильтра
@@ -108,25 +109,18 @@ public partial class CitizenDocumentsWindow : Window
         }
     }
 
-    // Загрузка из БД (тяжёлая)
+    // Загрузка из БД
     private async Task LoadDocumentsAsync()
     {
         try
         {
             var docs = await _db.GetCitizenDocumentsAsync(_citizenId);
-            
-            // ✅ Отладка через уведомление
-            NotificationsControl.ShowInfo("Отладка", 
-                $"CitizenId: {_citizenId}\n" +
-                $"Документов получено: {docs?.Count ?? 0}\n" +
-                $"Тип результата: {docs?.GetType()}");
-            
             _allDocuments = docs ?? new List<MyDocument>();
             
             if (_allDocuments.Count == 0)
             {
                 NotificationsControl.ShowWarning("Нет документов", 
-                    $"Для гражданина ID {_citizenId} не найдено документов");
+                    $"Для гражданина {_citizenFullName} не найдено документов");
             }
         }
         catch (Exception ex)
@@ -135,10 +129,36 @@ public partial class CitizenDocumentsWindow : Window
         }
     }
 
-    // Фильтрация (лёгкая, по памяти)
+    // Кнопка "Найти" — загружает и применяет фильтры
+    private async void BtnSearch_Click(object? sender, RoutedEventArgs e)
+    {
+        _searchText = txt_search.Text?.Trim() ?? "";
+        
+        // Проверка: есть ли хоть один критерий
+        bool hasSearchText = !string.IsNullOrWhiteSpace(_searchText);
+        bool hasDateFrom = dp_date_from.SelectedDate.HasValue;
+        bool hasDateTo = dp_date_to.SelectedDate.HasValue;
+        bool hasFilter = _selectedFilterType != "Все";
+        
+        if (!hasSearchText && !hasDateFrom && !hasDateTo && !hasFilter)
+        {
+            NotificationsControl.ShowWarning("Пустой поиск", "Введите текст, выберите тип документа или укажите диапазон дат");
+            return;
+        }
+        
+        await LoadDocumentsAsync();
+        ApplyFilters();
+    }
+
+    // Фильтрация (по памяти, без БД)
     private void ApplyFilters()
     {
-        if (_allDocuments.Count == 0) return;
+        if (_allDocuments.Count == 0)
+        {
+            documentsContainer.ItemsSource = null;
+            txtNoDocuments.IsVisible = true;
+            return;
+        }
         
         var filtered = _allDocuments;
         
@@ -163,18 +183,18 @@ public partial class CitizenDocumentsWindow : Window
         }
         
         // Текстовый поиск
-        var searchText = txt_search.Text?.Trim() ?? "";
-        if (!string.IsNullOrWhiteSpace(searchText))
+        if (!string.IsNullOrWhiteSpace(_searchText))
         {
             filtered = filtered.Where(d => 
-                (d.Number?.ToString().Contains(searchText) ?? false) ||
-                d.Content?.ToLower().Contains(searchText.ToLower()) == true ||
-                d.DocumentType?.ToLower().Contains(searchText.ToLower()) == true
+                (d.Number?.ToString().Contains(_searchText) ?? false) ||
+                d.Content?.ToLower().Contains(_searchText.ToLower()) == true ||
+                d.DocumentType?.ToLower().Contains(_searchText.ToLower()) == true
             ).ToList();
         }
         
-        documentsContainer.ItemsSource = filtered;
-        txtNoDocuments.IsVisible = filtered.Count == 0;
+        _currentDocuments = filtered;
+        documentsContainer.ItemsSource = _currentDocuments;
+        txtNoDocuments.IsVisible = _currentDocuments.Count == 0;
         
         // Переподписываем кнопки после обновления списка
         Task.Delay(100).ContinueWith(_ => 
@@ -189,18 +209,6 @@ public partial class CitizenDocumentsWindow : Window
         var searchWindow = new SearchCitizensWindow(_currentUserId);
         searchWindow.Show();
         this.Close();
-    }
-
-    // Кнопка "Найти" — загружает из БД и применяет фильтры
-    private async void BtnSearch_Click(object? sender, RoutedEventArgs e)
-    {
-        await LoadDocumentsAsync();
-        ApplyFilters();
-        
-        if (_allDocuments.Count == 0)
-        {
-            txtNoDocuments.IsVisible = true;
-        }
     }
 
     // Подписка на кнопки "Открыть"
@@ -226,13 +234,7 @@ public partial class CitizenDocumentsWindow : Window
             try
             {
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                var viewer = new DocumentViewerWindow(
-                    _currentUserId, 
-                    fullDoc, 
-                    "CitizenDocuments",
-                    _citizenId,
-                    _citizenFullName);
-                viewer.Show();
+                var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
                 this.Close();
             }
             catch (Exception ex)

@@ -151,7 +151,7 @@ public partial class RecentsWindow : Window
         {
             var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
             // ✅ Передаём "Recents" как источник
-            new DocumentViewerWindow(_currentUserId, fullDoc, "Recents").Show();
+            var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
             Close();
         }
     }

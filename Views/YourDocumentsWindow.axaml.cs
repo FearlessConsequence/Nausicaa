@@ -25,7 +25,7 @@ public partial class YourDocumentsWindow : Window
 
     public YourDocumentsWindow(int currentUserId) : this(currentUserId, null) { }
     
-    public YourDocumentsWindow(int currentUserId, string? dealNumber)
+   public YourDocumentsWindow(int currentUserId, string? dealNumber = null)
     {
         InitializeComponent();
         _currentUserId = currentUserId;
@@ -36,9 +36,15 @@ public partial class YourDocumentsWindow : Window
         
         _db = new DatabaseHelper();
         
-        // ✅ Настройка кнопок фильтрации
-        SetupFilterButtons();
+        // ✅ Кнопки фильтрации ТОЛЬКО меняют выбранный тип, НЕ вызывают поиск
+        btn_filter_all.Click += (s, e) => SelectFilter("Все");
+        btn_filter_appeals.Click += (s, e) => SelectFilter("Обращение");
+        btn_filter_statements.Click += (s, e) => SelectFilter("Заявление");
+        btn_filter_protocols.Click += (s, e) => SelectFilter("Административный протокол");
+        btn_filter_explanations.Click += (s, e) => SelectFilter("Протокол объяснения");
+        btn_filter_reports.Click += (s, e) => SelectFilter("Направление на мед. освид.");
         
+        // ✅ Только кнопка "Найти" запускает поиск
         btn_search.Click += OnSearchClick;
         
         this.Opened += async (s, e) => 
@@ -71,7 +77,7 @@ public partial class YourDocumentsWindow : Window
     {
         _selectedFilterType = filterType;
         UpdateFilterButtonsUI(filterType);
-        _ = PerformSearch();
+        // ❌ НЕТ PerformSearch() здесь!
     }
     
     // ✅ Обновление UI кнопок фильтра
@@ -123,6 +129,20 @@ public partial class YourDocumentsWindow : Window
 
     private async void OnSearchClick(object? sender, RoutedEventArgs e)
     {
+        _searchText = txt_search.Text?.Trim() ?? "";
+        
+        // Проверка: есть ли хоть один критерий
+        bool hasSearchText = !string.IsNullOrWhiteSpace(_searchText);
+        bool hasDateFrom = dp_date_from.SelectedDate.HasValue;
+        bool hasDateTo = dp_date_to.SelectedDate.HasValue;
+        bool hasFilter = _selectedFilterType != "Все";
+        
+        if (!hasSearchText && !hasDateFrom && !hasDateTo && !hasFilter)
+        {
+            NotificationsControl.ShowWarning("Пустой поиск", "Введите текст, выберите тип документа или укажите диапазон дат");
+            return;
+        }
+        
         await PerformSearch();
     }
     
@@ -132,23 +152,27 @@ public partial class YourDocumentsWindow : Window
         
         var filtered = _allDocuments;
         
+        // Фильтр по типу
         if (_selectedFilterType != "Все")
         {
             filtered = filtered.Where(d => d.DocumentType == _selectedFilterType).ToList();
         }
         
+        // Фильтр по дате от
         if (dp_date_from.SelectedDate.HasValue)
         {
             var dateFrom = dp_date_from.SelectedDate.Value.Date;
             filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom).ToList();
         }
         
+        // Фильтр по дате до
         if (dp_date_to.SelectedDate.HasValue)
         {
             var dateTo = dp_date_to.SelectedDate.Value.Date;
             filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo).ToList();
         }
         
+        // Текстовый поиск
         if (!string.IsNullOrWhiteSpace(_searchText))
         {
             filtered = filtered.Where(d => 
@@ -159,7 +183,6 @@ public partial class YourDocumentsWindow : Window
         }
         
         _currentDocuments = filtered;
-        
         documentsContainer.ItemsSource = _currentDocuments;
         emptyStateBorder.IsVisible = _currentDocuments.Count == 0;
         
@@ -233,16 +256,16 @@ public partial class YourDocumentsWindow : Window
         {
             try
             {
-                Console.WriteLine($"[OPEN] Открываем документ: {doc.DocumentType} #{doc.Number}");
-                
+                Console.WriteLine($"[DEBUG] Открываем документ из YourDocumentsWindow");
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                new DocumentViewerWindow(_currentUserId, fullDoc, "YourDocuments").Show();
-                Close();    
+                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc, this);
+                viewer.Show();
+                this.Hide();  // ← Hide вместо Close
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Open document: {ex.Message}");
-                NotificationsControl.ShowError("Ошибка", $"Не удалось открыть документ: {ex.Message}");
+                Console.WriteLine($"[ERROR] {ex.Message}");
+                NotificationsControl.ShowError("Ошибка", ex.Message);
             }
         }
     }

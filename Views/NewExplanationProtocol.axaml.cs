@@ -13,6 +13,7 @@ public partial class NewExplanationProtocol : Window
 {
     private readonly DatabaseHelper _db;
     private readonly int _currentUserId;
+    private readonly Window? _previousWindow;
     private int? _currentDraftId;
 
     public NewExplanationProtocol() : this(0) { }
@@ -44,7 +45,7 @@ public partial class NewExplanationProtocol : Window
     {
         try
         {
-            var citizensWindow = new SelectCitizenWindow();
+            var citizensWindow = new SelectCitizenWindow(_currentUserId, _previousWindow);
             
             citizensWindow.Closed += (s, args) =>
             {
@@ -73,7 +74,7 @@ public partial class NewExplanationProtocol : Window
     {
         try
         {
-            var dealWindow = new SelectDealWindow();
+            var dealWindow = new SelectDealWindow(_currentUserId, _previousWindow);
             
             dealWindow.Closed += (s, args) =>
             {

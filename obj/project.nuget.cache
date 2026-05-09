@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AnhmrVX9Hds=",
+  "dgSpecHash": "bzSRO1tTTxk=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ggg84\\Downloads\\CourseWork\\CourseWork.csproj",
+  "projectFilePath": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\CourseWork.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ggg84\\.nuget\\packages\\avalonia\\11.3.12\\avalonia.11.3.12.nupkg.sha512",
     "C:\\Users\\ggg84\\.nuget\\packages\\avalonia.angle.windows.natives\\2.1.25547.20250602\\avalonia.angle.windows.natives.2.1.25547.20250602.nupkg.sha512",
@@ -60,9 +60,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'Tmds.DBus.Protocol' 0.21.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
-      "projectPath": "C:\\Users\\ggg84\\Downloads\\CourseWork\\CourseWork.csproj",
+      "projectPath": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\CourseWork.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\ggg84\\Downloads\\CourseWork\\CourseWork.csproj",
+      "filePath": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\CourseWork.csproj",
       "libraryId": "Tmds.DBus.Protocol",
       "targetGraphs": [
         "net10.0"

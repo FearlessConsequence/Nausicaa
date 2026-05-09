@@ -16,8 +16,6 @@ public partial class OtherDocumentsWindow : Window
     private readonly int _currentUserId;
     private List<ExternalDocument> _documents = new();
 
-    public OtherDocumentsWindow() : this(0) { }
-
     public OtherDocumentsWindow(int currentUserId)
     {
         InitializeComponent();
@@ -37,7 +35,7 @@ public partial class OtherDocumentsWindow : Window
 
     private void Btn_select_deal_Click(object? sender, RoutedEventArgs e)
     {
-        var dealWindow = new SelectDealWindow();
+        var dealWindow = new SelectDealWindow(_currentUserId, this);
         dealWindow.Closed += (s, args) =>
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -60,7 +58,7 @@ public partial class OtherDocumentsWindow : Window
         {
             if (txt_deal.Tag == null)
             {
-                await ShowMessage("Внимание", "Пожалуйста, выберите дело");
+                NotificationsControl.ShowWarning("Внимание", "Выберите дело");
                 return;
             }
             
@@ -95,7 +93,11 @@ public partial class OtherDocumentsWindow : Window
                     await _db.SaveDocumentAccessRequestAsync(_currentUserId, doc.TableName, doc.Id, result);
                     
                     var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                    ShowDocumentViewer(fullDoc);
+                    
+                    // ✅ Исправь здесь — передавай this
+                    var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
+                    viewerWindow.Show();
+                    this.Close();  // или this.Hide()
                 }
                 catch (Exception ex)
                 {
@@ -107,7 +109,7 @@ public partial class OtherDocumentsWindow : Window
 
     private void ShowDocumentViewer(DocumentFull fullDoc)
     {
-        new DocumentViewerWindow(_currentUserId, fullDoc, "OtherDocuments").Show();
+        var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
         Close();
     }
 

@@ -64,8 +64,22 @@
                                 <DatePicker x:Name="dp_date_to" Height="36" FontSize="13" CornerRadius="6"/>
                             </StackPanel>
                         </Grid>
-                        
-                        <Button Content="Найти" Height="40" Background="#0F4B5E" Foreground="White" FontSize="14" CornerRadius="8" Margin="0,8,0,0" x:Name="btn_search"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Grid.Column="1" 
+                                    Content="← Назад" 
+                                    Height="43"
+                                    Width="80"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Background="#6C757D" 
+                                    Foreground="White" 
+                                    FontSize="13" 
+                                    CornerRadius="8" 
+                                    x:Name="btn_back" Margin="0,0,0,0"/>
+
+                            <Button Content="Найти" Height="43" Width="70" HorizontalContentAlignment="Center" 
+                            VerticalContentAlignment="Center" Background="#0F4B5E" Foreground="White" FontSize="13" CornerRadius="8" Margin="5,0,0,0" x:Name="btn_search"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
                 
@@ -121,16 +135,6 @@
                         <TextBlock Text="Измените параметры поиска" FontSize="14" Foreground="#ADB5BD"/>
                     </StackPanel>
                 </Border>
-
-                <TextBlock x:Name="txt_debug" 
-                           Grid.Row="3"
-                           Text="" 
-                           FontSize="10" 
-                           Foreground="Red"
-                           Margin="24,0,24,24"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Bottom"/>
-                
             </Grid>
         </Border>
     </Grid>

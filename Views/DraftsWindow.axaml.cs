@@ -13,6 +13,7 @@ namespace CourseWork.Views;
 public partial class DraftsWindow : Window
 {
     private readonly DatabaseHelper _db;
+    private readonly Window? _previousWindow;
     private readonly int _currentUserId;
     private List<Draft> _all = new();
     private List<Draft> _shown = new();
@@ -21,6 +22,7 @@ public partial class DraftsWindow : Window
     {
         InitializeComponent();
         _currentUserId = userId;
+        _previousWindow = _previousWindow;
         cmb_filterType.SelectedIndex = 0;
         _db = new DatabaseHelper();
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");

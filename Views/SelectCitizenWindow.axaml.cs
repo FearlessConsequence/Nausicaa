@@ -15,12 +15,16 @@ public partial class SelectCitizenWindow : Window
 {
     private readonly DatabaseHelper _db;
     private List<Citizen> _allCitizens = new();
+    private readonly int _currentUserId = 0;
+    private readonly Window? _previousWindow;
     public Citizen? SelectedCitizen { get; private set; }
 
-    public SelectCitizenWindow()
+    public SelectCitizenWindow(int currentUserId, Window? _previousWindow = null)
     {
         InitializeComponent();
         _db = new DatabaseHelper();
+        _currentUserId = currentUserId;
+        _previousWindow = _previousWindow;
         
         btn_search.Click += OnSearchClick;
         btn_cancel.Click += (s, e) => Close();

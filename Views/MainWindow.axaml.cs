@@ -14,10 +14,9 @@ public partial class MainWindow : Window
 {
     private readonly int _currentUserId;
     private readonly DatabaseHelper _db;
+    private readonly Window _previousWindow;
     private List<RecentDocument> _recentDocuments = new();
     private List<Draft> _drafts = new();
-    
-    public MainWindow() : this(0) { }
     
     public MainWindow(int currentUserId)
     {

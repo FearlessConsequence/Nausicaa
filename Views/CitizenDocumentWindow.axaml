@@ -6,7 +6,7 @@
         xmlns:controls="using:CourseWork.Controls"
         Background="#F5F7FA">
 
-    <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+    <Grid RowDefinitions="*, Auto" ColumnDefinitions="200, *">
         
         <controls:LeftPanel x:Name="LeftPanelControl" 
                             Grid.Column="0" 
@@ -135,6 +135,7 @@
                     </StackPanel>
                 </Border>
                 
+                <!-- Поиск: поле + кнопки -->
                 <Border Grid.Row="3"
                         Background="White"
                         CornerRadius="12"
@@ -144,15 +145,6 @@
                         Margin="0,0,0,24">
                     
                     <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="12">
-                        
-                        <TextBox x:Name="txt_search" 
-                                Grid.Column="0"
-                                Height="40" 
-                                Watermark="Поиск по номеру, содержанию..."
-                                FontSize="13"
-                                BorderBrush="#E0E0E0"
-                                CornerRadius="6"/>
-                        
                         <Button Content="← Назад" 
                                 Grid.Column="1"
                                 Width="100" 
@@ -176,6 +168,14 @@
                                 FontSize="14"
                                 CornerRadius="6"
                                 x:Name="btn_search"/>
+                                
+                        <TextBox x:Name="txt_search" 
+                                Grid.Column="0"
+                                Height="40" 
+                                Watermark="Поиск по номеру, содержанию..."
+                                FontSize="13"
+                                BorderBrush="#E0E0E0"
+                                CornerRadius="6"/>
                         
                     </Grid>
                 </Border>
@@ -251,5 +251,12 @@
                 
             </Grid>
         </Border>
+        
+        <!-- ✅ ПАНЕЛЬ УВЕДОМЛЕНИЙ ВНИЗУ -->
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                                       Grid.Column="0" 
+                                       Grid.ColumnSpan="2"
+                                       Grid.Row="1"      
+                                       VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

@@ -11,32 +11,34 @@ namespace CourseWork.Views;
 
 public partial class SelectDealWindow : Window
 {
+    private readonly Window? _previousWindow;
     private readonly DatabaseHelper _db;
+    private readonly int _currentUserId;
     private List<Deal> _allDeals = new();
     public Deal? SelectedDeal { get; private set; }
 
-    public SelectDealWindow()
+    public SelectDealWindow(int currentUserId, Window? previousWindow = null)
     {
         InitializeComponent();
         _db = new DatabaseHelper();
         
         btn_search.Click += Btn_search_Click;
+         _currentUserId = currentUserId;
+        _previousWindow = previousWindow;
+        
+        btn_back.Click += (s, e) =>
+        {
+            _previousWindow?.Show();
+            Close();
+        };
         
     }
 
     private async Task LoadDealsAsync()
     {
-        try
-        {
-            txt_debug.Text = "Поиск...";
-            _allDeals = await _db.GetDealsAsync();
-            txt_debug.Text = $"✓ Найдено: {_allDeals.Count} дел";
-            ApplyFilter();
-        }
-        catch (Exception ex)
-        {
-            txt_debug.Text = $"✗ Ошибка: {ex.Message}";
-        }
+
+        _allDeals = await _db.GetDealsAsync();
+        ApplyFilter();
     }
 
     private async void Btn_search_Click(object? sender, RoutedEventArgs e) => await LoadDealsAsync();

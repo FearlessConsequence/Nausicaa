@@ -14,8 +14,7 @@ public partial class NewExaminationReport : Window
     private readonly DatabaseHelper _db;
     private int? _currentDraftId;
     private readonly int _currentUserId;
-
-    public NewExaminationReport() : this(0) { }
+    private readonly Window? _previousWindow;
     
     public NewExaminationReport(int currentUserId)
     {
@@ -40,7 +39,7 @@ public partial class NewExaminationReport : Window
     {
         try
         {
-            var citizensWindow = new SelectCitizenWindow();
+            var citizensWindow = new SelectCitizenWindow(_currentUserId, _previousWindow);
             citizensWindow.Closed += (s, args) =>
             {
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -67,7 +66,7 @@ public partial class NewExaminationReport : Window
     {
         try
         {
-            var dealWindow = new SelectDealWindow();
+            var dealWindow = new SelectDealWindow(_currentUserId, _previousWindow);
             
             dealWindow.Closed += (s, args) =>
             {

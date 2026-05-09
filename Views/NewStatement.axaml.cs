@@ -40,7 +40,7 @@ public partial class NewStatement : Window
     {
         try
         {
-            var citizensWindow = new SelectCitizenWindow();
+            var citizensWindow = new SelectCitizenWindow(_currentUserId, this);
             
             citizensWindow.Closed += (s, args) =>
             {

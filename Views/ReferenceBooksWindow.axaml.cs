@@ -35,7 +35,7 @@ public partial class ReferenceBooksWindow : Window
         
         if (string.IsNullOrWhiteSpace(searchText))
         {
-            await ShowMessage("Внимание", "Введите поисковый запрос");
+            NotificationsControl.ShowWarning("Внимание", "Введите текст для поиска");
             return;
         }
         
@@ -43,6 +43,7 @@ public partial class ReferenceBooksWindow : Window
         
         if (string.IsNullOrEmpty(selectedType))
         {
+            NotificationsControl.ShowWarning("Внимание", "Выберите тип справочника");
             return;
         }
         
@@ -50,62 +51,55 @@ public partial class ReferenceBooksWindow : Window
         
         object? results = null;
         
-        switch (selectedType)
+        try
         {
-            case "Статьи КоАП":
-                results = await _db.SearchArticlesAsync(searchText);
-                txt_current_title.Text = $"Статьи КоАП - результаты поиска: \"{searchText}\"";
-                break;
-                
-            case "Должности":
-                results = await _db.SearchPostsAsync(searchText);
-                txt_current_title.Text = $"Должности - результаты поиска: \"{searchText}\"";
-                break;
-                
-            case "Организации":
-                results = await _db.SearchStructuresAsync(searchText);
-                txt_current_title.Text = $"Организации - результаты поиска: \"{searchText}\"";
-                break;
-        }
-        
-        if (results != null)
-        {
-            itemsContainer.ItemsSource = (System.Collections.IEnumerable?)results;
-            var count = ((System.Collections.IList)results).Count;
-            txt_empty.IsVisible = count == 0;
-            itemsContainer.IsVisible = count > 0;
-            
-            if (count == 0)
+            switch (selectedType)
             {
-                txt_empty.Text = "Ничего не найдено";
+                case "Статьи КоАП":
+                    results = await _db.SearchArticlesAsync(searchText);
+                    txt_current_title.Text = $"Статьи КоАП - результаты поиска: \"{searchText}\"";
+                    break;
+                    
+                case "Должности":
+                    results = await _db.SearchPostsAsync(searchText);
+                    txt_current_title.Text = $"Должности - результаты поиска: \"{searchText}\"";
+                    break;
+                    
+                case "Организации":
+                    results = await _db.SearchStructuresAsync(searchText);
+                    txt_current_title.Text = $"Организации - результаты поиска: \"{searchText}\"";
+                    break;
+                    
+                default:
+                    NotificationsControl.ShowError("Ошибка", $"Неизвестный тип: {selectedType}");
+                    return;
             }
-        }
-    }
-    
-    private async Task ShowMessage(string title, string message)
-    {
-        var dialog = new Window
-        {
-            Title = title,
-            Width = 350,
-            Height = 150,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
+            
+            if (results != null)
             {
-                Margin = new Avalonia.Thickness(20),
-                Spacing = 15,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Children =
+                itemsContainer.ItemsSource = (System.Collections.IEnumerable?)results;
+                var count = ((System.Collections.IList)results).Count;
+                txt_empty.IsVisible = count == 0;
+                itemsContainer.IsVisible = count > 0;
+                
+                if (count == 0)
                 {
-                    new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap },
-                    new Button { Content = "OK", Width = 80, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center }
+                    txt_empty.Text = "Ничего не найдено";
                 }
             }
-        };
-        
-        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
-        if (okButton != null) okButton.Click += (s, args) => dialog.Close();
-        
-        await dialog.ShowDialog(this);
+            else
+            {
+                txt_empty.IsVisible = true;
+                txt_empty.Text = "Ошибка при выполнении поиска";
+                itemsContainer.IsVisible = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            NotificationsControl.ShowError("Ошибка", $"Поиск не выполнен: {ex.Message}");
+            txt_empty.IsVisible = true;
+            txt_empty.Text = "Произошла ошибка при поиске";
+            itemsContainer.IsVisible = false;
+        }
     }
 }

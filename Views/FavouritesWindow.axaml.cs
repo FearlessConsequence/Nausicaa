@@ -136,7 +136,7 @@ public partial class FavouritesWindow : Window
             try
             {
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                new DocumentViewerWindow(_currentUserId, fullDoc, "Favorites").Show();
+                var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
                 Close();
             }
             catch (Exception ex)

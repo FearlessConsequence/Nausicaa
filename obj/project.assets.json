@@ -2428,11 +2428,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ggg84\\Downloads\\CourseWork\\CourseWork.csproj",
+      "projectUniqueName": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\CourseWork.csproj",
       "projectName": "CourseWork",
-      "projectPath": "C:\\Users\\ggg84\\Downloads\\CourseWork\\CourseWork.csproj",
+      "projectPath": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\CourseWork.csproj",
       "packagesPath": "C:\\Users\\ggg84\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ggg84\\Downloads\\CourseWork\\obj\\",
+      "outputPath": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ggg84\\AppData\\Roaming\\NuGet\\NuGet.Config"

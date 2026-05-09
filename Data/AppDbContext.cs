@@ -411,11 +411,12 @@ namespace CourseWork.Data
                 }
                 else
                 {   
-                    string insertSql = "INSERT INTO user_favorites (user_id, target_table, document_id) VALUES (@userId, @targetTable, @documentId)";
+                    string insertSql = "INSERT INTO user_favorites (user_id, target_table, document_id, created_at) VALUES (@userId, @targetTable, @documentId, @createdAt)";
                     await using var insertCmd = new NpgsqlCommand(insertSql, conn);
                     insertCmd.Parameters.AddWithValue("@userId", userId);
                     insertCmd.Parameters.AddWithValue("@targetTable", targetTable);
                     insertCmd.Parameters.AddWithValue("@documentId", documentId);
+                    insertCmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
                     int inserted = await insertCmd.ExecuteNonQueryAsync();
                     Console.WriteLine($"[DEBUG] Добавлено в избранное: {inserted} записей");
                 }
@@ -2108,7 +2109,7 @@ namespace CourseWork.Data
                         COALESCE(d.deal_number::text, 'Б/Н') AS deal_number,
                         mer.content AS description,
                         COALESCE(mer.signs_of_intoxication, '') AS other_information,
-                        COALESCE(mer.signature, false) AS signature,
+                        COALESCE(mer.citizen_signature, false) AS signature,
                         'Не указан' AS first_witness,
                         'Не указан' AS second_witness,
                         'Не указан' AS officer_name,
@@ -2119,7 +2120,7 @@ namespace CourseWork.Data
                     FROM medical_examination_report mer
                     LEFT JOIN deal d ON mer.deal = d.id_deal
                     LEFT JOIN citizens c ON mer.patient = c.id_citizens
-                    LEFT JOIN type_report tr ON mer.report = tr.id
+                    LEFT JOIN type_report tr ON mer.report = tr.id_type_report
                     WHERE mer.id_medical_examination_report = @id",
                     
         

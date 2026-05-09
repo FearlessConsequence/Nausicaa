@@ -13,9 +13,8 @@ public partial class NewAppel : Window
 {
     private readonly DatabaseHelper _db;
     private int? _currentDraftId;
+    private readonly Window? _previousWindow;
     private readonly int _currentUserId;
-
-    public NewAppel() : this(0) { }
     
     public NewAppel(int currentUserId)
     {
@@ -42,7 +41,8 @@ public partial class NewAppel : Window
     {
         try
         {
-            var citizensWindow = new SelectCitizenWindow();
+            var citizensWindow = new SelectCitizenWindow(_currentUserId, _previousWindow);
+            citizensWindow.Show();
             
             citizensWindow.Closed += (s, args) =>
             {

@@ -13,6 +13,7 @@ public partial class NewAdministrativeProtocol : Window
 {
     private readonly DatabaseHelper _db;
     private readonly int _currentUserId;
+    private readonly Window? _previousWindow;
     private int? _currentDraftId;
 
     public NewAdministrativeProtocol() : this(0) { }
@@ -43,7 +44,7 @@ public partial class NewAdministrativeProtocol : Window
 
     private async void Btn_select_deal_Click(object? sender, RoutedEventArgs e)
     {
-        var dealWindow = new SelectDealWindow();
+        var dealWindow = new SelectDealWindow(_currentUserId, _previousWindow);
         dealWindow.Closed += (s, args) =>
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -63,7 +64,7 @@ public partial class NewAdministrativeProtocol : Window
 
     private async void Btn_select_witness1_Click(object? sender, RoutedEventArgs e)
     {
-        var citizensWindow = new SelectCitizenWindow();
+        var citizensWindow = new SelectCitizenWindow(_currentUserId, _previousWindow);
         citizensWindow.Closed += (s, args) =>
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -83,7 +84,7 @@ public partial class NewAdministrativeProtocol : Window
 
     private async void Btn_select_witness2_Click(object? sender, RoutedEventArgs e)
     {
-        var citizensWindow = new SelectCitizenWindow();
+        var citizensWindow = new SelectCitizenWindow(_currentUserId, _previousWindow);
         citizensWindow.Closed += (s, args) =>
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
