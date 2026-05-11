@@ -141,12 +141,12 @@ public partial class SearchCitizensWindow : Window
         {
             try
             {
+                // ✅ Загружаем полные данные с телефоном
                 var fullCitizen = await _db.GetCitizenByIdAsync(citizen.Id);
                 if (fullCitizen != null)
                 {
                     var cardWindow = new CitizenCardWindow(_currentUserId, fullCitizen);
-                    cardWindow.SetSearchWindow(this);
-                    cardWindow.Show(this); // Show(this) автоматически заполняет this.Owner 
+                    await cardWindow.ShowDialog(this);
                 }
             }
             catch (Exception ex)

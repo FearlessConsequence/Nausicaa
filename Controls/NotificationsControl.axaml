@@ -15,9 +15,10 @@
                 Background="White" 
                 BorderBrush="#E9ECEF" 
                 BorderThickness="1,0,0,0"
-                Padding="20,12">
+                Padding="20,12"
+                MinHeight="70">
             
-            <StackPanel Orientation="Horizontal" Spacing="16">
+            <StackPanel Orientation="Horizontal" Spacing="20">
                 <TextBlock Text="Уведомления" 
                            FontSize="14" 
                            FontWeight="SemiBold" 
@@ -26,38 +27,39 @@
                 
                 <ScrollViewer HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Disabled">
-                    <StackPanel Orientation="Horizontal" Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="15">
                         
                         <ItemsControl x:Name="NotificationsList">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" Spacing="12"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="15"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderBrush="{Binding BorderColor}"
                                             Background="{Binding BackgroundColor}"
-                                            CornerRadius="8" 
-                                            Padding="12,8"
-                                            BorderThickness="1,1,1,3">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <TextBlock Text="{Binding Icon}" FontSize="14" VerticalAlignment="Center"/>
+                                            CornerRadius="10" 
+                                            Padding="16,12"
+                                            BorderThickness="1,1,1,3"
+                                            MinWidth="200">
+                                        <StackPanel Orientation="Horizontal" Spacing="12">
+                                            <TextBlock Text="{Binding Icon}" FontSize="18" VerticalAlignment="Center"/>
                                             <StackPanel>
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <StackPanel Orientation="Horizontal" Spacing="10">
                                                     <TextBlock Text="{Binding Title}" 
-                                                               FontSize="12" 
+                                                               FontSize="13" 
                                                                FontWeight="SemiBold" 
                                                                Foreground="#0F4B5E"/>
                                                     <TextBlock Text="{Binding Date}" 
-                                                               FontSize="10" 
+                                                               FontSize="11" 
                                                                Foreground="#6C757D"/>
                                                 </StackPanel>
                                                 <TextBlock Text="{Binding Message}" 
-                                                           FontSize="11" 
+                                                           FontSize="12" 
                                                            Foreground="#495057"
-                                                           MaxWidth="250"
-                                                           TextTrimming="CharacterEllipsis"/>
+                                                           MaxWidth="350"
+                                                           TextWrapping="Wrap"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </Border>

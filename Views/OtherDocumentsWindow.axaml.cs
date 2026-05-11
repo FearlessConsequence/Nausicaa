@@ -29,7 +29,7 @@ public partial class OtherDocumentsWindow : Window
         btn_select_deal.Click += Btn_select_deal_Click;
         btn_search.Click += Btn_search_Click;
         
-        emptyStateBorder.IsVisible = true;
+        emptyStateBorder.IsVisible = false;
         documentsContainer.IsVisible = false;
     }
 
@@ -94,10 +94,10 @@ public partial class OtherDocumentsWindow : Window
                     
                     var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
                     
-                    // ✅ Исправь здесь — передавай this
-                    var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
+                    // ✅ Передаём this как previousWindow
+                    var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc);
                     viewerWindow.Show();
-                    this.Close();  // или this.Hide()
+                    this.Hide();  // ← Hide вместо Close
                 }
                 catch (Exception ex)
                 {
@@ -109,8 +109,8 @@ public partial class OtherDocumentsWindow : Window
 
     private void ShowDocumentViewer(DocumentFull fullDoc)
     {
-        var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
-        Close();
+        var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc);
+        Hide();
     }
 
     private async Task ShowMessage(string title, string message)

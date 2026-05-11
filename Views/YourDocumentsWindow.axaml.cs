@@ -131,15 +131,10 @@ public partial class YourDocumentsWindow : Window
     {
         _searchText = txt_search.Text?.Trim() ?? "";
         
-        // Проверка: есть ли хоть один критерий
-        bool hasSearchText = !string.IsNullOrWhiteSpace(_searchText);
-        bool hasDateFrom = dp_date_from.SelectedDate.HasValue;
-        bool hasDateTo = dp_date_to.SelectedDate.HasValue;
-        bool hasFilter = _selectedFilterType != "Все";
-        
-        if (!hasSearchText && !hasDateFrom && !hasDateTo && !hasFilter)
+        // ✅ Проверка: текст должен быть обязательно
+        if (string.IsNullOrWhiteSpace(_searchText))
         {
-            NotificationsControl.ShowWarning("Пустой поиск", "Введите текст, выберите тип документа или укажите диапазон дат");
+            NotificationsControl.ShowWarning("Введите номер документа", "Для поиска необходимо ввести номер документа в текстовое поле");
             return;
         }
         
@@ -148,8 +143,6 @@ public partial class YourDocumentsWindow : Window
     
     private async Task PerformSearch()
     {
-        _searchText = txt_search.Text?.Trim() ?? "";
-        
         var filtered = _allDocuments;
         
         // Фильтр по типу
@@ -172,15 +165,10 @@ public partial class YourDocumentsWindow : Window
             filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo).ToList();
         }
         
-        // Текстовый поиск
-        if (!string.IsNullOrWhiteSpace(_searchText))
-        {
-            filtered = filtered.Where(d => 
-                (d.Number?.ToString().Contains(_searchText) ?? false) ||
-                d.CitizenFullName?.ToLower().Contains(_searchText.ToLower()) == true ||
-                d.Content?.ToLower().Contains(_searchText.ToLower()) == true
-            ).ToList();
-        }
+        // ✅ Текстовый поиск только по номеру (без проверки на пустоту, так как проверка уже в OnSearchClick)
+        filtered = filtered.Where(d => 
+            (d.Number?.ToString().Contains(_searchText) ?? false)
+        ).ToList();
         
         _currentDocuments = filtered;
         documentsContainer.ItemsSource = _currentDocuments;
@@ -258,7 +246,7 @@ public partial class YourDocumentsWindow : Window
             {
                 Console.WriteLine($"[DEBUG] Открываем документ из YourDocumentsWindow");
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc, this);
+                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc);
                 viewer.Show();
                 this.Hide();  // ← Hide вместо Close
             }

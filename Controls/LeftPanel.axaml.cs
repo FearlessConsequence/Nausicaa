@@ -1,4 +1,6 @@
+using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using CourseWork.Models;
 using CourseWork.Views;
@@ -149,5 +151,20 @@ public partial class LeftPanel : UserControl
     {
         var window = this.VisualRoot as Window;
         window?.Close();
+    }
+
+    private void CloseAllWindowsExcept(Window keepWindow)
+    {
+        if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var windows = desktop.Windows.ToList();
+            foreach (var win in windows)
+            {
+                if (win != keepWindow)
+                {
+                    win.Close();
+                }
+            }
+        }
     }
 }

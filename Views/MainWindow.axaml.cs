@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using CourseWork.Controls;
 using CourseWork.Data;
 using CourseWork.Models;
@@ -41,6 +42,37 @@ public partial class MainWindow : Window
             await LoadDraftsAsync();
         };
     }
+
+    private void btn_search_main_click(object? sender, RoutedEventArgs e)
+    {
+        string deal = txbx_deal.Text?.Trim() ?? "";
+        string series = txbx_series_number.Text?.Trim() ?? "";
+        string fio = txbx_fio.Text?.Trim() ?? "";
+        string phone = txbx_phone_number.Text?.Trim() ?? "";
+        string address = txbx_address.Text?.Trim() ?? "";
+        
+        // Если номер дела не пустой
+        if (!string.IsNullOrWhiteSpace(deal))
+        {
+            var yourDocumentsWindow = new YourDocumentsWindow(_currentUserId, deal);
+            yourDocumentsWindow.Show();
+            Close();
+            return;
+        }
+        
+        // Если какие-то другие поля не пустые
+        if (!string.IsNullOrWhiteSpace(series) || !string.IsNullOrWhiteSpace(fio) || 
+            !string.IsNullOrWhiteSpace(phone) || !string.IsNullOrWhiteSpace(address))
+        {
+            var searchCitizensWindow = new SearchCitizensWindow(_currentUserId);
+            searchCitizensWindow.Show();
+            Close();
+            return;
+        }
+        
+        // Если всё пусто
+        NotificationsControl.ShowWarning("Внимание", "Введите хотя бы один параметр для поиска");
+    }
     
     private async Task LoadRecentDocumentsAsync()
     {
@@ -49,6 +81,10 @@ public partial class MainWindow : Window
             _recentDocuments = await _db.GetAllDocumentsAsync();
             var recentDocs = _recentDocuments.Take(10).ToList();
             recentDocumentsList.ItemsSource = recentDocs;
+            
+            // ✅ Подписываемся на кнопки открытия
+            await Task.Delay(100);
+            SubscribeToRecentButtons();
             
             var txtNoRecent = this.FindControl<TextBlock>("txtNoRecent");
             if (txtNoRecent != null) txtNoRecent.IsVisible = recentDocs.Count == 0;
@@ -67,6 +103,10 @@ public partial class MainWindow : Window
             var recentDrafts = _drafts.Take(10).ToList();
             draftsList.ItemsSource = recentDrafts;
             
+            // ✅ Подписываемся на кнопки открытия
+            await Task.Delay(100);
+            SubscribeToDraftButtons();
+            
             var txtNoDrafts = this.FindControl<TextBlock>("txtNoDrafts");
             if (txtNoDrafts != null) txtNoDrafts.IsVisible = recentDrafts.Count == 0;
         }
@@ -75,55 +115,88 @@ public partial class MainWindow : Window
             Console.WriteLine($"[ERROR] LoadDrafts: {ex.Message}");
         }
     }
-    
-   private void btn_search_main_click(object? sender, RoutedEventArgs e)
+    private void SubscribeToRecentButtons()
     {
-        var txb_series_number = this.FindControl<TextBox>("txb_series_number");
-        var txb_fio_birth = this.FindControl<TextBox>("txb_fio_birth");
-        var txbx_deal = this.FindControl<TextBox>("txbx_deal");
-        var txb_phone = this.FindControl<TextBox>("txb_phone");
-        var txb_address = this.FindControl<TextBox>("txb_address");
+        var buttons = recentDocumentsList.GetVisualDescendants()
+            .OfType<Button>()
+            .Where(b => b.Name == "btnOpenRecent")
+            .ToList();
         
-        string seriesNumber = txb_series_number?.Text?.Trim() ?? "";
-        string fioBirth = txb_fio_birth?.Text?.Trim() ?? "";
-        string dealNumber = txbx_deal?.Text?.Trim() ?? "";
-        string phone = txb_phone?.Text?.Trim() ?? "";
-        string address = txb_address?.Text?.Trim() ?? "";
-        
-        Console.WriteLine($"[DEBUG] Поиск: dealNumber={dealNumber}, seriesNumber={seriesNumber}, fioBirth={fioBirth}, phone={phone}, address={address}");
-        
-        if (!string.IsNullOrWhiteSpace(dealNumber))
+        foreach (var btn in buttons)
         {
-            Console.WriteLine($"[DEBUG] Переход в YourDocumentsWindow с dealNumber={dealNumber}");
-            var yourDocumentsWindow = new YourDocumentsWindow(_currentUserId, dealNumber);
-            yourDocumentsWindow.Show();
-            this.Close();
-        }
-        else if (!string.IsNullOrWhiteSpace(seriesNumber) || 
-                !string.IsNullOrWhiteSpace(fioBirth) || 
-                !string.IsNullOrWhiteSpace(phone) || 
-                !string.IsNullOrWhiteSpace(address))
-        {
-            Console.WriteLine($"[DEBUG] Переход в SearchCitizensWindow с параметрами");
-            
-            var searchParams = new CitizenSearchParams
-            {
-                Passport = seriesNumber,
-                FullName = fioBirth,
-                Phone = phone,
-                Address = address
-            };
-            
-            var citizensWindow = new SearchCitizensWindow(_currentUserId, searchParams);
-            citizensWindow.Show();
-            this.Close();
-        }
-        else
-        {
-            Console.WriteLine($"[DEBUG] Пустой поиск");
-            NotificationsControl.ShowWarning("Внимание", "Введите хотя бы один параметр для поиска");
+            btn.Click -= OnRecentOpenClick;
+            btn.Click += OnRecentOpenClick;
         }
     }
+
+    private void SubscribeToDraftButtons()
+    {
+        var buttons = draftsList.GetVisualDescendants()
+            .OfType<Button>()
+            .Where(b => b.Name == "btnOpenDraft")
+            .ToList();
+        
+        foreach (var btn in buttons)
+        {
+            btn.Click -= OnDraftOpenClick;
+            btn.Click += OnDraftOpenClick;
+        }
+    }
+
+    private async void OnRecentOpenClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is RecentDocument doc)
+        {
+            // Получаем полный документ по ID и типу
+            string tableName = doc.DocumentType switch
+            {
+                "Заявление" => "statement",
+                "Обращение" => "appeals",
+                "Протокол объяснения" => "explanation_protocol",
+                "Направление на мед. освид." => "medical_examination_report",
+                "Административный протокол" => "administrative_protocol",
+                _ => "unknown"
+            };
+            
+            if (tableName != "unknown")
+            {
+                var fullDoc = await _db.GetFullDocumentAsync(tableName, doc.Id);
+                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc);
+                viewer.Show();
+                this.Hide();
+            }
+        }
+    }
+
+    private async void OnDraftOpenClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is Draft draft)
+        {
+            Window? targetWindow = draft.DocumentType switch
+            {
+                "appeals" => new NewAppel(_currentUserId),
+                "statement" => new NewStatement(_currentUserId),
+                "explanation_protocol" => new NewExplanationProtocol(_currentUserId),
+                "medical_examination_report" => new NewExaminationReport(_currentUserId),
+                "administrative_protocol" => new NewAdministrativeProtocol(_currentUserId),
+                _ => null
+            };
+            
+            if (targetWindow != null)
+            {
+                // Загружаем черновик (если есть метод)
+                if (targetWindow is NewAppel appel) await appel.LoadDraftAsync(draft);
+                else if (targetWindow is NewStatement statement) await statement.LoadDraftAsync(draft);
+                else if (targetWindow is NewExplanationProtocol exp) await exp.LoadDraftAsync(draft);
+                else if (targetWindow is NewExaminationReport exam) await exam.LoadDraftAsync(draft);
+                else if (targetWindow is NewAdministrativeProtocol admin) await admin.LoadDraftAsync(draft);
+                
+                targetWindow.Show();
+                this.Close();
+            }
+        }
+    }
+
     private void btn_newAppel_click(object? sender, RoutedEventArgs e)
     {
         var newAppel = new NewAppel(_currentUserId);
@@ -157,5 +230,32 @@ public partial class MainWindow : Window
         var newExaminationReport = new NewExaminationReport(_currentUserId);
         newExaminationReport.Show();
         this.Close();
+    }
+
+    private async Task ShowMessage(string title, string message)
+    {
+        var dialog = new Window
+        {
+            Title = title,
+            Width = 350,
+            Height = 150,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Content = new StackPanel
+            {
+                Margin = new Avalonia.Thickness(20),
+                Spacing = 15,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                Children =
+                {
+                    new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap },
+                    new Button { Content = "OK", Width = 80, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center }
+                }
+            }
+        };
+        
+        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
+        if (okButton != null) okButton.Click += (s, args) => dialog.Close();
+        
+        await dialog.ShowDialog(this);
     }
 }

@@ -9,6 +9,7 @@ using Avalonia.VisualTree;
 using CourseWork.Data;
 using CourseWork.Controls;
 using CourseWork.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CourseWork.Views;
 
@@ -32,6 +33,13 @@ public partial class FavouritesWindow : Window
         leftPanel?.SetUserId(_currentUserId);
         
         this.Opened += async (s, e) => await LoadFavoritesAsync();
+        btn_goToRecents.Click += btn_goToRecents_click;
+    }
+    private void btn_goToRecents_click(object? sender, RoutedEventArgs e)
+    {
+        var recentsWindow = new RecentsWindow(_currentUserId);
+        recentsWindow.Show();
+        this.Close(); 
     }
 
     private async Task LoadFavoritesAsync()
@@ -136,8 +144,10 @@ public partial class FavouritesWindow : Window
             try
             {
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
-                Close();
+                var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc);
+                viewerWindow.Show();
+                
+                Hide();
             }
             catch (Exception ex)
             {

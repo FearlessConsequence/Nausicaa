@@ -9,7 +9,7 @@
         Title="Курсовой проект"
         WindowState="Maximized">
 
-    <Grid RowDefinitions="850, *" ColumnDefinitions="200, *">
+    <Grid RowDefinitions="*, Auto" ColumnDefinitions="200, *">
         
         <controls:LeftPanel x:Name="LeftPanelControl" 
                     Grid.Column="0" 
@@ -60,11 +60,11 @@
                         <Grid ColumnDefinitions="*,*,*,*,*,Auto" ColumnSpacing="10">
                             <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="2">
                                 <TextBlock Text="Серия/Номер:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="00 00 123456" FontSize="12"/>
+                                <TextBox Height="28" Watermark="00 00 123456" FontSize="12" x:Name="txbx_series_number"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="2">
                                 <TextBlock Text="ФИО / Дата рожд.:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="Иванов Иван / 01.01.1985" FontSize="12"/>
+                                <TextBox Height="28" Watermark="Иванов Иван / 01.01.1985" FontSize="12" x:Name="txbx_fio"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Orientation="Vertical" Spacing="2">
                                 <TextBlock Text="Дело №:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
@@ -72,13 +72,15 @@
                             </StackPanel>
                             <StackPanel Grid.Column="3" Orientation="Vertical" Spacing="2">
                                 <TextBlock Text="Телефон:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="+7 999 123-45-67" FontSize="12"/>
+                                <TextBox Height="28" Watermark="+7 999 123-45-67" FontSize="12" x:Name="txbx_phone_number"/>
                             </StackPanel>
                             <StackPanel Grid.Column="4" Orientation="Vertical" Spacing="2">
                                 <TextBlock Text="Место проживания:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="Москва, Пушкина 32" FontSize="12"/>
+                                <TextBox Height="28" Watermark="Москва, Пушкина 32" FontSize="12" x:Name="txbx_address"/>
                             </StackPanel>
-                            <Button Grid.Column="5" Content="Поиск" Width="80" Height="32" Background="#0F4B5E" Foreground="White" CornerRadius="4" FontSize="14" VerticalAlignment="Bottom" VerticalContentAlignment="Center" x:Name="btn_searchMain" HorizontalContentAlignment="Center"/>
+                            <Button Grid.Column="5" Content="Поиск" Width="80" Height="32" Background="#0F4B5E" Foreground="White" 
+                            CornerRadius="4" FontSize="14" VerticalAlignment="Bottom" VerticalContentAlignment="Center" x:Name="btn_searchMain" 
+                            HorizontalContentAlignment="Center"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -90,6 +92,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- Недавние документы -->
                     <Border Grid.Column="0" Background="White" 
                     BorderBrush="LightGray" BorderThickness="1" 
                     BoxShadow="0 0 15 3 #80808080" CornerRadius="8" Padding="15">
@@ -102,11 +105,23 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="#F8F9FA" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
-                                                    <StackPanel Orientation="Horizontal" Spacing="10">
-                                                        <TextBlock Text="{Binding DocumentTypeIcon}" FontSize="16"/>
-                                                        <TextBlock Text="{Binding DocumentName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
-                                                        <TextBlock Text="{Binding LastOpenedDateFormatted}" FontSize="11" Foreground="#6C757D"/>
-                                                    </StackPanel>
+                                                    <Grid ColumnDefinitions="*, Auto">
+                                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                                            <TextBlock Text="{Binding DocumentTypeIcon}" FontSize="16"/>
+                                                            <TextBlock Text="{Binding DocumentName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
+                                                            <TextBlock Text="{Binding LastOpenedDateFormatted}" FontSize="11" Foreground="#6C757D"/>
+                                                        </StackPanel>
+                                                        <Button Grid.Column="1" 
+                                                                Content="→"
+                                                                Width="30" Height="30"
+                                                                Background="#0F4B5E"
+                                                                Foreground="White"
+                                                                CornerRadius="4"
+                                                                FontSize="14"
+                                                                Tag="{Binding}"
+                                                                Cursor="Hand"
+                                                                x:Name="btnOpenRecent"/>
+                                                    </Grid>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -124,6 +139,7 @@
                         </Grid>
                     </Border>
 
+                    <!-- Черновики -->
                     <Border Grid.Column="2" Background="White" 
                     BorderBrush="LightGray" BorderThickness="1" 
                     BoxShadow="0 0 15 3 #80808080" CornerRadius="8" Padding="15">
@@ -137,11 +153,23 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="#F8F9FA" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
-                                                    <StackPanel Orientation="Horizontal" Spacing="10">
-                                                        <TextBlock Text="📄" FontSize="16"/>
-                                                        <TextBlock Text="{Binding TypeDisplayName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
-                                                        <TextBlock Text="{Binding DateFormatted}" FontSize="11" Foreground="#6C757D"/>
-                                                    </StackPanel>
+                                                    <Grid ColumnDefinitions="*, Auto">
+                                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                                            <TextBlock Text="📄" FontSize="16"/>
+                                                            <TextBlock Text="{Binding TypeDisplayName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
+                                                            <TextBlock Text="{Binding DateFormatted}" FontSize="11" Foreground="#6C757D"/>
+                                                        </StackPanel>
+                                                        <Button Grid.Column="1" 
+                                                                Content="→"
+                                                                Width="30" Height="30"
+                                                                Background="#0F4B5E"
+                                                                Foreground="White"
+                                                                CornerRadius="4"
+                                                                FontSize="14"
+                                                                Tag="{Binding}"
+                                                                Cursor="Hand"
+                                                                x:Name="btnOpenDraft"/>
+                                                    </Grid>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>

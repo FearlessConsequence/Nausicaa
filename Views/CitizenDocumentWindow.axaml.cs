@@ -134,15 +134,10 @@ public partial class CitizenDocumentsWindow : Window
     {
         _searchText = txt_search.Text?.Trim() ?? "";
         
-        // Проверка: есть ли хоть один критерий
-        bool hasSearchText = !string.IsNullOrWhiteSpace(_searchText);
-        bool hasDateFrom = dp_date_from.SelectedDate.HasValue;
-        bool hasDateTo = dp_date_to.SelectedDate.HasValue;
-        bool hasFilter = _selectedFilterType != "Все";
-        
-        if (!hasSearchText && !hasDateFrom && !hasDateTo && !hasFilter)
+        // ✅ Проверка: текст должен быть обязательно
+        if (string.IsNullOrWhiteSpace(_searchText))
         {
-            NotificationsControl.ShowWarning("Пустой поиск", "Введите текст, выберите тип документа или укажите диапазон дат");
+            NotificationsControl.ShowWarning("Введите номер документа", "Для поиска необходимо ввести номер документа в текстовое поле");
             return;
         }
         
@@ -229,17 +224,22 @@ public partial class CitizenDocumentsWindow : Window
     // Открытие документа
     private async void OnOpenClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Tag is MyDocument doc)
+        if (sender is Button button && button   .Tag is MyDocument doc)
         {
             try
             {
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
-                this.Close();
+                
+                // ✅ ShowDialog блокирует родительское окно
+                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc);
+                await viewer.ShowDialog(this);
+                
+                // ✅ После закрытия диалога управление возвращается сюда,
+                // все поля (_citizenId, _citizenFullName) сохраняются
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Open document: {ex.Message}");
+                NotificationsControl.ShowError("Ошибка", ex.Message);
             }
         }
     }

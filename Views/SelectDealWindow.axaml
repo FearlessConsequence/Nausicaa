@@ -79,6 +79,12 @@
 
                             <Button Content="Найти" Height="43" Width="70" HorizontalContentAlignment="Center" 
                             VerticalContentAlignment="Center" Background="#0F4B5E" Foreground="White" FontSize="13" CornerRadius="8" Margin="5,0,0,0" x:Name="btn_search"/>
+                             <TextBlock x:Name="txt_error" 
+                                Text="" 
+                                FontSize="13" 
+                                Foreground="#DC3545"
+                                IsVisible="False"
+                                Margin="10,10,0,0"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>

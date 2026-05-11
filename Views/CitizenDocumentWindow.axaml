@@ -146,7 +146,7 @@
                     
                     <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="12">
                         <Button Content="← Назад" 
-                                Grid.Column="1"
+                                Grid.Column="0"
                                 Width="100" 
                                 Height="40"
                                 Background="#6C757D" 
@@ -158,7 +158,7 @@
                                 x:Name="btnBack"/>
                         
                         <Button Content="Найти" 
-                                Grid.Column="2"
+                                Grid.Column="1"
                                 Height="40" 
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center"
@@ -170,7 +170,7 @@
                                 x:Name="btn_search"/>
                                 
                         <TextBox x:Name="txt_search" 
-                                Grid.Column="0"
+                                Grid.Column="2"
                                 Height="40" 
                                 Watermark="Поиск по номеру, содержанию..."
                                 FontSize="13"

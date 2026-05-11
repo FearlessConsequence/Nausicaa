@@ -5,6 +5,7 @@ using Npgsql;
 using CourseWork.Models;
 using System.Reflection.Metadata;
 using System.Linq;
+using CourseWork.Helpers;
 
 namespace CourseWork.Data
 {
@@ -39,28 +40,34 @@ namespace CourseWork.Data
                 await using var conn = new NpgsqlConnection(_connectionString);
                 await conn.OpenAsync();
 
+                // Сначала получаем хэш пароля из БД
                 var sql = @"
-                    SELECT id, username, last_name, first_name, patronymic, COALESCE(role, 1) as role
+                    SELECT id, username, last_name, first_name, patronymic, COALESCE(role, 1) as role, password
                     FROM users
-                    WHERE username = @username AND password = @password";
+                    WHERE username = @username";
 
                 await using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@password", password);
 
                 await using var reader = await cmd.ExecuteReaderAsync();
                 
                 if (await reader.ReadAsync())
                 {
-                    return new UserWithRole
+                    var storedHash = reader.GetString(6);
+                    
+                    // Проверяем пароль
+                    if (PasswordHelper.VerifyPassword(password, storedHash))
                     {
-                        Id = reader.GetInt32(0),
-                        Username = reader.GetString(1),
-                        LastName = reader.GetString(2),
-                        FirstName = reader.GetString(3),
-                        Patronymic = reader.IsDBNull(4) ? null : reader.GetString(4),
-                        Role = (UserRole)reader.GetInt32(5)
-                    };
+                        return new UserWithRole
+                        {
+                            Id = reader.GetInt32(0),
+                            Username = reader.GetString(1),
+                            LastName = reader.GetString(2),
+                            FirstName = reader.GetString(3),
+                            Patronymic = reader.IsDBNull(4) ? null : reader.GetString(4),
+                            Role = (UserRole)reader.GetInt32(5)
+                        };
+                    }
                 }
                 return null;
             }
@@ -207,9 +214,8 @@ namespace CourseWork.Data
         
         
         
-       public async Task<List<Citizen>> GetCitizensAsync()
+        public async Task<Citizen?> GetCitizenByIdAsync(int citizenId)
         {
-            var citizens = new List<Citizen>();
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -221,19 +227,14 @@ namespace CourseWork.Data
                     c.patronymic,
                     c.birthday,
                     c.address_registration,
+                    cp.phone_number,
                     c.passport_series_and_number,
-                    c.criminal_record,
-                    c.count_record,
-                    c.post,
-                    c.working_place,
-                    c.education,
-                    c.family_status,
-                    c.citizenship,
-                    cp.phone_number as phone,
                     s.name as working_place_name,
                     e.education as education_name,
                     fs.family_status as family_status_name,
                     cit.citizenship as citizenship_name,
+                    c.criminal_record,
+                    c.count_record,
                     p.post as post_name
                 FROM citizens c
                 LEFT JOIN citizen_phones cp ON cp.citizen = c.id_citizens AND cp.is_primary = true
@@ -242,14 +243,15 @@ namespace CourseWork.Data
                 LEFT JOIN family_status fs ON c.family_status = fs.id_family_status
                 LEFT JOIN citizenship cit ON c.citizenship = cit.id_citizenship
                 LEFT JOIN post p ON c.post = p.id_post
-                ORDER BY c.last_name, c.first_name";
+                WHERE c.id_citizens = @citizenId";
 
             await using var cmd = new NpgsqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("citizenId", citizenId);
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            while (await reader.ReadAsync())
+            if (await reader.ReadAsync())
             {
-                citizens.Add(new Citizen
+                return new Citizen
                 {
                     Id = reader.GetInt32(0),
                     LastName = reader.GetString(1),
@@ -257,26 +259,46 @@ namespace CourseWork.Data
                     Patronymic = reader.IsDBNull(3) ? null : reader.GetString(3),
                     Birthday = reader.GetDateTime(4),
                     Address = reader.IsDBNull(5) ? null : reader.GetString(5),
-                    Passport = reader.IsDBNull(6) ? null : reader.GetString(6),
-                    CriminalRecord = reader.GetBoolean(7),
-                    CountRecord = reader.IsDBNull(8) ? null : reader.GetInt32(8),
-                    Post = reader.IsDBNull(9) ? null : reader.GetInt32(9),
-                    WorkingPlace = reader.IsDBNull(10) ? null : reader.GetInt32(10),
-                    Education = reader.IsDBNull(11) ? null : reader.GetInt32(11),
-                    FamilyStatus = reader.IsDBNull(12) ? null : reader.GetInt32(12),
-                    Citizenship = reader.IsDBNull(13) ? null : reader.GetInt32(13),
-                    Phone = reader.IsDBNull(14) ? null : reader.GetString(14),
-                    WorkingPlaceName = reader.IsDBNull(15) ? null : reader.GetString(15),
-                    EducationName = reader.IsDBNull(16) ? null : reader.GetString(16),
-                    FamilyStatusName = reader.IsDBNull(17) ? null : reader.GetString(17),
-                    CitizenshipName = reader.IsDBNull(18) ? null : reader.GetString(18),
-                    PostName = reader.IsDBNull(19) ? null : reader.GetString(19)
+                    Phone = reader.IsDBNull(6) ? null : reader.GetString(6),
+                    Passport = reader.IsDBNull(7) ? null : reader.GetString(7),
+                    WorkingPlaceName = reader.IsDBNull(8) ? null : reader.GetString(8),
+                    EducationName = reader.IsDBNull(9) ? null : reader.GetString(9),
+                    FamilyStatusName = reader.IsDBNull(10) ? null : reader.GetString(10),
+                    CitizenshipName = reader.IsDBNull(11) ? null : reader.GetString(11),
+
+                    WorkingPlace = null,
+                    Education = null,
+                    FamilyStatus = null,
+                    Citizenship = null,
+                };
+            }
+            return null;
+        }
+
+        public async Task<List<CitizenPhone>> GetCitizenPhonesAsync(int citizenId)
+        {
+            var phones = new List<CitizenPhone>();
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var sql = "SELECT id, phone_number, citizen, is_primary FROM citizen_phones WHERE citizen = @citizenId ORDER BY is_primary DESC";
+            
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("citizenId", citizenId);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                phones.Add(new CitizenPhone
+                {
+                    Id = reader.GetInt32(0),
+                    PhoneNumber = reader.GetString(1),
+                    CitizenId = reader.GetInt32(2),
+                    IsPrimary = reader.GetBoolean(3)
                 });
             }
-            
-            return citizens;
+            return phones;
         }
-        
         
         public async Task<List<RecentDocument>> SearchDocumentsByUserAsync(string searchText, int userId)
         {
@@ -982,64 +1004,7 @@ namespace CourseWork.Data
         }
 
 
-        public async Task<Citizen?> GetCitizenByIdAsync(int citizenId)
-        {
-            await using var conn = new NpgsqlConnection(_connectionString);
-            await conn.OpenAsync();
-
-            var sql = @"
-                SELECT 
-                    c.id_citizens,
-                    c.last_name,
-                    c.first_name,
-                    c.patronymic,
-                    c.birthday,
-                    c.address_registration,
-                    cp.phone_number,
-                    c.passport_series_and_number,
-                    s.name as working_place,
-                    e.education,
-                    fs.family_status,
-                    cit.citizenship,
-                    c.post,                  
-                    c.criminal_record         
-                FROM citizens c
-                LEFT JOIN citizen_phones cp ON cp.citizen = c.id_citizens AND cp.is_primary = true
-                LEFT JOIN structures s ON c.working_place = s.id_structures
-                LEFT JOIN education e ON c.education = e.id_education
-                LEFT JOIN family_status fs ON c.family_status = fs.id_family_status
-                LEFT JOIN citizenship cit ON c.citizenship = cit.id_citizenship
-                WHERE c.id_citizens = @citizenId";
-
-            await using var cmd = new NpgsqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("citizenId", citizenId);
-            await using var reader = await cmd.ExecuteReaderAsync();
-
-            if (await reader.ReadAsync())
-            {
-                return new Citizen
-                {
-                    Id = reader.GetInt32(0),
-                    LastName = reader.GetString(1),
-                    FirstName = reader.GetString(2),
-                    Patronymic = reader.IsDBNull(3) ? null : reader.GetString(3),
-                    Birthday = reader.GetDateTime(4),
-                    Address = reader.IsDBNull(5) ? null : reader.GetString(5),
-                    Phone = reader.IsDBNull(6) ? null : reader.GetString(6),
-                    Passport = reader.IsDBNull(7) ? null : reader.GetString(7),
-                    WorkingPlaceName = reader.IsDBNull(8) ? null : reader.GetString(8),
-                    EducationName = reader.IsDBNull(9) ? null : reader.GetString(9),
-                    FamilyStatusName = reader.IsDBNull(10) ? null : reader.GetString(10),
-                    CitizenshipName = reader.IsDBNull(11) ? null : reader.GetString(11),
-
-                    WorkingPlace = null,
-                    Education = null,
-                    FamilyStatus = null,
-                    Citizenship = null,
-                };
-            }
-            return null;
-        }
+       
         private string ExtractPreview(string json)
         {
             try
@@ -1640,22 +1605,20 @@ namespace CourseWork.Data
             string whereClause = conditions.Count > 0 ? $"WHERE {string.Join(" AND ", conditions)}" : "";
 
             var sql = $@"
-                SELECT 
+                SELECT
                     c.id_citizens,
                     c.last_name,
                     c.first_name,
                     c.patronymic,
                     c.birthday,
                     c.address_registration,
-                    c.passport_series_and_number,
-                    c.criminal_record,
-                    c.count_record,
-                    cp.phone_number as phone,
-                    s.name as working_place_name,
-                    e.education as education_name,
-                    fs.family_status as family_status_name,
-                    cit.citizenship as citizenship_name,
-                    p.post as post_name
+                    c.passport_series_and_number,  -- ✅ Добавьте паспорт
+                    (SELECT cp.phone_number FROM citizen_phones cp WHERE cp.citizen = c.id_citizens AND cp.is_primary = TRUE LIMIT 1) AS phone,
+                    s.name as working_place,       -- ✅ Место работы (название)
+                    e.education,                   -- ✅ Образование (название)
+                    fs.family_status,              -- ✅ Семейное положение (название)
+                    cit.citizenship,               -- ✅ Гражданство (название)
+                    p.post as post_name            -- ✅ Должность (название)
                 FROM citizens c
                 LEFT JOIN citizen_phones cp ON cp.citizen = c.id_citizens AND cp.is_primary = true
                 LEFT JOIN structures s ON c.working_place = s.id_structures
@@ -1676,6 +1639,7 @@ namespace CourseWork.Data
             await using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
+                // Внутри SearchCitizensAsync, в блоке citizens.Add(...):
                 citizens.Add(new Citizen
                 {
                     Id = reader.GetInt32(0),
@@ -1685,14 +1649,12 @@ namespace CourseWork.Data
                     Birthday = reader.GetDateTime(4),
                     Address = reader.IsDBNull(5) ? null : reader.GetString(5),
                     Passport = reader.IsDBNull(6) ? null : reader.GetString(6),
-                    CriminalRecord = reader.GetBoolean(7),
-                    CountRecord = reader.IsDBNull(8) ? null : reader.GetInt32(8),
-                    Phone = reader.IsDBNull(9) ? null : reader.GetString(9),
-                    WorkingPlaceName = reader.IsDBNull(10) ? null : reader.GetString(10),
-                    EducationName = reader.IsDBNull(11) ? null : reader.GetString(11),
-                    FamilyStatusName = reader.IsDBNull(12) ? null : reader.GetString(12),
-                    CitizenshipName = reader.IsDBNull(13) ? null : reader.GetString(13),
-                    PostName = reader.IsDBNull(14) ? null : reader.GetString(14)
+                    Phone = reader.IsDBNull(7) ? null : reader.GetString(7),
+                    WorkingPlaceName = reader.IsDBNull(8) ? null : reader.GetString(8),
+                    EducationName = reader.IsDBNull(9) ? null : reader.GetString(9),
+                    FamilyStatusName = reader.IsDBNull(10) ? null : reader.GetString(10),
+                    CitizenshipName = reader.IsDBNull(11) ? null : reader.GetString(11),
+                    PostName = reader.IsDBNull(12) ? null : reader.GetString(12),
                 });
             }
 
@@ -2057,7 +2019,7 @@ namespace CourseWork.Data
                         COALESCE(d.deal_number::text, 'Б/Н') AS deal_number,
                         ap.description AS description,
                         COALESCE(ap.other_information, '') AS other_information,
-                        COALESCE(ap.signature_for_knowing_everithing, false) AS signature,
+                        false AS signature,
                         COALESCE(cw1.last_name || ' ' || cw1.first_name || ' ' || COALESCE(cw1.patronymic, ''), 'Не указан') AS first_witness,
                         COALESCE(cw2.last_name || ' ' || cw2.first_name || ' ' || COALESCE(cw2.patronymic, ''), 'Не указан') AS second_witness,
                         COALESCE(co.last_name || ' ' || co.first_name || ' ' || COALESCE(co.patronymic, ''), 'Не указан') AS officer_name,
@@ -2085,7 +2047,7 @@ namespace CourseWork.Data
                         COALESCE(d.deal_number::text, 'Б/Н') AS deal_number,
                         ep.content AS description,
                         '' AS other_information,
-                        COALESCE(ep.need_forensic_medical_examination, false) AS signature,
+                        false AS signature,
                         'Не указан' AS first_witness,
                         'Не указан' AS second_witness,
                         'Не указан' AS officer_name,
@@ -2123,7 +2085,6 @@ namespace CourseWork.Data
                     LEFT JOIN type_report tr ON mer.report = tr.id_type_report
                     WHERE mer.id_medical_examination_report = @id",
                     
-        
                 "appeals" => @"
                     SELECT 
                         'Обращение' AS document_type,
@@ -2148,7 +2109,6 @@ namespace CourseWork.Data
                     LEFT JOIN citizens co ON cap.citizen = co.id_citizens
                     WHERE a.id_appeals = @id",
                     
-        
                 "statement" => @"
                     SELECT 
                         'Заявление' AS document_type,
@@ -2184,22 +2144,22 @@ namespace CourseWork.Data
             {
                 return new DocumentFull
                 {
-                    DocumentType = reader.IsDBNull(0) ? string.Empty : reader.GetString(0),
-                    Number = reader.IsDBNull(1) ? "Б/Н" : reader.GetString(1),
-                    CreatedAt = reader.IsDBNull(2) ? DateTime.Now : reader.GetDateTime(2),
-                    CitizenFullName = reader.IsDBNull(3) ? "Неизвестно" : reader.GetString(3),
-                    Content = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
-                    DealNumber = reader.IsDBNull(5) ? string.Empty : reader.GetString(5),
-                    Description = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
-                    OtherInformation = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
-                    SignatureForKnowing = reader.IsDBNull(8) ? false : reader.GetBoolean(8),
-                    FirstWitnessName = reader.IsDBNull(9) ? "Не указан" : reader.GetString(9),
-                    SecondWitnessName = reader.IsDBNull(10) ? "Не указан" : reader.GetString(10),
-                    OfficerName = reader.IsDBNull(11) ? "Не указан" : reader.GetString(11),
-                    ArticleName = reader.IsDBNull(12) ? "Не указана" : reader.GetString(12),
-                    PatientName = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
-                    ReportType = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
-                    SignsOfIntoxication = reader.IsDBNull(15) ? string.Empty : reader.GetString(15)
+                    DocumentType = reader.GetString(0),
+                    Number = reader.GetString(1),
+                    CreatedAt = reader.GetDateTime(2),
+                    CitizenFullName = reader.GetString(3),
+                    Content = reader.GetString(4),
+                    DealNumber = reader.GetString(5),
+                    Description = reader.GetString(6),
+                    OtherInformation = reader.GetString(7),
+                    SignatureForKnowing = reader.GetBoolean(8),
+                    FirstWitnessName = reader.GetString(9),
+                    SecondWitnessName = reader.GetString(10),
+                    OfficerName = reader.GetString(11),
+                    ArticleName = reader.GetString(12),
+                    PatientName = reader.GetString(13),
+                    ReportType = reader.GetString(14),
+                    SignsOfIntoxication = reader.GetString(15)
                 };
             }
 
