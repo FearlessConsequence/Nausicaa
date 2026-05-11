@@ -17,7 +17,6 @@ public partial class SearchCitizensWindow : Window
     private readonly int _currentUserId;
      public Citizen? SelectedCitizen { get; private set; }
     public SearchCitizensWindow() : this(0) { }
-    
     public SearchCitizensWindow(int currentUserId)
     {
         InitializeComponent();

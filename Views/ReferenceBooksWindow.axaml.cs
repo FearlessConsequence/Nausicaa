@@ -13,6 +13,7 @@ public partial class ReferenceBooksWindow : Window
     private readonly DatabaseHelper _db;
     private readonly int _currentUserId = 0;
 
+
     public ReferenceBooksWindow()
     {
         InitializeComponent();

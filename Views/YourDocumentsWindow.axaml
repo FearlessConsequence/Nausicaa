@@ -4,6 +4,7 @@
         Title="Мои документы"
         WindowState="Maximized"
         xmlns:controls="using:CourseWork.Controls"
+        xmlns:models="using:CourseWork.Models"
         Background="#F5F7FA">
 
     <Grid RowDefinitions="*" ColumnDefinitions="200, *">
@@ -159,9 +160,9 @@
                 
                 <ScrollViewer Grid.Row="4" 
                               VerticalScrollBarVisibility="Auto">
-                    <ItemsControl x:Name="documentsContainer">
+                    <ItemsControl x:Name="documentsContainer" x:DataType="models:MyDocument">
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate DataType="models:MyDocument">
                                 <Border Background="White"
                                         CornerRadius="12"
                                         BorderBrush="#E9ECEF"

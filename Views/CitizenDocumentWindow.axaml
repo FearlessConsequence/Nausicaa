@@ -4,6 +4,7 @@
         Title="Документы гражданина"
         WindowState="Maximized"
         xmlns:controls="using:CourseWork.Controls"
+        xmlns:models="using:CourseWork.Models"
         Background="#F5F7FA">
 
     <Grid RowDefinitions="*, Auto" ColumnDefinitions="200, *">
@@ -136,6 +137,7 @@
                 </Border>
                 
                 <!-- Поиск: поле + кнопки -->
+                <!-- Поиск: поле + кнопки -->
                 <Border Grid.Row="3"
                         Background="White"
                         CornerRadius="12"
@@ -144,7 +146,8 @@
                         Padding="16"
                         Margin="0,0,0,24">
                     
-                    <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="12">
+                    <Grid ColumnDefinitions="Auto, Auto, *" ColumnSpacing="12">
+                        
                         <Button Content="← Назад" 
                                 Grid.Column="0"
                                 Width="100" 
@@ -181,9 +184,9 @@
                 </Border>
                 
                 <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
-                    <ItemsControl x:Name="documentsContainer">
+                    <ItemsControl x:Name="documentsContainer" x:DataType="models:MyDocument">
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate DataType="models:MyDocument">
                                 <Border Background="White"
                                         CornerRadius="12"
                                         BorderBrush="#E9ECEF"

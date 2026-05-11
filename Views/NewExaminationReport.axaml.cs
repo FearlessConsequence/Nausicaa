@@ -1,3 +1,4 @@
+#pragma warning disable CS0649
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,11 +12,14 @@ namespace CourseWork.Views;
 
 public partial class NewExaminationReport : Window
 {
-    private readonly DatabaseHelper _db;
+    private readonly DatabaseHelper? _db;
     private int? _currentDraftId;
     private readonly int _currentUserId;
     private readonly Window? _previousWindow;
-    
+    public NewExaminationReport()
+    {
+        InitializeComponent();
+    }    
     public NewExaminationReport(int currentUserId)
     {
         InitializeComponent();
@@ -150,6 +154,7 @@ public partial class NewExaminationReport : Window
             bool citizenSig = chk_citizen_signature.IsChecked ?? false;
             bool officerSig = chk_officer_signature.IsChecked ?? false;
 
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             int newId = await _db.CreateMedicalExaminationReportAsync(
                 patientId, dealId, reportType, content, signs, 
                 number, selectedDateTime, citizenSig, officerSig);
@@ -188,11 +193,13 @@ public partial class NewExaminationReport : Window
             
             if (_currentDraftId.HasValue)
             {
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 await _db.UpdateDraftAsync(_currentDraftId.Value, formDataJson);
                 await ShowMessage("Успех", "Черновик обновлён!");
             }
             else
             {
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 int newDraftId = await _db.SaveDraftAsync(_currentUserId, "medical_examination_report", formDataJson);
                 _currentDraftId = newDraftId;
                 await ShowMessage("Успех", "Черновик сохранён!");
@@ -250,6 +257,7 @@ public partial class NewExaminationReport : Window
             {
                 Task.Run(async () =>
                 {
+                    if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                     var citizen = await _db.GetCitizenByIdAsync(pid);
                     Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                     {
@@ -321,6 +329,7 @@ public partial class NewExaminationReport : Window
 
             if (draft.PatientId.HasValue)
             {
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 var citizen = await _db.GetCitizenByIdAsync(draft.PatientId.Value);
                 if (citizen != null)
                 {

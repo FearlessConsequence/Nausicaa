@@ -29,6 +29,9 @@
           }
         },
         "warningProperties": {
+          "noWarn": [
+            "NU1903"
+          ],
           "warnAsError": [
             "NU1605"
           ]
@@ -91,6 +94,10 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[7.0.18, )"
+            },
+            "Tmds.DBus.Protocol": {
+              "target": "Package",
+              "version": "[0.22.0, )"
             }
           },
           "imports": [

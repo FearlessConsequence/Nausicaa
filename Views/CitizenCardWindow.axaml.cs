@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CourseWork.Models;
-using Avalonia;
-using System.Linq;
+using CourseWork.Controls;
 
 namespace CourseWork.Views;
 
@@ -55,6 +54,7 @@ public partial class CitizenCardWindow : Window
         txtConvictions.Text = citizen.CriminalRecord 
             ? $"Есть судимость ({(citizen.CountRecord.HasValue ? citizen.CountRecord.Value.ToString() : "кол-во не указано")})" 
             : "Нет судимостей";
+        txtPosition.Text = citizen.PostName ?? "Не указана";
     }
         
     private async void BtnViewDocuments_Click(object? sender, RoutedEventArgs e)

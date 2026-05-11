@@ -975,13 +975,13 @@
           }
         }
       },
-      "Tmds.DBus.Protocol/0.21.2": {
+      "Tmds.DBus.Protocol/0.22.0": {
         "type": "package",
         "compile": {
-          "lib/net8.0/Tmds.DBus.Protocol.dll": {}
+          "lib/net9.0/Tmds.DBus.Protocol.dll": {}
         },
         "runtime": {
-          "lib/net8.0/Tmds.DBus.Protocol.dll": {}
+          "lib/net9.0/Tmds.DBus.Protocol.dll": {}
         }
       }
     }
@@ -2390,18 +2390,19 @@
         "skiasharp.nativeassets.win32.nuspec"
       ]
     },
-    "Tmds.DBus.Protocol/0.21.2": {
-      "sha512": "ScSMrUrrw8px4kK1Glh0fZv/HQUlg1078bNXNPfRPKQ3WbRzV9HpsydYEOgSoMK5LWICMf2bMwIFH0pGjxjcMA==",
+    "Tmds.DBus.Protocol/0.22.0": {
+      "sha512": "hUg+KCn3eDRaf7YKBCT+4aG63ygmUBlzZ0c5w09inu8SL2oRn870bE2F/bUd4t3cgSKtQcK2ahbQKHmHf9o2kQ==",
       "type": "package",
-      "path": "tmds.dbus.protocol/0.21.2",
+      "path": "tmds.dbus.protocol/0.22.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/net6.0/Tmds.DBus.Protocol.dll",
         "lib/net8.0/Tmds.DBus.Protocol.dll",
+        "lib/net9.0/Tmds.DBus.Protocol.dll",
         "lib/netstandard2.0/Tmds.DBus.Protocol.dll",
         "lib/netstandard2.1/Tmds.DBus.Protocol.dll",
-        "tmds.dbus.protocol.0.21.2.nupkg.sha512",
+        "tmds.dbus.protocol.0.22.0.nupkg.sha512",
         "tmds.dbus.protocol.nuspec"
       ]
     }
@@ -2419,7 +2420,8 @@
       "Microsoft.EntityFrameworkCore.Relational >= 7.0.20",
       "Microsoft.Extensions.Configuration.Json >= 10.0.5",
       "Microsoft.Extensions.DependencyInjection >= 10.0.5",
-      "Npgsql.EntityFrameworkCore.PostgreSQL >= 7.0.18"
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 7.0.18",
+      "Tmds.DBus.Protocol >= 0.22.0"
     ]
   },
   "packageFolders": {
@@ -2450,6 +2452,9 @@
         }
       },
       "warningProperties": {
+        "noWarn": [
+          "NU1903"
+        ],
         "warnAsError": [
           "NU1605"
         ]
@@ -2512,6 +2517,10 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
             "version": "[7.0.18, )"
+          },
+          "Tmds.DBus.Protocol": {
+            "target": "Package",
+            "version": "[0.22.0, )"
           }
         },
         "imports": [
@@ -2807,17 +2816,5 @@
         }
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Tmds.DBus.Protocol' 0.21.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
-      "libraryId": "Tmds.DBus.Protocol",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  }
 }

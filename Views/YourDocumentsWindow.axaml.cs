@@ -15,7 +15,7 @@ namespace CourseWork.Views;
 public partial class YourDocumentsWindow : Window
 {
     private string _searchDealNumber = "";
-    private readonly DatabaseHelper _db;
+    private readonly DatabaseHelper? _db;
     private readonly int _currentUserId;
     private List<MyDocument> _allDocuments = new();
     private List<MyDocument> _currentDocuments = new();
@@ -23,7 +23,10 @@ public partial class YourDocumentsWindow : Window
     private string _selectedFilterType = "Все";
     private string _searchText = "";
 
-    public YourDocumentsWindow(int currentUserId) : this(currentUserId, null) { }
+    public YourDocumentsWindow()
+    {
+        InitializeComponent();
+    }
     
    public YourDocumentsWindow(int currentUserId, string? dealNumber = null)
     {
@@ -117,6 +120,7 @@ public partial class YourDocumentsWindow : Window
     {
         try
         {
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             _allDocuments = await _db.GetUserDocumentsAsync(_currentUserId);
             emptyStateBorder.IsVisible = false;
             documentsContainer.ItemsSource = null;
@@ -214,6 +218,7 @@ public partial class YourDocumentsWindow : Window
         {
             try
             {
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 await _db.ToggleFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
                 bool isFavorite = await _db.IsFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
                 
@@ -244,6 +249,7 @@ public partial class YourDocumentsWindow : Window
         {
             try
             {
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 Console.WriteLine($"[DEBUG] Открываем документ из YourDocumentsWindow");
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
                 var viewer = new DocumentViewerWindow(_currentUserId, fullDoc);

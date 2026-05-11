@@ -11,6 +11,10 @@ public partial class DocumentViewerWindow : Window
     private readonly int _currentUserId;
     
     // ✅ Упрощённый конструктор — убираем лишние параметры
+    public DocumentViewerWindow()
+    {
+        InitializeComponent();
+    }
     public DocumentViewerWindow(int currentUserId, DocumentFull? document)
     {
         InitializeComponent();

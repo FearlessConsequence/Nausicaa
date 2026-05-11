@@ -1,3 +1,4 @@
+#pragma warning disable CS0649
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace CourseWork.Views;
 public partial class MainWindow : Window
 {
     private readonly int _currentUserId;
-    private readonly DatabaseHelper _db;
-    private readonly Window _previousWindow;
+    private readonly DatabaseHelper? _db;
     private List<RecentDocument> _recentDocuments = new();
     private List<Draft> _drafts = new();
-    
+    public MainWindow()
+    {
+        InitializeComponent();
+    } 
     public MainWindow(int currentUserId)
     {
         InitializeComponent();
@@ -78,6 +81,7 @@ public partial class MainWindow : Window
     {
         try
         {
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             _recentDocuments = await _db.GetAllDocumentsAsync();
             var recentDocs = _recentDocuments.Take(10).ToList();
             recentDocumentsList.ItemsSource = recentDocs;
@@ -99,6 +103,7 @@ public partial class MainWindow : Window
     {
         try
         {
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             _drafts = await _db.GetDraftsAsync(_currentUserId);
             var recentDrafts = _drafts.Take(10).ToList();
             draftsList.ItemsSource = recentDrafts;
@@ -160,6 +165,7 @@ public partial class MainWindow : Window
             
             if (tableName != "unknown")
             {
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 var fullDoc = await _db.GetFullDocumentAsync(tableName, doc.Id);
                 var viewer = new DocumentViewerWindow(_currentUserId, fullDoc);
                 viewer.Show();

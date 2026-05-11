@@ -13,18 +13,22 @@ namespace CourseWork.Views;
 
 public partial class SelectCitizenWindow : Window
 {
-    private readonly DatabaseHelper _db;
+    private readonly DatabaseHelper? _db;
     private List<Citizen> _allCitizens = new();
     private readonly int _currentUserId = 0;
     private readonly Window? _previousWindow;
     public Citizen? SelectedCitizen { get; private set; }
-
-    public SelectCitizenWindow(int currentUserId, Window? _previousWindow = null)
+    
+    public SelectCitizenWindow()
+    {
+        InitializeComponent();
+    }
+    public SelectCitizenWindow(int currentUserId, Window? previousWindow = null)
     {
         InitializeComponent();
         _db = new DatabaseHelper();
         _currentUserId = currentUserId;
-        _previousWindow = _previousWindow;
+        _previousWindow = previousWindow;
         
         btn_search.Click += OnSearchClick;
         btn_cancel.Click += (s, e) => Close();
@@ -92,7 +96,7 @@ public partial class SelectCitizenWindow : Window
             {
                 searchParams.FullName = $"{lastName} {firstName} {patronymic}".Trim();
             }
-            
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             var results = await _db.SearchCitizensAsync(searchParams);
             
             citizensContainer.ItemsSource = results;

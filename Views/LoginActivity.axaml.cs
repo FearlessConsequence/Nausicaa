@@ -7,8 +7,7 @@ using CourseWork.Models;
 namespace CourseWork.Views;
 
 public partial class LoginActitvity : Window
-{
-    private readonly Window _previousWindow;
+{ 
     public LoginActitvity()
     {
         InitializeComponent();

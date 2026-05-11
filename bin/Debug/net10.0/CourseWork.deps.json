@@ -19,7 +19,8 @@
           "Microsoft.EntityFrameworkCore.Relational": "7.0.20",
           "Microsoft.Extensions.Configuration.Json": "10.0.5",
           "Microsoft.Extensions.DependencyInjection": "10.0.5",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18"
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18",
+          "Tmds.DBus.Protocol": "0.22.0"
         },
         "runtime": {
           "CourseWork.dll": {}
@@ -161,7 +162,7 @@
       "Avalonia.FreeDesktop/11.3.12": {
         "dependencies": {
           "Avalonia": "11.3.12",
-          "Tmds.DBus.Protocol": "0.21.2"
+          "Tmds.DBus.Protocol": "0.22.0"
         },
         "runtime": {
           "lib/net8.0/Avalonia.FreeDesktop.dll": {
@@ -674,11 +675,11 @@
           }
         }
       },
-      "Tmds.DBus.Protocol/0.21.2": {
+      "Tmds.DBus.Protocol/0.22.0": {
         "runtime": {
-          "lib/net8.0/Tmds.DBus.Protocol.dll": {
-            "assemblyVersion": "0.21.2.0",
-            "fileVersion": "0.21.2.0"
+          "lib/net9.0/Tmds.DBus.Protocol.dll": {
+            "assemblyVersion": "0.22.0.0",
+            "fileVersion": "0.22.0.0"
           }
         }
       }
@@ -1005,12 +1006,12 @@
       "path": "skiasharp.nativeassets.win32/2.88.9",
       "hashPath": "skiasharp.nativeassets.win32.2.88.9.nupkg.sha512"
     },
-    "Tmds.DBus.Protocol/0.21.2": {
+    "Tmds.DBus.Protocol/0.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ScSMrUrrw8px4kK1Glh0fZv/HQUlg1078bNXNPfRPKQ3WbRzV9HpsydYEOgSoMK5LWICMf2bMwIFH0pGjxjcMA==",
-      "path": "tmds.dbus.protocol/0.21.2",
-      "hashPath": "tmds.dbus.protocol.0.21.2.nupkg.sha512"
+      "sha512": "sha512-hUg+KCn3eDRaf7YKBCT+4aG63ygmUBlzZ0c5w09inu8SL2oRn870bE2F/bUd4t3cgSKtQcK2ahbQKHmHf9o2kQ==",
+      "path": "tmds.dbus.protocol/0.22.0",
+      "hashPath": "tmds.dbus.protocol.0.22.0.nupkg.sha512"
     }
   }
 }

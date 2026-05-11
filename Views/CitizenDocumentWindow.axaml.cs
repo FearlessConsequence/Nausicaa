@@ -15,9 +15,11 @@ namespace CourseWork.Views;
 
 public partial class CitizenDocumentsWindow : Window
 {
+    public CitizenDocumentsWindow() : this(0, 0, null, null) { }
     private readonly int _currentUserId;
     private readonly int _citizenId;
-    private readonly string _citizenFullName;
+    
+    private readonly string? _citizenFullName;
     private readonly DatabaseHelper _db;
     
     private List<MyDocument> _allDocuments = new();
@@ -26,7 +28,7 @@ public partial class CitizenDocumentsWindow : Window
     private string _searchText = "";
 
     // Конструктор
-    public CitizenDocumentsWindow(int currentUserId, int citizenId, string citizenFullName, Window? parent = null)
+    public CitizenDocumentsWindow(int currentUserId, int citizenId, string? citizenFullName, Window? parent = null)
     {
         InitializeComponent();
         

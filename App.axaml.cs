@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using CourseWork.Models;
 using CourseWork.Views;
-using Avalonia.Controls.ApplicationLifetimes;
 
 namespace CourseWork;
 

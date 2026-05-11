@@ -1,3 +1,4 @@
+#pragma warning disable CS0649
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,11 +12,14 @@ namespace CourseWork.Views;
 
 public partial class NewAppel : Window
 {
-    private readonly DatabaseHelper _db;
+    private readonly DatabaseHelper? _db;
     private int? _currentDraftId;
     private readonly Window? _previousWindow;
     private readonly int _currentUserId;
-    
+    public NewAppel()
+    {
+        InitializeComponent();
+    }    
     public NewAppel(int currentUserId)
     {
         InitializeComponent();
@@ -113,7 +117,7 @@ public partial class NewAppel : Window
                     number = num;
                 }
             }
-
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             int newId = await _db.CreateAppealAsync(citizenId, content, _currentUserId, number, selectedDateTime);
 
             Console.WriteLine($"[SUCCESS] Обращение создано! ID: {newId}");
@@ -161,14 +165,14 @@ public partial class NewAppel : Window
             
             if (_currentDraftId.HasValue)
             {
-
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 await _db.UpdateDraftAsync(_currentDraftId.Value, formDataJson);
                 NotificationsControl.ShowSuccess("Успех", "Черновик обновлен");
                 Console.WriteLine($"[DEBUG] Обновлён черновик ID: {_currentDraftId}");
             }
             else
             {
-
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 int newDraftId = await _db.SaveDraftAsync(_currentUserId, "appeals", formDataJson);
                 _currentDraftId = newDraftId;
                 NotificationsControl.ShowSuccess("Успех", "Черновик сохранен");
@@ -202,7 +206,8 @@ public partial class NewAppel : Window
             {
 
                 Task.Run(async () =>
-                {
+                {  
+                    if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                     var citizen = await _db.GetCitizenByIdAsync(citizenId);
                     Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                     {
@@ -261,6 +266,7 @@ public partial class NewAppel : Window
 
             if (draft.CitizenId.HasValue)
             {
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 var citizen = await _db.GetCitizenByIdAsync(draft.CitizenId.Value);
                 if (citizen != null)
                 {

@@ -227,7 +227,7 @@ namespace CourseWork.Data
                     c.patronymic,
                     c.birthday,
                     c.address_registration,
-                    cp.phone_number,
+                    cp.phone_number,                    -- ← телефон
                     c.passport_series_and_number,
                     s.name as working_place_name,
                     e.education as education_name,
@@ -237,7 +237,7 @@ namespace CourseWork.Data
                     c.count_record,
                     p.post as post_name
                 FROM citizens c
-                LEFT JOIN citizen_phones cp ON cp.citizen = c.id_citizens AND cp.is_primary = true
+                LEFT JOIN citizen_phones cp ON cp.citizen = c.id_citizens AND cp.is_primary = true   -- ← этот JOIN
                 LEFT JOIN structures s ON c.working_place = s.id_structures
                 LEFT JOIN education e ON c.education = e.id_education
                 LEFT JOIN family_status fs ON c.family_status = fs.id_family_status
@@ -265,6 +265,9 @@ namespace CourseWork.Data
                     EducationName = reader.IsDBNull(9) ? null : reader.GetString(9),
                     FamilyStatusName = reader.IsDBNull(10) ? null : reader.GetString(10),
                     CitizenshipName = reader.IsDBNull(11) ? null : reader.GetString(11),
+                    CriminalRecord = reader.GetBoolean(12),           // ← добавить
+                    CountRecord = reader.IsDBNull(13) ? null : reader.GetInt32(13),  // ← добавить
+                    PostName = reader.IsDBNull(14) ? null : reader.GetString(14),    // ← добавить
 
                     WorkingPlace = null,
                     Education = null,
@@ -273,31 +276,6 @@ namespace CourseWork.Data
                 };
             }
             return null;
-        }
-
-        public async Task<List<CitizenPhone>> GetCitizenPhonesAsync(int citizenId)
-        {
-            var phones = new List<CitizenPhone>();
-            await using var conn = new NpgsqlConnection(_connectionString);
-            await conn.OpenAsync();
-
-            var sql = "SELECT id, phone_number, citizen, is_primary FROM citizen_phones WHERE citizen = @citizenId ORDER BY is_primary DESC";
-            
-            await using var cmd = new NpgsqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("citizenId", citizenId);
-            await using var reader = await cmd.ExecuteReaderAsync();
-
-            while (await reader.ReadAsync())
-            {
-                phones.Add(new CitizenPhone
-                {
-                    Id = reader.GetInt32(0),
-                    PhoneNumber = reader.GetString(1),
-                    CitizenId = reader.GetInt32(2),
-                    IsPrimary = reader.GetBoolean(3)
-                });
-            }
-            return phones;
         }
         
         public async Task<List<RecentDocument>> SearchDocumentsByUserAsync(string searchText, int userId)
@@ -508,7 +486,8 @@ namespace CourseWork.Data
             cmd.Parameters.AddWithValue("@signApplicant", signatureApplicant);
             cmd.Parameters.AddWithValue("@signOfficer", signatureOfficer);
 
-            return (int)await cmd.ExecuteScalarAsync();
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : 0;
         }
                 
         
@@ -539,7 +518,8 @@ namespace CourseWork.Data
             cmd.Parameters.AddWithValue("@officer", policeOfficerId.Value);
             cmd.Parameters.AddWithValue("@number", number ?? (object)DBNull.Value);
 
-            return (int)await cmd.ExecuteScalarAsync();
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : 0;
         }
 
         
@@ -561,7 +541,8 @@ namespace CourseWork.Data
             cmd.Parameters.AddWithValue("@content", content);
             cmd.Parameters.AddWithValue("@number", number ?? (object)DBNull.Value);
 
-            return (int)await cmd.ExecuteScalarAsync();
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : 0;
         }
 
         
@@ -586,7 +567,8 @@ namespace CourseWork.Data
             cmd.Parameters.AddWithValue("@witness1", firstWitnessId);
             cmd.Parameters.AddWithValue("@witness2", secondWitnessId ?? (object)DBNull.Value);
 
-            return (int)await cmd.ExecuteScalarAsync();
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : 0;
         }
 
         
@@ -818,7 +800,8 @@ namespace CourseWork.Data
             var checkSql = "SELECT COUNT(*) FROM users WHERE id = @userId";
             await using var checkCmd = new NpgsqlCommand(checkSql, conn);
             checkCmd.Parameters.AddWithValue("@userId", userId);
-            var exists = (long)await checkCmd.ExecuteScalarAsync();
+            var result = await checkCmd.ExecuteScalarAsync();
+            var exists = result != null ? (long)result : 0;
             
             Console.WriteLine($"[DEBUG] Пользователь с id={userId} существует: {exists > 0}");
             
@@ -845,7 +828,8 @@ namespace CourseWork.Data
             cmd.Parameters.AddWithValue("docType", documentType);
             cmd.Parameters.AddWithValue("formData", formDataJson);
 
-            return (int)await cmd.ExecuteScalarAsync();
+            result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : 0;
         }
 
 
@@ -1352,7 +1336,8 @@ namespace CourseWork.Data
             cmd.Parameters.AddWithValue("citizenSig", citizenSig);
             cmd.Parameters.AddWithValue("officerSig", officerSig);
 
-            return (int)await cmd.ExecuteScalarAsync();
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : 0;
         }
 
         private async Task<int> GetReportTypeIdByNameAsync(string reportTypeName)

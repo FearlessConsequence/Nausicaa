@@ -12,9 +12,13 @@ namespace CourseWork.Views;
 
 public partial class OtherDocumentsWindow : Window
 {
-    private readonly DatabaseHelper _db;
+    private readonly DatabaseHelper? _db;
     private readonly int _currentUserId;
     private List<ExternalDocument> _documents = new();
+    public OtherDocumentsWindow()
+    {
+        InitializeComponent();
+    }
 
     public OtherDocumentsWindow(int currentUserId)
     {
@@ -63,7 +67,7 @@ public partial class OtherDocumentsWindow : Window
             }
             
             int dealId = (int)txt_deal.Tag;
-            
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             _documents = await _db.GetExternalDocumentsAsync(dealId, null);
             
             documentsContainer.ItemsSource = null;
@@ -90,6 +94,7 @@ public partial class OtherDocumentsWindow : Window
             {
                 try
                 {
+                    if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                     await _db.SaveDocumentAccessRequestAsync(_currentUserId, doc.TableName, doc.Id, result);
                     
                     var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);

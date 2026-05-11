@@ -13,10 +13,14 @@ namespace CourseWork.Views;
 public partial class SelectDealWindow : Window
 {
     private readonly Window? _previousWindow;
-    private readonly DatabaseHelper _db;
+    private readonly DatabaseHelper? _db;
     private readonly int _currentUserId;
     private List<Deal> _allDeals = new();
     public Deal? SelectedDeal { get; private set; }
+    public SelectDealWindow()
+    {
+        InitializeComponent();
+    }
 
     public SelectDealWindow(int currentUserId, Window? previousWindow = null)
     {
@@ -36,6 +40,7 @@ public partial class SelectDealWindow : Window
 
     private async Task LoadDealsAsync()
     {
+        if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
         _allDeals = await _db.GetDealsAsync();
         ApplyFilter();
     }

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bzSRO1tTTxk=",
+  "dgSpecHash": "pYrqbG/HSqE=",
   "success": true,
   "projectFilePath": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\CourseWork.csproj",
   "expectedPackageFiles": [
@@ -53,20 +53,7 @@
     "C:\\Users\\ggg84\\.nuget\\packages\\skiasharp.nativeassets.macos\\2.88.9\\skiasharp.nativeassets.macos.2.88.9.nupkg.sha512",
     "C:\\Users\\ggg84\\.nuget\\packages\\skiasharp.nativeassets.webassembly\\2.88.9\\skiasharp.nativeassets.webassembly.2.88.9.nupkg.sha512",
     "C:\\Users\\ggg84\\.nuget\\packages\\skiasharp.nativeassets.win32\\2.88.9\\skiasharp.nativeassets.win32.2.88.9.nupkg.sha512",
-    "C:\\Users\\ggg84\\.nuget\\packages\\tmds.dbus.protocol\\0.21.2\\tmds.dbus.protocol.0.21.2.nupkg.sha512"
+    "C:\\Users\\ggg84\\.nuget\\packages\\tmds.dbus.protocol\\0.22.0\\tmds.dbus.protocol.0.22.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "message": "Package 'Tmds.DBus.Protocol' 0.21.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
-      "projectPath": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\CourseWork.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\ggg84\\OneDrive\\Desktop\\Difference\\AvaloniaProjects\\CourseWork\\CourseWork.csproj",
-      "libraryId": "Tmds.DBus.Protocol",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }

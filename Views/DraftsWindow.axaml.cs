@@ -12,17 +12,19 @@ namespace CourseWork.Views;
 
 public partial class DraftsWindow : Window
 {
-    private readonly DatabaseHelper _db;
-    private readonly Window? _previousWindow;
+    private readonly DatabaseHelper? _db;
     private readonly int _currentUserId;
     private List<Draft> _all = new();
     private List<Draft> _shown = new();
+    public DraftsWindow()
+    {
+        InitializeComponent();
+    }
 
     public DraftsWindow(int userId)
     {
         InitializeComponent();
         _currentUserId = userId;
-        _previousWindow = _previousWindow;
         cmb_filterType.SelectedIndex = 0;
         _db = new DatabaseHelper();
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
@@ -35,6 +37,7 @@ public partial class DraftsWindow : Window
     {
         try
         {
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             _all = await _db.GetDraftsAsync(_currentUserId);
             _applyFilter();
         }
@@ -131,6 +134,7 @@ public partial class DraftsWindow : Window
         {
             try
             {
+                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 await _db.DeleteDraftAsync(id);
                 await _load();
                 NotificationsControl.ShowSuccess("Черновик удален", $"Черновик ID {id} успешно удален");
