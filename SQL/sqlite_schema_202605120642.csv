@@ -1,0 +1,428 @@
+"type","name","tbl_name","rootpage","sql"
+table,settlements,settlements,2,"CREATE TABLE settlements (
+    id_settlements INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    title_of_settlements VARCHAR(50) NOT NULL
+)"
+table,sqlite_sequence,sqlite_sequence,3,"CREATE TABLE sqlite_sequence(name,seq)"
+table,citizenship,citizenship,16,"CREATE TABLE citizenship (
+    id_citizenship INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    citizenship VARCHAR(50) NOT NULL
+)"
+table,education,education,32,"CREATE TABLE education (
+    id_education INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    education VARCHAR(50) NOT NULL
+)"
+table,type_of_punishment,type_of_punishment,41,"CREATE TABLE type_of_punishment (
+    id_type_of_punishment INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    type_of_punishment VARCHAR(50) NOT NULL
+)"
+table,article,article,42,"CREATE TABLE article (
+    id_article INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    number_of_article NUMERIC(4,2) NOT NULL CHECK (number_of_article >= 1 AND number_of_article <= 99.99),
+    description TEXT NOT NULL
+)"
+table,type_intoxication,type_intoxication,75,"CREATE TABLE type_intoxication (
+    id_type_intoxication INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    type_intoxication VARCHAR(50) NOT NULL
+)"
+table,type_violation,type_violation,76,"CREATE TABLE type_violation (
+    id_type_violation INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    type_violation VARCHAR(50) NOT NULL
+)"
+table,type_report,type_report,77,"CREATE TABLE type_report (
+    id_type_report INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    type_report VARCHAR(50) NOT NULL
+)"
+table,responsibility,responsibility,80,"CREATE TABLE responsibility (
+    id_responsibility INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    type_of_responsibility VARCHAR(50) NOT NULL
+)"
+table,post,post,81,"CREATE TABLE post (
+    id_post INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    post VARCHAR(50) NOT NULL
+)"
+table,family_status,family_status,101,"CREATE TABLE family_status (
+    id_family_status INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    family_status VARCHAR(50) NOT NULL
+)"
+table,articles_and_responsobility,articles_and_responsobility,104,"CREATE TABLE articles_and_responsobility (
+    id_articles_and_responsibility INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    responsibility INTEGER NOT NULL REFERENCES responsibility(id_responsibility),
+    article INTEGER NOT NULL REFERENCES article(id_article)
+)"
+table,structures,structures,113,"CREATE TABLE structures (
+    id_structures INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    settlement INTEGER NOT NULL REFERENCES settlements(id_settlements),
+    description TEXT NOT NULL
+)"
+table,citizens,citizens,122,"CREATE TABLE citizens (
+    id_citizens INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    patronymic VARCHAR(50) NULL,
+    birthday DATE NOT NULL,
+    settlement_of_birth INTEGER NOT NULL REFERENCES settlements(id_settlements),
+    address_registration VARCHAR(100) NOT NULL CHECK (length(address_registration) >= 5),
+    working_place INTEGER NOT NULL REFERENCES structures(id_structures),
+    post INTEGER NOT NULL REFERENCES post(id_post),
+    criminal_record BOOLEAN NOT NULL,
+    count_record INTEGER NOT NULL,
+    passport_series_and_number BIGINT NOT NULL CHECK (passport_series_and_number >= 1000000000 AND passport_series_and_number <= 9999999999),
+    family_status INTEGER NOT NULL REFERENCES family_status(id_family_status),
+    education INTEGER NOT NULL REFERENCES education(id_education),
+    citizenship INTEGER NOT NULL REFERENCES citizenship(id_citizenship)
+)"
+table,citizens_and_posts,citizens_and_posts,141,"CREATE TABLE citizens_and_posts (
+    id_citizens_and_posts INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    citizen INTEGER NOT NULL REFERENCES citizens(id_citizens),
+    citizen_post INTEGER NOT NULL REFERENCES post(id_post)
+)"
+table,deal,deal,144,"CREATE TABLE deal (
+    id_deal INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    deal_number INTEGER NOT NULL,
+    settlement INTEGER NOT NULL REFERENCES settlements(id_settlements),
+    offender INTEGER NOT NULL REFERENCES citizens(id_citizens),
+    police_officer INTEGER NOT NULL REFERENCES citizens_and_posts(id_citizens_and_posts),
+    article INTEGER NOT NULL REFERENCES article(id_article),
+    responsibility INTEGER NOT NULL REFERENCES responsibility(id_responsibility)
+)"
+table,statement,statement,147,"CREATE TABLE statement (
+    id_statement INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    applicant INTEGER NOT NULL REFERENCES citizens(id_citizens),
+    content TEXT NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL CHECK (time BETWEEN '00:00:00' AND '23:59:59'),
+    police_officer INTEGER NOT NULL REFERENCES citizens_and_posts(id_citizens_and_posts),
+    signature_applicant BOOLEAN NULL,
+    signature_police_officer BOOLEAN NULL
+)"
+table,appeals,appeals,165,"CREATE TABLE appeals (
+    id_appeals INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    appeal_citizen INTEGER NOT NULL REFERENCES citizens(id_citizens),
+    police_officer INTEGER NOT NULL REFERENCES citizens_and_posts(id_citizens_and_posts),
+    content TEXT NOT NULL
+)"
+table,explanation_protocol,explanation_protocol,200,"CREATE TABLE explanation_protocol (
+    id_explanation_protocol INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    date DATE NOT NULL,
+    citizen INTEGER NOT NULL REFERENCES citizens(id_citizens),
+    deal INTEGER NOT NULL REFERENCES deal(id_deal),
+    signature_for_error_testimony BOOLEAN NULL,
+    signature_for_knowing_everithing BOOLEAN NULL,
+    content TEXT NOT NULL,
+    need_forensic_medical_examination BOOLEAN NOT NULL,
+    need_medical_examination_certificate BOOLEAN NOT NULL,
+    citizen_signature BOOLEAN NULL,
+    police_officer_signature BOOLEAN NULL
+)"
+table,forensic_medical_examination,forensic_medical_examination,234,"CREATE TABLE forensic_medical_examination (
+    id_forensic_medical_examination INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    date DATE NOT NULL,
+    structure INTEGER NOT NULL REFERENCES structures(id_structures),
+    deal INTEGER NULL REFERENCES deal(id_deal),
+    expert INTEGER NOT NULL REFERENCES citizens_and_posts(id_citizens_and_posts),
+    content TEXT NOT NULL,
+    physical_injuries BOOLEAN NOT NULL,
+    severity_of_harm_to_health BOOLEAN NOT NULL,
+    could_injuries_have_occurred_on_time BOOLEAN NOT NULL,
+    number_of_examination INTEGER NOT NULL,
+    signature_expert BOOLEAN NULL
+)"
+table,medical_examination_report,medical_examination_report,254,"CREATE TABLE medical_examination_report (
+    id_medical_examination_report INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    deal INTEGER NULL REFERENCES deal(id_deal),
+    report INTEGER NOT NULL REFERENCES type_report(id_type_report),
+    patient INTEGER NOT NULL REFERENCES citizens(id_citizens),
+    date DATE NOT NULL,
+    time TIME NOT NULL CHECK (time BETWEEN '00:00:00' AND '23:59:59'),
+    signs_of_intoxication TEXT NOT NULL,
+    content TEXT NOT NULL,
+    approval BOOLEAN NULL,
+    signature BOOLEAN NULL
+)"
+table,medical_examination_certificate,medical_examination_certificate,335,"CREATE TABLE medical_examination_certificate (
+    id_medical_examination_certificate INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    medical_examination_report INTEGER NOT NULL REFERENCES medical_examination_report(id_medical_examination_report),
+    date DATE NOT NULL,
+    time TIME NOT NULL CHECK (time BETWEEN '00:00:00' AND '23:59:59'),
+    medical_institution INTEGER NOT NULL REFERENCES structures(id_structures),
+    doctor INTEGER NOT NULL REFERENCES citizens_and_posts(id_citizens_and_posts),
+    signs_of_intoxication TEXT NOT NULL,
+    result TEXT NOT NULL,
+    type_intoxication INTEGER NOT NULL REFERENCES type_intoxication(id_type_intoxication),
+    doctor_signature BOOLEAN NULL
+)"
+table,administrative_protocol,administrative_protocol,387,"CREATE TABLE administrative_protocol (
+    id_protocol INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    protocol_number INTEGER NOT NULL CHECK (protocol_number >= 1000 AND protocol_number <= 999999),
+    making_date DATE NOT NULL,
+    making_time TIME NOT NULL CHECK (making_time BETWEEN '00:00:00' AND '23:59:59'),
+    deal INTEGER NOT NULL REFERENCES deal(id_deal),
+    description TEXT NOT NULL,
+    other_information TEXT NOT NULL,
+    signature_for_knowing_everithing BOOLEAN NULL,
+    first_witness INTEGER NOT NULL REFERENCES citizens(id_citizens),
+    second_witness INTEGER NULL REFERENCES citizens(id_citizens)
+)"
+table,resolution,resolution,414,"CREATE TABLE resolution (
+    id_resolution INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    number_of_protocol INTEGER CHECK (number_of_protocol IS NULL OR (number_of_protocol >= 1000 AND number_of_protocol <= 999999)),
+    date DATE NOT NULL,
+    time TIME NOT NULL CHECK (time BETWEEN '00:00:00' AND '23:59:59'),
+    structure INTEGER NOT NULL REFERENCES structures(id_structures),
+    court_staff INTEGER NOT NULL REFERENCES citizens_and_posts(id_citizens_and_posts),
+    deal INTEGER NOT NULL REFERENCES deal(id_deal),
+    resolution TEXT NOT NULL,
+    punishment INTEGER NOT NULL REFERENCES type_of_punishment(id_type_of_punishment),
+    fine_sum INTEGER NULL CHECK (fine_sum IS NULL OR (fine_sum >= 0 AND fine_sum <= 1000000)),
+    days_of_arrest INTEGER NULL
+)"
+trigger,validate_offender_age,administrative_protocol,0,"CREATE TRIGGER validate_offender_age
+    BEFORE INSERT ON administrative_protocol
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN (
+            SELECT (julianday('now') - julianday(c.birthday)) / 365.25 
+            FROM citizens c 
+            JOIN deal d ON c.id_citizens = d.offender 
+            WHERE d.id_deal = NEW.deal
+        ) < 16
+        THEN RAISE(ABORT, 'Нельзя составить административный протокол на гражданина младше 16 лет')
+    END;
+END"
+trigger,check_admin_protocol_date,administrative_protocol,0,"CREATE TRIGGER check_admin_protocol_date
+    BEFORE INSERT ON administrative_protocol
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NEW.making_date > DATE('now') 
+        THEN RAISE(ABORT, 'Дата в таблице administrative_protocol не может быть в будущем. Указанная дата: ' || NEW.making_date)
+    END;
+END"
+trigger,validate_admin_protocol_date,administrative_protocol,0,"CREATE TRIGGER validate_admin_protocol_date
+    BEFORE INSERT ON administrative_protocol
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NEW.making_date > DATE('now') 
+        THEN RAISE(ABORT, 'Дата в таблице administrative_protocol не может быть в будущем. Указанная дата: ' || NEW.making_date)
+    END;
+END"
+trigger,validate_explanation_protocol_date,explanation_protocol,0,"CREATE TRIGGER validate_explanation_protocol_date
+    BEFORE INSERT ON explanation_protocol
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NEW.date > DATE('now') 
+        THEN RAISE(ABORT, 'Дата в таблице explanation_protocol не может быть в будущем. Указанная дата: ' || NEW.date)
+    END;
+END"
+trigger,validate_resolution_date,resolution,0,"CREATE TRIGGER validate_resolution_date
+    BEFORE INSERT ON resolution
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NEW.date > DATE('now') 
+        THEN RAISE(ABORT, 'Дата в таблице resolution не может быть в будущем. Указанная дата: ' || NEW.date)
+    END;
+END"
+trigger,validate_medical_report_date,medical_examination_report,0,"CREATE TRIGGER validate_medical_report_date
+    BEFORE INSERT ON medical_examination_report
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NEW.date > DATE('now') 
+        THEN RAISE(ABORT, 'Дата в таблице medical_examination_report не может быть в будущем. Указанная дата: ' || NEW.date)
+    END;
+END"
+trigger,validate_medical_certificate_date,medical_examination_certificate,0,"CREATE TRIGGER validate_medical_certificate_date
+    BEFORE INSERT ON medical_examination_certificate
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NEW.date > DATE('now') 
+        THEN RAISE(ABORT, 'Дата в таблице medical_examination_certificate не может быть в будущем. Указанная дата: ' || NEW.date)
+    END;
+END"
+trigger,validate_forensic_examination_date,forensic_medical_examination,0,"CREATE TRIGGER validate_forensic_examination_date
+    BEFORE INSERT ON forensic_medical_examination
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NEW.date > DATE('now') 
+        THEN RAISE(ABORT, 'Дата в таблице forensic_medical_examination не может быть в будущем. Указанная дата: ' || NEW.date)
+    END;
+END"
+trigger,validate_deal_sequence,deal,0,"CREATE TRIGGER validate_deal_sequence
+    BEFORE INSERT ON deal
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (
+            SELECT 1 FROM statement s
+            JOIN citizens applicant ON s.applicant = applicant.id_citizens
+            JOIN citizens offender ON NEW.offender = offender.id_citizens
+            WHERE (
+                (s.applicant != NEW.offender)
+                OR (s.content LIKE '%' || offender.last_name || '%')
+                OR (s.content LIKE '%кража%' OR s.content LIKE '%нарушение%' OR s.content LIKE '%избиение%')
+            )
+            AND s.date <= DATE('now')
+            AND s.date >= DATE('now', '-1 year')
+        )
+        THEN RAISE(ABORT, 'Нельзя создать дело №' || NEW.deal_number || ' на гражданина ' || 
+            (SELECT last_name FROM citizens WHERE id_citizens = NEW.offender) || ' без соответствующего заявления')
+    END;
+END"
+trigger,validate_explanation_protocol_sequence,explanation_protocol,0,"CREATE TRIGGER validate_explanation_protocol_sequence
+    BEFORE INSERT ON explanation_protocol
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (SELECT 1 FROM deal WHERE id_deal = NEW.deal)
+        THEN RAISE(ABORT, 'Нельзя создать протокол объяснения без дела')
+    END;
+END"
+trigger,validate_admin_protocol_sequence,administrative_protocol,0,"CREATE TRIGGER validate_admin_protocol_sequence
+    BEFORE INSERT ON administrative_protocol
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (SELECT 1 FROM explanation_protocol WHERE deal = NEW.deal)
+        THEN RAISE(ABORT, 'Нельзя создать административный протокол без протокола объяснения')
+    END;
+END"
+trigger,validate_medical_report_sequence,medical_examination_report,0,"CREATE TRIGGER validate_medical_report_sequence
+    BEFORE INSERT ON medical_examination_report
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (
+            SELECT 1 FROM explanation_protocol
+            WHERE deal = NEW.deal
+            AND need_medical_examination_certificate = 1
+        )
+        THEN RAISE(ABORT, 'Нельзя создать направление на медицинское освидетельствование без соответствующего указания в протоколе объяснения')
+    END;
+END"
+trigger,validate_medical_certificate_sequence,medical_examination_certificate,0,"CREATE TRIGGER validate_medical_certificate_sequence
+    BEFORE INSERT ON medical_examination_certificate
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (
+            SELECT 1 FROM medical_examination_report
+            WHERE id_medical_examination_report = NEW.medical_examination_report
+        )
+        THEN RAISE(ABORT, 'Нельзя создать акт медицинского освидетельствования без направления на медицинское освидетельствование')
+    END;
+END"
+trigger,validate_forensic_exam_sequence,forensic_medical_examination,0,"CREATE TRIGGER validate_forensic_exam_sequence
+    BEFORE INSERT ON forensic_medical_examination
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (
+            SELECT 1 FROM explanation_protocol
+            WHERE deal = NEW.deal
+            AND need_forensic_medical_examination = 1
+        )
+        THEN RAISE(ABORT, 'Нельзя создать судебно-медицинскую экспертизу без соответствующего указания в протоколе объяснения')
+    END;
+END"
+trigger,validate_resolution_sequence,resolution,0,"CREATE TRIGGER validate_resolution_sequence
+    BEFORE INSERT ON resolution
+    FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (SELECT 1 FROM administrative_protocol WHERE deal = NEW.deal)
+        THEN RAISE(ABORT, 'Нельзя создать постановление без административного протокола')
+    END;
+END"
+trigger,trg_update_violation_count,administrative_protocol,0,"CREATE TRIGGER trg_update_violation_count
+    AFTER INSERT ON administrative_protocol
+    FOR EACH ROW
+BEGIN
+    UPDATE citizens
+    SET count_record = count_record + 1
+    WHERE id_citizens = (
+        SELECT d.offender 
+        FROM deal d 
+        WHERE d.id_deal = NEW.deal
+    );
+END"
+trigger,trg_update_criminal_record,resolution,0,"CREATE TRIGGER trg_update_criminal_record
+    AFTER INSERT ON resolution
+    FOR EACH ROW
+BEGIN
+    UPDATE citizens
+    SET criminal_record = 1
+    WHERE id_citizens = (
+        SELECT d.offender 
+        FROM deal d 
+        WHERE d.id_deal = NEW.deal
+    );
+END"
+table,_statement,_statement,6,"CREATE TABLE ""_statement"" (
+	id_statement INTEGER,
+	applicant INTEGER,
+	content NVARCHAR(128),
+	date NVARCHAR(50),
+	time NVARCHAR(50),
+	police_officer INTEGER,
+	signature_applicant INTEGER,
+	signature_police_officer INTEGER
+)"
+table,categories,categories,79,"CREATE TABLE categories (
+	id NUMERIC NOT NULL,
+	name varchar(50),
+	description TEXT NOT NULL
+)"
+table,roles,roles,82,"CREATE TABLE roles (
+	id NUMERIC NOT NULL,
+	role_id varchar(50),
+	description TEXT NOT NULL
+)"
+table,sender,sender,83,"CREATE TABLE sender (
+	id int4 NOT NULL,
+	sender varchar(50),
+	description TEXT,
+	requisits varchar(50)
+)"
+table,users,users,84,"CREATE TABLE users (
+	id NUMERIC NOT NULL,
+	lastname varchar(50),
+	firstname varchar(50),
+	patronymic varchar(50),
+	login varchar(50),
+	password varchar(255),
+	balance NUMERIC(10,2),
+	""role"" int4 NOT NULL,
+	created_at TIMESTAMP(29)
+)"
+table,limits,limits,85,"CREATE TABLE limits (
+	id NUMERIC NOT NULL,
+	user_id int4 NOT NULL,
+	date_beginning TIMESTAMP(13) NOT NULL,
+	date_ending TIMESTAMP(13) NOT NULL,
+	sum_limit NUMERIC(10,2)
+)"
+table,recipient,recipient,86,"CREATE TABLE recipient (
+	id NUMERIC NOT NULL,
+	user_id int4,
+	name varchar(50),
+	requisites int8,
+	description TEXT
+)"
+table,transactions,transactions,87,"CREATE TABLE transactions (
+	id NUMERIC NOT NULL,
+	sender int4,
+	user_id int4,
+	category_id int4 NOT NULL,
+	recipient_id int4,
+	amount NUMERIC(10,2),
+	transaction_date TIMESTAMP(29) NOT NULL,
+	created_at TIMESTAMP(29)
+)"
