@@ -86,11 +86,6 @@
                                     x:Name="btn_select_deal"/>
                         </Grid>
                         
-                        <TextBlock x:Name="txt_deal_error" 
-                                   Text="⚠️ Необходимо выбрать дело" 
-                                   Foreground="#DC3545" 
-                                   FontSize="12"
-                                   IsVisible="False"/>
                     </StackPanel>
 
         

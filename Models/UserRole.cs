@@ -2,12 +2,12 @@ namespace CourseWork.Models;
 
 public enum UserRole
 {
-    PoliceOfficer = 1, 
-    Judge = 2,         
-    MedicalExpert = 3, 
-    AdminInspector = 4 
+    PoliceOfficer = 1,      // Полицейский
+    Judge = 2,              // Судья
+    MedicalExpert = 3,      // Врач (мед. освидетельствование)
+    AdminInspector = 4,     // Инспектор адм. практики
+    ForensicExpert = 5      // Судмедэксперт
 }
-
 public class UserWithRole
 {
     public int Id { get; set; }

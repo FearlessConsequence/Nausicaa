@@ -20,174 +20,416 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Margin="0, 50">
-                    <TextBlock Text="Быстрое создание документа:" VerticalAlignment="Top" 
-                    HorizontalAlignment="Center" Foreground="#0F4B5E" FontWeight="SemiBold" 
-                    Margin="20, 20, 20, 20" FontSize="18"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Width="130" x:Name="btn_newAppel" Height="130" Margin="8" 
-                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
-                            <TextBlock Text="Обращение" FontWeight="SemiBold" FontSize="15" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Button>
-                        <Button Width="130" x:Name="btn_newStatement" Height="130" Margin="8"
-                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
-                            <TextBlock Text="Заявление" FontWeight="SemiBold" FontSize="15" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Button>
-                        <Button Width="130" x:Name="btn_newExplanationProtocol" Height="130" Margin="8" 
-                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
-                            <TextBlock Text="Протокол объяснения" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Button>
-                        <Button Width="130" x:Name="btn_newExaminationReport" Height="130" Margin="8" 
-                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
-                            <TextBlock Text="Направление на мед. освид." FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Button>
-                        <Button Width="130" x:Name="btn_newAdministrativeProtocol" Height="130" Margin="8" 
-                        Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8">
-                            <TextBlock Text="Адм. протокол" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Button>
+                <!-- Панель быстрого создания документа (строка 0) -->
+<StackPanel Grid.Row="0" Margin="0, 20">
+    <TextBlock Text="Быстрое создание документа:" 
+               HorizontalAlignment="Center" 
+               Foreground="#0F4B5E" FontWeight="SemiBold" 
+               Margin="20, 10, 20, 15" FontSize="18"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        
+        <!-- Обращение -->
+        <Button Width="130" x:Name="btn_newAppel" Height="130" Margin="8" 
+                Background="#F3F3F3" BorderThickness="0" CornerRadius="8"
+                Padding="10">
+            <TextBlock Text="Обращение" 
+                       FontWeight="SemiBold" FontSize="15" 
+                       Foreground="#0F4B5E" 
+                       TextAlignment="Center" 
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Button>
+        
+        <!-- Заявление -->
+        <Button Width="130" x:Name="btn_newStatement" Height="130" Margin="8"
+                Background="#F3F3F3" BorderThickness="0" CornerRadius="8"
+                Padding="10">
+            <TextBlock Text="Заявление" 
+                       FontWeight="SemiBold" FontSize="15" 
+                       Foreground="#0F4B5E" 
+                       TextAlignment="Center" 
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Button>
+        
+        <!-- Протокол объяснения -->
+        <Button Width="130" x:Name="btn_newExplanationProtocol" Height="130" Margin="8" 
+                Background="#F3F3F3" BorderThickness="0" CornerRadius="8"
+                Padding="10">
+            <TextBlock Text="Протокол объяснения" 
+                       FontWeight="SemiBold" FontSize="14" 
+                       Foreground="#0F4B5E" 
+                       TextAlignment="Center" 
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Button>
+        
+        <!-- Направление на мед. освид. -->
+        <Button Width="130" x:Name="btn_newExaminationReport" Height="130" Margin="8" 
+                Background="#F3F3F3" BorderThickness="0" CornerRadius="8"
+                Padding="10">
+            <TextBlock Text="Направление на мед. освид." 
+                       FontWeight="SemiBold" FontSize="13" 
+                       Foreground="#0F4B5E" 
+                       TextAlignment="Center" 
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Button>
+        
+        <!-- Адм. протокол -->
+        <Button Width="130" x:Name="btn_newAdministrativeProtocol" Height="130" Margin="8" 
+                Background="#F3F3F3" BorderThickness="0" CornerRadius="8"
+                Padding="10">
+            <TextBlock Text="Административный протокол" 
+                       FontWeight="SemiBold" FontSize="13" 
+                       Foreground="#0F4B5E" 
+                       TextAlignment="Center" 
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Button>
+                    
+
+        <!-- Кнопка для врача -->
+        <Button Width="130" x:Name="btn_newMedicalCertificate" Height="130" Margin="8" 
+                Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8"
+                IsVisible="False" Content="Акт мед. освид." FontWeight="SemiBold" FontSize="14"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+        <!-- Кнопка для судьи -->
+        <Button Width="140" x:Name="btn_newResolution" Height="140" Margin="8" 
+                Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8"
+                IsVisible="False" Content="Постановление" FontWeight="SemiBold" FontSize="15"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+        <!-- Кнопка для эксперта -->
+        <Button Width="140" x:Name="btn_newForensicExpertise" Height="140" Margin="8" 
+                Background="#F3F3F3" Foreground="#0F4B5E" BorderThickness="0" CornerRadius="8"
+                IsVisible="False" FontWeight="SemiBold" FontSize="15"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            <Button.Content>
+                <TextBlock Text="Судебная&#x0a;экспертиза" TextAlignment="Center"/>
+            </Button.Content>
+        </Button>
+    </StackPanel>
+</StackPanel>
+
+<Border Grid.Row="1" Background="White" BorderBrush="LightGray" 
+        BorderThickness="1" BoxShadow="0 0 15 3 #80808080" CornerRadius="4" 
+        Margin="20,0,20,0" Padding="15,12">
+    <StackPanel Spacing="15">
+        
+        <!-- ======================================================= -->
+        <!-- 1. ОБЩАЯ ПАНЕЛЬ: ПОИСК ГРАЖДАНИНА (для всех ролей)      -->
+        <!-- ======================================================= -->
+<Border Background="#F8F9FA" CornerRadius="8" Padding="14">
+    <StackPanel Spacing="10">
+        <TextBlock Text="🔍 Поиск гражданина" FontWeight="Bold" FontSize="14" Foreground="#0F4B5E"/>
+        
+        <Grid ColumnDefinitions="*, *, *, *, *, Auto" ColumnSpacing="15">
+            <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Паспорт:" FontSize="11" Foreground="#0F4B5E"/>
+                <TextBox Height="32" Watermark="00 00 123456" x:Name="txbx_citizen_passport" FontSize="12"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="ФИО:" FontSize="11" Foreground="#0F4B5E"/>
+                <TextBox Height="32" Watermark="Иванов Иван Иванович" x:Name="txbx_citizen_fio" FontSize="12"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Дата рождения:" FontSize="11" Foreground="#0F4B5E"/>
+                <DatePicker Height="32" x:Name="dp_citizen_birthday" FontSize="12"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="3" Orientation="Vertical" Spacing="4" Margin="10,0,0,0">
+                <TextBlock Text="Телефон:" FontSize="11" Foreground="#0F4B5E"/>
+                <TextBox Height="32" Watermark="+7 999 123-45-67" x:Name="txbx_citizen_phone" FontSize="12"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="4" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Адрес:" FontSize="11" Foreground="#0F4B5E"/>
+                <TextBox Height="32" Watermark="г. Москва, ул. Пушкина, д. 10" x:Name="txbx_citizen_address" FontSize="12"/>
+            </StackPanel>
+            
+            <Button Grid.Column="5" Content="Найти гражданина" Height="32" 
+                    Background="#0F4B5E" Foreground="White" CornerRadius="4" 
+                    FontSize="14" x:Name="btn_citizen_search" 
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                    Margin="0,18,0,0"/>
+        </Grid>
+    </StackPanel>
+</Border>
+
+        <!-- ======================================================= -->
+        <!-- 2. ПАНЕЛЬ ПОИСКА ДОКУМЕНТА (меняется в зависимости от роли) -->
+        <!-- ======================================================= -->
+
+        <!-- Для полицейского -->
+<Border x:Name="DocSearchPolice" CornerRadius="8" Padding="12" IsVisible="True">
+    <StackPanel Spacing="12">
+        <TextBlock Text="📄 Поиск документа" FontWeight="Bold" FontSize="14" Foreground="#0F4B5E"/>
+        
+        <Grid ColumnDefinitions="*, *, *, Auto, Auto" ColumnSpacing="15">
+            <!-- Номер дела -->
+            <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Номер дела:" FontSize="11" Foreground="#0F4B5E"/>
+                <TextBox Height="32" Watermark="2026-000123" x:Name="txbx_police_deal" FontSize="12"/>
+            </StackPanel>
+            
+            <!-- Тип документа -->
+            <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Тип документа:" FontSize="11" Foreground="#0F4B5E"/>
+                <ComboBox Height="32" x:Name="cmb_police_doc_type" FontSize="12" SelectedIndex="0"
+                        HorizontalAlignment="Stretch">
+                    <ComboBoxItem Content="Любой"/>
+                    <ComboBoxItem Content="Обращение"/>
+                    <ComboBoxItem Content="Заявление"/>
+                    <ComboBoxItem Content="Протокол объяснения"/>
+                    <ComboBoxItem Content="Направление на мед. освид."/>
+                    <ComboBoxItem Content="Административный протокол"/>
+                    <ComboBoxItem Content="Акт медицинского освидетельствования"/>
+                    <ComboBoxItem Content="Судебно-медицинская экспертиза"/>
+                    <ComboBoxItem Content="Постановление"/>
+                </ComboBox>
+            </StackPanel>
+            
+            <!-- Дата составления -->
+            <StackPanel Grid.Column="2" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Дата составления:" FontSize="11" Foreground="#0F4B5E"/>
+                <DatePicker Height="32" x:Name="dp_police_doc_date" FontSize="12"/>
+            </StackPanel>
+            
+            <!-- Чекбокс -->
+            <CheckBox Grid.Column="3" Content="Искать по гражданину" VerticalAlignment="Center" 
+                      x:Name="chk_police_search_doc" FontSize="12" Margin="0,16,60,0"/>
+            
+            <!-- Кнопка -->
+            <Button Grid.Column="4" Content="Найти документ" Height="32" 
+                    Background="#0F4B5E" Foreground="White" CornerRadius="4" 
+                    FontSize="14" x:Name="btn_police_doc_search" 
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="140"
+                    Margin="0,16,0,0"/>
+        </Grid>
+    </StackPanel>
+</Border>
+        <!-- Для врача -->
+        <Border x:Name="DocSearchDoctor" CornerRadius="8" Padding="12" IsVisible="False">
+            <StackPanel Spacing="10">
+                <TextBlock Text="📄 Поиск актов и направлений на медицинское освидетельствование" FontWeight="Bold" FontSize="14" Foreground="#0F4B5E"/>
+                <Grid ColumnDefinitions="1.2*, 1.2*, 1.2*, Auto, Auto" ColumnSpacing="10">
+                    <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="4">
+                        <TextBlock Text="Номер направления:" FontSize="11" Foreground="#0F4B5E"/>
+                        <TextBox Height="32" Watermark="Номер" x:Name="txbx_doctor_report_number" FontSize="12"/>
                     </StackPanel>
-                </StackPanel>
-                
-                <Border Grid.Row="1" Background="White" BorderBrush="LightGray" 
-                BorderThickness="1" BoxShadow="0 0 15 3 #80808080" CornerRadius="4" 
-                Margin="20,0,20,0" VerticalAlignment="Top" Height="115" 
-                HorizontalAlignment="Stretch" Padding="10,8">
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="Поиск дел и протоколов" FontWeight="Bold" FontSize="17" Margin="0,0,0,10" Foreground="#0F4B5E"/>
-                        <Grid ColumnDefinitions="*,*,*,*,*,Auto" ColumnSpacing="10">
-                            <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="2">
-                                <TextBlock Text="Серия/Номер:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="00 00 123456" FontSize="12" x:Name="txbx_series_number"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="2">
-                                <TextBlock Text="ФИО / Дата рожд.:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="Иванов Иван / 01.01.1985" FontSize="12" x:Name="txbx_fio"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2" Orientation="Vertical" Spacing="2">
-                                <TextBlock Text="Дело №:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="2026-000123" FontSize="12" x:Name="txbx_deal"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="3" Orientation="Vertical" Spacing="2">
-                                <TextBlock Text="Телефон:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="+7 999 123-45-67" FontSize="12" x:Name="txbx_phone_number"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="4" Orientation="Vertical" Spacing="2">
-                                <TextBlock Text="Место проживания:" VerticalAlignment="Center" FontSize="12" Foreground="#0F4B5E"/>
-                                <TextBox Height="28" Watermark="Москва, Пушкина 32" FontSize="12" x:Name="txbx_address"/>
-                            </StackPanel>
-                            <Button Grid.Column="5" Content="Поиск" Width="80" Height="32" Background="#0F4B5E" Foreground="White" 
-                            CornerRadius="4" FontSize="14" VerticalAlignment="Bottom" VerticalContentAlignment="Center" x:Name="btn_searchMain" 
-                            HorizontalContentAlignment="Center"/>
-                        </Grid>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4">
+                        <TextBlock Text="Номер акта:" FontSize="11" Foreground="#0F4B5E"/>
+                        <TextBox Height="32" Watermark="Номер акта" x:Name="txbx_doctor_cert_number" FontSize="12"/>
                     </StackPanel>
-                </Border>
-
-                <Grid Grid.Row="1" Margin="20,130,20,20" VerticalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Недавние документы -->
-                    <Border Grid.Column="0" Background="White" 
-                    BorderBrush="LightGray" BorderThickness="1" 
-                    BoxShadow="0 0 15 3 #80808080" CornerRadius="8" Padding="15">
-                        <Grid RowDefinitions="Auto, *">
-                            <TextBlock Grid.Row="0" Text="Недавние документы" FontWeight="Bold" FontSize="17" Foreground="#0F4B5E" Margin="0,0,0,15"/>
-                            
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
-                                <StackPanel>
-                                    <ItemsControl x:Name="recentDocumentsList">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="#F8F9FA" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
-                                                    <Grid ColumnDefinitions="*, Auto">
-                                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
-                                                            <TextBlock Text="{Binding DocumentTypeIcon}" FontSize="16"/>
-                                                            <TextBlock Text="{Binding DocumentName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
-                                                            <TextBlock Text="{Binding LastOpenedDateFormatted}" FontSize="11" Foreground="#6C757D"/>
-                                                        </StackPanel>
-                                                        <Button Grid.Column="1" 
-                                                                Content="→"
-                                                                Width="30" Height="30"
-                                                                Background="#0F4B5E"
-                                                                Foreground="White"
-                                                                CornerRadius="4"
-                                                                FontSize="14"
-                                                                Tag="{Binding}"
-                                                                Cursor="Hand"
-                                                                x:Name="btnOpenRecent"/>
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    
-                                    <TextBlock x:Name="txtNoRecent" 
-                                               Text="Нет недавних документов" 
-                                               FontSize="13" 
-                                               Foreground="#6C757D" 
-                                               HorizontalAlignment="Center"
-                                               Margin="0,20,0,0"
-                                               IsVisible="False"/>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </Grid>
-                    </Border>
-
-                    <!-- Черновики -->
-                    <Border Grid.Column="2" Background="White" 
-                    BorderBrush="LightGray" BorderThickness="1" 
-                    BoxShadow="0 0 15 3 #80808080" CornerRadius="8" Padding="15">
-                        <Grid RowDefinitions="Auto, *">
-                            <TextBlock Grid.Row="0" Text="Черновики" FontWeight="Bold" 
-                            FontSize="17" Foreground="#0F4B5E" Margin="0,0,0,15"/>
-                            
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
-                                <StackPanel>
-                                    <ItemsControl x:Name="draftsList">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="#F8F9FA" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
-                                                    <Grid ColumnDefinitions="*, Auto">
-                                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
-                                                            <TextBlock Text="📄" FontSize="16"/>
-                                                            <TextBlock Text="{Binding TypeDisplayName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
-                                                            <TextBlock Text="{Binding DateFormatted}" FontSize="11" Foreground="#6C757D"/>
-                                                        </StackPanel>
-                                                        <Button Grid.Column="1" 
-                                                                Content="→"
-                                                                Width="30" Height="30"
-                                                                Background="#0F4B5E"
-                                                                Foreground="White"
-                                                                CornerRadius="4"
-                                                                FontSize="14"
-                                                                Tag="{Binding}"
-                                                                Cursor="Hand"
-                                                                x:Name="btnOpenDraft"/>
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    
-                                    <TextBlock x:Name="txtNoDrafts" 
-                                               Text="Нет черновиков" 
-                                               FontSize="13" 
-                                               Foreground="#6C757D" 
-                                               HorizontalAlignment="Center"
-                                               Margin="0,20,0,0"
-                                               IsVisible="False"/>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </Grid>
-                    </Border>
+                    <StackPanel Grid.Column="2" Orientation="Vertical" Spacing="4">
+                        <TextBlock Text="Дата составления:" FontSize="11" Foreground="#0F4B5E"/>
+                        <DatePicker Height="32" x:Name="dp_doctor_doc_date" FontSize="12"/>
+                    </StackPanel>
+                    <CheckBox Grid.Column="3" Content="Искать по гражданину" VerticalAlignment="Center" 
+                            x:Name="chk_doctor_search_doc" FontSize="12" Margin="0,16,60,0"/>
+                    <Button Grid.Column="4" Content="Найти документ" Width="140" Height="32" 
+                            Background="#0F4B5E" Foreground="White" CornerRadius="4" 
+                            FontSize="14" x:Name="btn_doctor_doc_search" VerticalAlignment="Bottom"
+                            Margin="0,16,0,0" HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"/>
                 </Grid>
-            </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Для судьи -->
+<Border x:Name="DocSearchJudge" CornerRadius="8" Padding="12" IsVisible="False">
+    <StackPanel Spacing="10">
+        <TextBlock Text="📄 Поиск документов" FontWeight="Bold" FontSize="14" Foreground="#0F4B5E"/>
+        
+        <Grid ColumnDefinitions="1.5*, 1*, 1*, 1*, Auto, Auto" ColumnSpacing="8">
+            
+            <!-- Тип документа -->
+            <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Тип документа:" FontSize="11" Foreground="#0F4B5E"/>
+                <ComboBox x:Name="cmb_judge_doc_type" 
+                          Height="32" 
+                          FontSize="12" 
+                          SelectedIndex="0"
+                          HorizontalAlignment="Stretch">
+                    <ComboBoxItem Content="Все"/>
+                    <ComboBoxItem Content="Обращение"/>
+                    <ComboBoxItem Content="Заявление"/>
+                    <ComboBoxItem Content="Протокол объяснения"/>
+                    <ComboBoxItem Content="Направление на мед. освид."/>
+                    <ComboBoxItem Content="Административный протокол"/>
+                    <ComboBoxItem Content="Акт медицинского освидетельствования"/>
+                    <ComboBoxItem Content="Судебно-медицинская экспертиза"/>
+                    <ComboBoxItem Content="Постановление"/>
+                </ComboBox>
+            </StackPanel>
+            
+            <!-- Номер документа -->
+            <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Номер документа:" FontSize="11" Foreground="#0F4B5E"/>
+                <TextBox Height="32" Watermark="Номер" x:Name="txbx_judge_number" FontSize="12"/>
+            </StackPanel>
+            
+            <!-- Номер дела -->
+            <StackPanel Grid.Column="2" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Номер дела:" FontSize="11" Foreground="#0F4B5E"/>
+                <TextBox Height="32" Watermark="Номер дела" x:Name="txbx_judge_deal" FontSize="12"/>
+            </StackPanel>
+            
+            <!-- Дата -->
+            <StackPanel Grid.Column="3" Orientation="Vertical" Spacing="4">
+                <TextBlock Text="Дата:" FontSize="11" Foreground="#0F4B5E"/>
+                <DatePicker Height="32" x:Name="dp_judge_doc_date" FontSize="12"/>
+            </StackPanel>
+            
+            <!-- Чекбокс -->
+            <StackPanel Grid.Column="4" VerticalAlignment="Center" Margin="0,16,0,0">
+                <CheckBox Content="Искать по гражданину" 
+                          x:Name="chk_judge_search_doc" 
+                          FontSize="13"/>
+            </StackPanel>
+            
+            <!-- Кнопка найти -->
+            <Button Grid.Column="5" 
+                    Content="Найти" 
+                    Width="70" 
+                    Height="32" 
+                    Background="#0F4B5E" 
+                    Foreground="White" 
+                    CornerRadius="4" 
+                    FontSize="13" 
+                    x:Name="btn_judge_doc_search" 
+                    VerticalAlignment="Bottom"
+                    Margin="0,16,0,0"/>
+        </Grid>
+    </StackPanel>
+</Border>
+
+        <!-- Для эксперта -->
+        <Border x:Name="DocSearchForensic" CornerRadius="8" Padding="12" IsVisible="False">
+            <StackPanel Spacing="10">
+                <TextBlock Text="📄 Поиск экспертизы" FontWeight="Bold" FontSize="14" Foreground="#0F4B5E"/>
+                <Grid ColumnDefinitions="1.2*, 1.2*, 1.2*, Auto, Auto" ColumnSpacing="10">
+                    <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="4">
+                        <TextBlock Text="Номер экспертизы:" FontSize="11" Foreground="#0F4B5E"/>
+                        <TextBox Height="32" Watermark="Номер" x:Name="txbx_forensic_number" FontSize="12"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4">
+                        <TextBlock Text="Номер дела:" FontSize="11" Foreground="#0F4B5E"/>
+                        <TextBox Height="32" Watermark="Номер дела" x:Name="txbx_forensic_deal" FontSize="12"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Vertical" Spacing="4">
+                        <TextBlock Text="Дата составления:" FontSize="11" Foreground="#0F4B5E"/>
+                        <DatePicker Height="32" x:Name="dp_forensic_doc_date" FontSize="12"/>
+                    </StackPanel>
+                    <CheckBox Grid.Column="3" Content="Искать по гражданину" VerticalAlignment="Center" 
+                            x:Name="chk_forensic_search_doc" FontSize="12" Margin="0,16,60,0"/>
+                    <Button Grid.Column="4" Content="Найти документ" Width="140" Height="32" 
+                            Background="#0F4B5E" Foreground="White" CornerRadius="4" 
+                            FontSize="14" x:Name="btn_forensic_doc_search" VerticalAlignment="Bottom"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Margin="0,16,0,0"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Для инспектора (пока копия полицейского) -->
+        <Border x:Name="DocSearchInspector" CornerRadius="8" Padding="12" IsVisible="False">
+            <!-- то же, что у полицейского -->
+        </Border>
+
+    </StackPanel>
+</Border>
+
+                    <!-- Недавние документы и Черновики (строка 2) -->
+                    <Grid Grid.Row="2" Margin="20,20,20,20" VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Недавние документы -->
+                        <Border Grid.Column="0" Background="White" 
+                                BorderBrush="LightGray" BorderThickness="1" 
+                                BoxShadow="0 0 15 3 #80808080" CornerRadius="8" Padding="15">
+                            <Grid RowDefinitions="Auto, *">
+                                <TextBlock Grid.Row="0" Text="Недавние документы" FontWeight="Bold" FontSize="17" Foreground="#0F4B5E" Margin="0,0,0,15"/>
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                                    <StackPanel>
+                                        <ItemsControl x:Name="recentDocumentsList">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#F8F9FA" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
+                                                        <Grid ColumnDefinitions="*, Auto">
+                                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                                                <TextBlock Text="{Binding DocumentTypeIcon}" FontSize="16"/>
+                                                                <TextBlock Text="{Binding DocumentName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
+                                                                <TextBlock Text="{Binding LastOpenedDateFormatted}" FontSize="11" Foreground="#6C757D"/>
+                                                            </StackPanel>
+                                                            <Button Grid.Column="1" Content="→" Width="30" Height="30"
+                                                                    Background="#0F4B5E" Foreground="White" CornerRadius="4"
+                                                                    FontSize="14" Tag="{Binding}" Cursor="Hand" x:Name="btnOpenRecent"/>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock x:Name="txtNoRecent" Text="Нет недавних документов" 
+                                                FontSize="13" Foreground="#6C757D" HorizontalAlignment="Center"
+                                                Margin="0,20,0,0" IsVisible="False"/>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <!-- Черновики -->
+                        <Border Grid.Column="2" Background="White" 
+                                BorderBrush="LightGray" BorderThickness="1" 
+                                BoxShadow="0 0 15 3 #80808080" CornerRadius="8" Padding="15">
+                            <Grid RowDefinitions="Auto, *">
+                                <TextBlock Grid.Row="0" Text="Черновики" FontWeight="Bold" FontSize="17" Foreground="#0F4B5E" Margin="0,0,0,15"/>
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                                    <StackPanel>
+                                        <ItemsControl x:Name="draftsList">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#F8F9FA" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
+                                                        <Grid ColumnDefinitions="*, Auto">
+                                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                                                <TextBlock Text="📄" FontSize="16"/>
+                                                                <TextBlock Text="{Binding TypeDisplayName}" FontSize="13" FontWeight="SemiBold" Foreground="#1E2A3A"/>
+                                                                <TextBlock Text="{Binding DateFormatted}" FontSize="11" Foreground="#6C757D"/>
+                                                            </StackPanel>
+                                                            <Button Grid.Column="1" Content="→" Width="30" Height="30"
+                                                                    Background="#0F4B5E" Foreground="White" CornerRadius="4"
+                                                                    FontSize="14" Tag="{Binding}" Cursor="Hand" x:Name="btnOpenDraft"/>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock x:Name="txtNoDrafts" Text="Нет черновиков" 
+                                                FontSize="13" Foreground="#6C757D" HorizontalAlignment="Center"
+                                                Margin="0,20,0,0" IsVisible="False"/>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
         </Border>
 
         <controls:NotificationsControl x:Name="NotificationsControl" 

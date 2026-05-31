@@ -1,3 +1,4 @@
+using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,6 +7,8 @@ using CourseWork.Models;
 using System.Reflection.Metadata;
 using System.Linq;
 using CourseWork.Helpers;
+using CourseWork.Controls;
+using System.Text.Json;
 
 namespace CourseWork.Data
 {
@@ -22,12 +25,12 @@ namespace CourseWork.Data
         {
             return new RecentDocument
             {
-                Id = reader.GetInt32(0),              
-                DocumentTypeId = reader.GetInt32(1),  
-                DocumentType = reader.GetString(2),   
-                Number = reader.IsDBNull(3) ? null : reader.GetInt32(3),  
-                MakingDateAndTime = reader.GetDateTime(4),  
-                CitizenName = reader.IsDBNull(5) ? null : reader.GetString(5)  
+                Id = reader.GetInt32(0),
+                DocumentTypeId = reader.GetInt32(1),
+                DocumentType = reader.GetString(2),
+                Number = reader.IsDBNull(3) ? null : reader.GetInt32(3),
+                MakingDateAndTime = reader.GetDateTime(4),
+                CitizenName = reader.IsDBNull(5) ? null : reader.GetString(5)
             };
         }
 
@@ -37,10 +40,13 @@ namespace CourseWork.Data
         {
             try
             {
+                Console.WriteLine($"[AUTH] Попытка входа: username={username}");
+                
                 await using var conn = new NpgsqlConnection(_connectionString);
                 await conn.OpenAsync();
+                
+                Console.WriteLine($"[AUTH] Подключение к БД открыто");
 
-                // Сначала получаем хэш пароля из БД
                 var sql = @"
                     SELECT id, username, last_name, first_name, patronymic, COALESCE(role, 1) as role, password
                     FROM users
@@ -53,12 +59,16 @@ namespace CourseWork.Data
                 
                 if (await reader.ReadAsync())
                 {
-                    var storedHash = reader.GetString(6);
+                    Console.WriteLine($"[AUTH] Пользователь найден в БД");
                     
-                    // Проверяем пароль
-                    if (PasswordHelper.VerifyPassword(password, storedHash))
+                    var storedHash = reader.GetString(6);
+                    bool passwordValid = PasswordHelper.VerifyPassword(password, storedHash);
+                    
+                    Console.WriteLine($"[AUTH] Проверка пароля: {passwordValid}");
+                    
+                    if (passwordValid)
                     {
-                        return new UserWithRole
+                        var user = new UserWithRole
                         {
                             Id = reader.GetInt32(0),
                             Username = reader.GetString(1),
@@ -67,66 +77,284 @@ namespace CourseWork.Data
                             Patronymic = reader.IsDBNull(4) ? null : reader.GetString(4),
                             Role = (UserRole)reader.GetInt32(5)
                         };
+                        Console.WriteLine($"[AUTH] Успех! UserId={user.Id}, Role={user.Role}");
+                        return user;
                     }
                 }
+                else
+                {
+                    Console.WriteLine($"[AUTH] Пользователь '{username}' не найден");
+                }
+                
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] AuthenticateUserWithRoleAsync: {ex.Message}");
-                return null;
+                Console.WriteLine($"[AUTH ERROR] {ex.Message}");
+                Console.WriteLine($"[AUTH ERROR] {ex.StackTrace}");
+                throw; // Пробрасываем дальше для отображения в UI
             }
         }
 
-        public async Task<bool> RegisterUserAsync(string username, string password, string lastName, string firstName, string? patronymic = null)
-        {
-            try
-            {
-                await using var conn = new NpgsqlConnection(_connectionString);
-                await conn.OpenAsync();
-
-                var sql = @"INSERT INTO users (username, password, last_name, first_name, patronymic) 
-                           VALUES (@username, @password, @lastName, @firstName, @patronymic)";
-                await using var cmd = new NpgsqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@password", password);
-                cmd.Parameters.AddWithValue("@lastName", lastName);
-                cmd.Parameters.AddWithValue("@firstName", firstName);
-                cmd.Parameters.AddWithValue("@patronymic", patronymic ?? (object)DBNull.Value);
-
-                await cmd.ExecuteNonQueryAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        
-        
-        
-        
-        
-        public async Task<List<RecentDocument>> GetAllDocumentsAsync()
+        public async Task<List<RecentDocument>> GetAllDocumentsAsync(UserRole role, int userId)
         {
             var documents = new List<RecentDocument>();
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
-            var sql = @"SELECT id, type_id, type_name, number, making_date, citizen_name 
-                        FROM view_recent_documents 
-                        ORDER BY making_date DESC 
+
+            string sql = "";
+
+            switch (role)
+            {
+                case UserRole.MedicalExpert:
+                    sql = @"
+                        SELECT 
+                            mer.id_medical_examination_report AS id,
+                            4 AS type_id,
+                            'Направление на мед. освид.' AS type_name,
+                            mer.number,
+                            mer.making_date_and_time AS making_date,
+                            c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                        FROM medical_examination_report mer
+                        LEFT JOIN citizens c ON mer.patient = c.id_citizens
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            mec.id_medical_examination_certificate AS id,
+                            6 AS type_id,
+                            'Акт медицинского освидетельствования' AS type_name,
+                            mec.number,
+                            mec.making_date_and_time AS making_date,
+                            c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                        FROM medical_examination_certificate mec
+                        LEFT JOIN medical_examination_report mer ON mec.medical_examination_report = mer.id_medical_examination_report
+                        LEFT JOIN citizens c ON mer.patient = c.id_citizens
+                        
+                        ORDER BY making_date DESC
                         LIMIT 100";
+                    break;
+
+                case UserRole.PoliceOfficer:
+                    sql = @"
+                        SELECT id, type_id, type_name, number, making_date, citizen_name FROM (
+                            -- Обращения
+                            SELECT 
+                                a.id_appeals AS id,
+                                2 AS type_id,
+                                'Обращение' AS type_name,
+                                a.number,
+                                a.making_date_and_time AS making_date,
+                                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                            FROM appeals a
+                            JOIN citizens c ON a.appeal_citizen = c.id_citizens
+                            WHERE a.police_officer = @userId
+                            
+                            UNION ALL
+                            
+                            -- Заявления
+                            SELECT 
+                                s.id_statement AS id,
+                                1 AS type_id,
+                                'Заявление' AS type_name,
+                                s.number,
+                                s.date_and_time AS making_date,
+                                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                            FROM statement s
+                            JOIN citizens c ON s.applicant = c.id_citizens
+                            WHERE s.police_officer = @userId
+                            
+                            UNION ALL
+                            
+                            -- Протоколы объяснения
+                            SELECT 
+                                ep.id_explanation_protocol AS id,
+                                3 AS type_id,
+                                'Протокол объяснения' AS type_name,
+                                ep.number,
+                                ep.making_date_and_time AS making_date,
+                                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                            FROM explanation_protocol ep
+                            JOIN citizens c ON ep.citizen = c.id_citizens
+                            JOIN deal d ON ep.deal = d.id_deal
+                            WHERE d.police_officer = (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)
+                            
+                            UNION ALL
+                            
+                            -- Направления на мед. освид.
+                            SELECT 
+                                mer.id_medical_examination_report AS id,
+                                4 AS type_id,
+                                'Направление на мед. освид.' AS type_name,
+                                mer.number,
+                                mer.making_date_and_time AS making_date,
+                                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                            FROM medical_examination_report mer
+                            JOIN citizens c ON mer.patient = c.id_citizens
+                            JOIN deal d ON mer.deal = d.id_deal
+                            WHERE d.police_officer = (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)
+                            
+                            UNION ALL
+                            
+                            -- Административные протоколы
+                            SELECT 
+                                ap.id_protocol AS id,
+                                5 AS type_id,
+                                'Административный протокол' AS type_name,
+                                ap.protocol_number AS number,
+                                ap.making_date_and_time AS making_date,
+                                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                            FROM administrative_protocol ap
+                            JOIN deal d ON ap.deal = d.id_deal
+                            JOIN citizens c ON d.offender = c.id_citizens
+                            WHERE d.police_officer = (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)
+                        ) AS docs
+                        ORDER BY making_date DESC
+                        LIMIT 100";
+                    break;
+
+                case UserRole.ForensicExpert:
+                    sql = @"
+                        SELECT 
+                            fe.id_forensic_medical_examination AS id,
+                            7 AS type_id,
+                            'Судебно-медицинская экспертиза' AS type_name,
+                            fe.number AS number,
+                            fe.making_date_and_time AS making_date,
+                            c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                        FROM forensic_medical_examination fe
+                        LEFT JOIN deal d ON fe.deal = d.id_deal
+                        LEFT JOIN citizens c ON d.offender = c.id_citizens
+                        WHERE fe.expert = (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)
+                        ORDER BY fe.making_date_and_time DESC
+                        LIMIT 100";
+                    break;
+
+                case UserRole.Judge:
+                    sql = @"
+                        SELECT 
+                            r.id_resolution AS id,
+                            8 AS type_id,
+                            'Постановление' AS type_name,
+                            r.protocol_number AS number,
+                            r.making_date_and_time AS making_date,
+                            c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name
+                        FROM resolution r
+                        LEFT JOIN deal d ON r.deal = d.id_deal
+                        LEFT JOIN citizens c ON d.offender = c.id_citizens
+                        ORDER BY r.making_date_and_time DESC
+                        LIMIT 100";
+                    break;
+            }
 
             await using var cmd = new NpgsqlCommand(sql, conn);
+            if (role == UserRole.PoliceOfficer || role == UserRole.ForensicExpert)
+            {
+                cmd.Parameters.AddWithValue("@userId", userId);
+            }
+
             await using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
-                documents.Add(MapReader(reader));
-
-            Console.WriteLine($"[DEBUG] GetAllDocumentsAsync: загружено {documents.Count} документов");
+            {
+                documents.Add(new RecentDocument
+                {
+                    Id = reader.GetInt32(0),
+                    DocumentTypeId = reader.GetInt32(1),
+                    DocumentType = reader.GetString(2),
+                    Number = reader.IsDBNull(3) ? null : reader.GetInt32(3),     // ← безопасное чтение
+                    MakingDateAndTime = reader.GetDateTime(4),
+                    CitizenName = reader.IsDBNull(5) ? null : reader.GetString(5)  // ← безопасное чтение
+                });
+            }
             return documents;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
         
@@ -135,80 +363,136 @@ namespace CourseWork.Data
         {
             var documents = new List<RecentDocument>();
             
+            // Отладка: начало метода
+            Console.WriteLine($"[DEBUG] GetFavoriteDocumentsAsync вызван для userId={userId}");
+            NotificationsControl.ShowInfo("Отладка", $"GetFavoriteDocumentsAsync: userId={userId}");
+            
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
             var sql = @"
-                SELECT 
-                    f.document_id AS id,
-                    CASE f.target_table
-                        WHEN 'statement' THEN 1
-                        WHEN 'appeals' THEN 2
-                        WHEN 'explanation_protocol' THEN 3
-                        WHEN 'medical_examination_report' THEN 4
-                        WHEN 'administrative_protocol' THEN 5
-                    END AS type_id,
-                    CASE f.target_table
-                        WHEN 'statement' THEN 'Заявление'
-                        WHEN 'appeals' THEN 'Обращение'
-                        WHEN 'explanation_protocol' THEN 'Протокол объяснения'
-                        WHEN 'medical_examination_report' THEN 'Направление на мед. освид.'
-                        WHEN 'administrative_protocol' THEN 'Административный протокол'
-                    END AS type_name,
-                    CASE f.target_table
-                        WHEN 'statement' THEN s.number
-                        WHEN 'appeals' THEN a.number
-                        WHEN 'explanation_protocol' THEN ep.number
-                        WHEN 'medical_examination_report' THEN mer.number
-                        WHEN 'administrative_protocol' THEN ap.protocol_number
-                    END AS number,
-                    CASE f.target_table
-                        WHEN 'statement' THEN s.date_and_time
-                        WHEN 'appeals' THEN a.making_date_and_time
-                        WHEN 'explanation_protocol' THEN ep.making_date_and_time
-                        WHEN 'medical_examination_report' THEN mer.making_date_and_time
-                        WHEN 'administrative_protocol' THEN ap.making_date_and_time
-                    END AS making_date,
-                    CASE f.target_table
-                        WHEN 'statement' THEN c_s.last_name || ' ' || c_s.first_name || ' ' || COALESCE(c_s.patronymic, '')
-                        WHEN 'appeals' THEN c_a.last_name || ' ' || c_a.first_name || ' ' || COALESCE(c_a.patronymic, '')
-                        WHEN 'explanation_protocol' THEN c_ep.last_name || ' ' || c_ep.first_name || ' ' || COALESCE(c_ep.patronymic, '')
-                        WHEN 'medical_examination_report' THEN c_mer.last_name || ' ' || c_mer.first_name || ' ' || COALESCE(c_mer.patronymic, '')
-                        WHEN 'administrative_protocol' THEN c_ap.last_name || ' ' || c_ap.first_name || ' ' || COALESCE(c_ap.patronymic, '')
-                    END AS citizen_name
-                FROM user_favorites f
-                LEFT JOIN statement s ON f.target_table = 'statement' AND f.document_id = s.id_statement
-                LEFT JOIN citizens c_s ON s.applicant = c_s.id_citizens
-                LEFT JOIN appeals a ON f.target_table = 'appeals' AND f.document_id = a.id_appeals
-                LEFT JOIN citizens c_a ON a.appeal_citizen = c_a.id_citizens
-                LEFT JOIN explanation_protocol ep ON f.target_table = 'explanation_protocol' AND f.document_id = ep.id_explanation_protocol
-                LEFT JOIN citizens c_ep ON ep.citizen = c_ep.id_citizens
-                LEFT JOIN medical_examination_report mer ON f.target_table = 'medical_examination_report' AND f.document_id = mer.id_medical_examination_report
-                LEFT JOIN citizens c_mer ON mer.patient = c_mer.id_citizens
-                LEFT JOIN administrative_protocol ap ON f.target_table = 'administrative_protocol' AND f.document_id = ap.id_protocol
-                LEFT JOIN deal d ON ap.deal = d.id_deal
-                LEFT JOIN citizens c_ap ON d.offender = c_ap.id_citizens
-                WHERE f.user_id = @userId
-                ORDER BY making_date DESC";
+    SELECT 
+        f.document_id AS id,
+        CASE f.target_table
+            WHEN 'statement' THEN 1
+            WHEN 'appeals' THEN 2
+            WHEN 'explanation_protocol' THEN 3
+            WHEN 'medical_examination_report' THEN 4
+            WHEN 'administrative_protocol' THEN 5
+            WHEN 'medical_certificate' THEN 6
+            WHEN 'forensic_medical_examination' THEN 7
+            WHEN 'resolution' THEN 8
+        END AS type_id,
+        CASE f.target_table
+            WHEN 'statement' THEN 'Заявление'
+            WHEN 'appeals' THEN 'Обращение'
+            WHEN 'explanation_protocol' THEN 'Протокол объяснения'
+            WHEN 'medical_examination_report' THEN 'Направление на мед. освид.'
+            WHEN 'administrative_protocol' THEN 'Административный протокол'
+            WHEN 'medical_certificate' THEN 'Акт медицинского освидетельствования'
+            WHEN 'forensic_medical_examination' THEN 'Судебно-медицинская экспертиза'
+            WHEN 'resolution' THEN 'Постановление'
+        END AS type_name,
+        CASE f.target_table
+            WHEN 'statement' THEN s.number
+            WHEN 'appeals' THEN a.number
+            WHEN 'explanation_protocol' THEN ep.number
+            WHEN 'medical_examination_report' THEN mer.number
+            WHEN 'administrative_protocol' THEN ap.protocol_number
+            WHEN 'medical_certificate' THEN mc.number
+            WHEN 'forensic_medical_examination' THEN fe.number
+            WHEN 'resolution' THEN r.protocol_number
+        END AS number,
+        CASE f.target_table
+            WHEN 'statement' THEN s.date_and_time
+            WHEN 'appeals' THEN a.making_date_and_time
+            WHEN 'explanation_protocol' THEN ep.making_date_and_time
+            WHEN 'medical_examination_report' THEN mer.making_date_and_time
+            WHEN 'administrative_protocol' THEN ap.making_date_and_time
+            WHEN 'medical_certificate' THEN mc.making_date_and_time
+            WHEN 'forensic_medical_examination' THEN fe.making_date_and_time
+            WHEN 'resolution' THEN r.making_date_and_time
+        END AS making_date,
+        CASE f.target_table
+            WHEN 'statement' THEN c_s.last_name || ' ' || c_s.first_name || ' ' || COALESCE(c_s.patronymic, '')
+            WHEN 'appeals' THEN c_a.last_name || ' ' || c_a.first_name || ' ' || COALESCE(c_a.patronymic, '')
+            WHEN 'explanation_protocol' THEN c_ep.last_name || ' ' || c_ep.first_name || ' ' || COALESCE(c_ep.patronymic, '')
+            WHEN 'medical_examination_report' THEN c_mer.last_name || ' ' || c_mer.first_name || ' ' || COALESCE(c_mer.patronymic, '')
+            WHEN 'administrative_protocol' THEN c_ap.last_name || ' ' || c_ap.first_name || ' ' || COALESCE(c_ap.patronymic, '')
+            WHEN 'medical_certificate' THEN c_mc.last_name || ' ' || c_mc.first_name || ' ' || COALESCE(c_mc.patronymic, '')
+            WHEN 'forensic_medical_examination' THEN c_fe.last_name || ' ' || c_fe.first_name || ' ' || COALESCE(c_fe.patronymic, '')
+            WHEN 'resolution' THEN c_r.last_name || ' ' || c_r.first_name || ' ' || COALESCE(c_r.patronymic, '')
+        END AS citizen_name
+    FROM user_favorites f
+    LEFT JOIN statement s ON f.target_table = 'statement' AND f.document_id = s.id_statement
+    LEFT JOIN citizens c_s ON s.applicant = c_s.id_citizens
+    LEFT JOIN appeals a ON f.target_table = 'appeals' AND f.document_id = a.id_appeals
+    LEFT JOIN citizens c_a ON a.appeal_citizen = c_a.id_citizens
+    LEFT JOIN explanation_protocol ep ON f.target_table = 'explanation_protocol' AND f.document_id = ep.id_explanation_protocol
+    LEFT JOIN citizens c_ep ON ep.citizen = c_ep.id_citizens
+    LEFT JOIN medical_examination_report mer ON f.target_table = 'medical_examination_report' AND f.document_id = mer.id_medical_examination_report
+    LEFT JOIN citizens c_mer ON mer.patient = c_mer.id_citizens
+    LEFT JOIN administrative_protocol ap ON f.target_table = 'administrative_protocol' AND f.document_id = ap.id_protocol
+    LEFT JOIN deal d ON ap.deal = d.id_deal
+    LEFT JOIN citizens c_ap ON d.offender = c_ap.id_citizens
+    LEFT JOIN medical_examination_certificate mc ON f.target_table = 'medical_certificate' AND f.document_id = mc.id_medical_examination_certificate
+    LEFT JOIN medical_examination_report mer_mc ON mc.medical_examination_report = mer_mc.id_medical_examination_report
+    LEFT JOIN citizens c_mc ON mer_mc.patient = c_mc.id_citizens
+    LEFT JOIN forensic_medical_examination fe ON f.target_table = 'forensic_medical_examination' AND f.document_id = fe.id_forensic_medical_examination
+    LEFT JOIN deal d_fe ON fe.deal = d_fe.id_deal
+    LEFT JOIN citizens c_fe ON d_fe.offender = c_fe.id_citizens
+    LEFT JOIN resolution r ON f.target_table = 'resolution' AND f.document_id = r.id_resolution
+    LEFT JOIN deal d_r ON r.deal = d_r.id_deal
+    LEFT JOIN citizens c_r ON d_r.offender = c_r.id_citizens
+    WHERE f.user_id = @userId";
 
             await using var cmd = new NpgsqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@userId", userId);
             
+            // Отладка: SQL запрос
+            Console.WriteLine($"[DEBUG] SQL запрос: {sql}");
+            
             await using var reader = await cmd.ExecuteReaderAsync();
             
+            // Отладка: проверка наличия данных
+            int rowCount = 0;
             while (await reader.ReadAsync())
             {
+                rowCount++;
+                var docId = reader.GetInt32(0);
+                var docType = reader.GetString(2);
+                var docNumber = reader.IsDBNull(3) ? "NULL" : reader.GetInt32(3).ToString();
+                var docDate = reader.GetDateTime(4);
+                var citizenName = reader.IsDBNull(5) ? "NULL" : reader.GetString(5);
+                
+                // Отладка: каждый документ
+                NotificationsControl.ShowInfo("Отладка", 
+                    $"Найден документ в избранном:\n" +
+                    $"ID: {docId}\n" +
+                    $"Тип: {docType}\n" +
+                    $"Номер: {docNumber}\n" +
+                    $"Дата: {docDate}\n" +
+                    $"Гражданин: {citizenName}");
+                
                 documents.Add(new RecentDocument
                 {
-                    Id = reader.GetInt32(0),
+                    Id = docId,
                     DocumentTypeId = reader.GetInt32(1),
-                    DocumentType = reader.GetString(2),
+                    DocumentType = docType,
                     Number = reader.IsDBNull(3) ? null : reader.GetInt32(3),
-                    MakingDateAndTime = reader.GetDateTime(4),
-                    CitizenName = reader.IsDBNull(5) ? null : reader.GetString(5)
+                    MakingDateAndTime = docDate,
+                    CitizenName = citizenName
                 });
             }
-
+            
+            // Отладка: итог
+            NotificationsControl.ShowInfo("Отладка", 
+                $"GetFavoriteDocumentsAsync завершён:\n" +
+                $"userId={userId}\n" +
+                $"Найдено документов: {rowCount}");
+            
+            Console.WriteLine($"[DEBUG] GetFavoriteDocumentsAsync: userId={userId}, найдено документов={rowCount}");
+            
             return documents;
         }
         
@@ -227,8 +511,8 @@ namespace CourseWork.Data
                     c.patronymic,
                     c.birthday,
                     c.address_registration,
-                    cp.phone_number,                    -- ← телефон
                     c.passport_series_and_number,
+                    (SELECT phone_number FROM citizen_phones WHERE citizen = c.id_citizens AND is_primary = true LIMIT 1) AS phone,
                     s.name as working_place_name,
                     e.education as education_name,
                     fs.family_status as family_status_name,
@@ -237,7 +521,6 @@ namespace CourseWork.Data
                     c.count_record,
                     p.post as post_name
                 FROM citizens c
-                LEFT JOIN citizen_phones cp ON cp.citizen = c.id_citizens AND cp.is_primary = true   -- ← этот JOIN
                 LEFT JOIN structures s ON c.working_place = s.id_structures
                 LEFT JOIN education e ON c.education = e.id_education
                 LEFT JOIN family_status fs ON c.family_status = fs.id_family_status
@@ -259,22 +542,25 @@ namespace CourseWork.Data
                     Patronymic = reader.IsDBNull(3) ? null : reader.GetString(3),
                     Birthday = reader.GetDateTime(4),
                     Address = reader.IsDBNull(5) ? null : reader.GetString(5),
-                    Phone = reader.IsDBNull(6) ? null : reader.GetString(6),
-                    Passport = reader.IsDBNull(7) ? null : reader.GetString(7),
+                    Passport = reader.IsDBNull(6) ? null : reader.GetString(6),       // ← passport на индексе 6
+                    Phone = reader.IsDBNull(7) ? null : reader.GetString(7),          // ← phone на индексе 7
                     WorkingPlaceName = reader.IsDBNull(8) ? null : reader.GetString(8),
                     EducationName = reader.IsDBNull(9) ? null : reader.GetString(9),
                     FamilyStatusName = reader.IsDBNull(10) ? null : reader.GetString(10),
                     CitizenshipName = reader.IsDBNull(11) ? null : reader.GetString(11),
-                    CriminalRecord = reader.GetBoolean(12),           // ← добавить
-                    CountRecord = reader.IsDBNull(13) ? null : reader.GetInt32(13),  // ← добавить
-                    PostName = reader.IsDBNull(14) ? null : reader.GetString(14),    // ← добавить
+                    CriminalRecord = reader.GetBoolean(12),
+                    CountRecord = reader.IsDBNull(13) ? null : reader.GetInt32(13),
+                    PostName = reader.IsDBNull(14) ? null : reader.GetString(14),
 
+                    
+                    // Эти поля не используются, но пусть будут
                     WorkingPlace = null,
                     Education = null,
                     FamilyStatus = null,
                     Citizenship = null,
                 };
-            }
+                
+            }   
             return null;
         }
         
@@ -935,7 +1221,7 @@ namespace CourseWork.Data
                 }
                 
         
-                draft.Preview = ExtractPreview(formData);
+                draft.Preview = ExtractPreview(formData, draft.DocumentType);
                 
         
                 draft.ProgressPercent = CalculateProgress(draft);
@@ -989,20 +1275,44 @@ namespace CourseWork.Data
 
 
        
-        private string ExtractPreview(string json)
+        private string ExtractPreview(string json, string documentType)
         {
             try
             {
                 using var doc = System.Text.Json.JsonDocument.Parse(json);
-                if (doc.RootElement.TryGetProperty("content", out var content))
-                {
-                    var text = content.GetString();
-                    return string.IsNullOrWhiteSpace(text) ? "(пусто)" : 
-                        (text.Length > 100 ? text.Substring(0, 100) + "..." : text);
-                }
+                var root = doc.RootElement;
+                
+                // Пытаемся получить номер документа
+                string number = "";
+                if (root.TryGetProperty("number", out var numProp) && numProp.ValueKind != JsonValueKind.Null)
+                    number = numProp.GetString();
+                else if (root.TryGetProperty("protocol_number", out var protocolProp) && protocolProp.ValueKind != JsonValueKind.Null)
+                    number = protocolProp.GetString();
+                
+                // Пытаемся получить ФИО гражданина
+                string citizenName = "";
+                if (root.TryGetProperty("citizen_name", out var citizenProp) && citizenProp.ValueKind != JsonValueKind.Null)
+                    citizenName = citizenProp.GetString();
+                else if (root.TryGetProperty("patient_name", out var patientProp) && patientProp.ValueKind != JsonValueKind.Null)
+                    citizenName = patientProp.GetString();
+                else if (root.TryGetProperty("applicant_name", out var applicantProp) && applicantProp.ValueKind != JsonValueKind.Null)
+                    citizenName = applicantProp.GetString();
+                
+                // Формируем превью
+                if (!string.IsNullOrWhiteSpace(number) && !string.IsNullOrWhiteSpace(citizenName))
+                    return $"№{number} - {citizenName}";
+                else if (!string.IsNullOrWhiteSpace(number))
+                    return $"№{number}";
+                else if (!string.IsNullOrWhiteSpace(citizenName))
+                    return citizenName;
+                
+                return "(нет данных)";
             }
-            catch { }
-            return "(ошибка чтения)";
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] ExtractPreview: {ex.Message}");
+                return "(ошибка чтения)";
+            }
         }
 
         private int? ExtractCitizenId(string json)
@@ -1059,7 +1369,6 @@ namespace CourseWork.Data
                     break;
                     
                 case "examination_report":
-                    fields.Add(draft.PatientId != null);
                     fields.Add(draft.DealId != null);
                     fields.Add(draft.ReportTypeId != null);
                     fields.Add(!string.IsNullOrWhiteSpace(draft.Content));
@@ -1203,11 +1512,11 @@ namespace CourseWork.Data
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
-    
             var sql = @"
                 SELECT 
                     d.id_deal,
-                    COALESCE(d.deal_number::text, 'Б/Н') AS number,
+                    d.deal_number,
+                    d.making_date,
                     COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_full_name
                 FROM deal d
                 LEFT JOIN citizens c ON d.offender = c.id_citizens
@@ -1221,9 +1530,9 @@ namespace CourseWork.Data
                 deals.Add(new Deal
                 {
                     Id = reader.GetInt32(0),
-                    Number = reader.IsDBNull(1) ? "Б/Н" : reader.GetString(1),
-                    CitizenFullName = reader.IsDBNull(2) ? "Неизвестно" : reader.GetString(2),
-                    DealDate = DateTime.Now
+                    Number = reader.IsDBNull(1) ? "Б/Н" : reader.GetInt32(1).ToString(),
+                    DealDate = reader.GetDateTime(2),
+                    CitizenFullName = reader.IsDBNull(3) ? "Неизвестно" : reader.GetString(3)
                 });
             }
 
@@ -1597,15 +1906,14 @@ namespace CourseWork.Data
                     c.patronymic,
                     c.birthday,
                     c.address_registration,
-                    c.passport_series_and_number,  -- ✅ Добавьте паспорт
+                    c.passport_series_and_number,
                     (SELECT cp.phone_number FROM citizen_phones cp WHERE cp.citizen = c.id_citizens AND cp.is_primary = TRUE LIMIT 1) AS phone,
-                    s.name as working_place,       -- ✅ Место работы (название)
-                    e.education,                   -- ✅ Образование (название)
-                    fs.family_status,              -- ✅ Семейное положение (название)
-                    cit.citizenship,               -- ✅ Гражданство (название)
-                    p.post as post_name            -- ✅ Должность (название)
+                    COALESCE(s.name, 'Не указано') AS working_place,
+                    COALESCE(e.education, 'Не указано') AS education,
+                    COALESCE(fs.family_status, 'Не указано') AS family_status,
+                    COALESCE(cit.citizenship, 'Не указано') AS citizenship,
+                    COALESCE(p.post, 'Не указана') AS post_name
                 FROM citizens c
-                LEFT JOIN citizen_phones cp ON cp.citizen = c.id_citizens AND cp.is_primary = true
                 LEFT JOIN structures s ON c.working_place = s.id_structures
                 LEFT JOIN education e ON c.education = e.id_education
                 LEFT JOIN family_status fs ON c.family_status = fs.id_family_status
@@ -1646,16 +1954,51 @@ namespace CourseWork.Data
             return citizens;
         }
 
-        public async Task<List<ExternalDocument>> GetExternalDocumentsAsync(int dealId, int? citizenId = null)
+        public async Task<List<ExternalDocument>> GetExternalDocumentsAsync(int? dealId, int? citizenId = null)
         {
             var documents = new List<ExternalDocument>();
             
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
-    
+            int dealIdValue = dealId ?? -1;
+
             var sql = @"
-                -- Протокол объяснения
+                -- Обращения
+                SELECT 
+                    a.id_appeals AS id,
+                    'appeals' AS table_name,
+                    'Обращение' AS document_type,
+                    COALESCE(a.number::text, 'Б/Н') AS number,
+                    COALESCE(a.making_date_and_time, NOW()) AS created_at,
+                    COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_name,
+                    '' AS deal_number,
+                    c.id_citizens AS citizen_id,
+                    NULL::int AS deal_id
+                FROM public.appeals a
+                LEFT JOIN public.citizens c ON a.appeal_citizen = c.id_citizens
+                WHERE a.police_officer != (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)
+                
+                UNION ALL
+                
+                -- Заявления
+                SELECT 
+                    s.id_statement AS id,
+                    'statement' AS table_name,
+                    'Заявление' AS document_type,
+                    COALESCE(s.number::text, 'Б/Н') AS number,
+                    COALESCE(s.date_and_time, NOW()) AS created_at,
+                    COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_name,
+                    '' AS deal_number,
+                    c.id_citizens AS citizen_id,
+                    NULL::int AS deal_id
+                FROM public.statement s
+                LEFT JOIN public.citizens c ON s.applicant = c.id_citizens
+                WHERE s.police_officer != (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)
+                
+                UNION ALL
+                
+                -- Протоколы объяснения
                 SELECT 
                     ep.id_explanation_protocol AS id,
                     'explanation_protocol' AS table_name,
@@ -1664,16 +2007,16 @@ namespace CourseWork.Data
                     COALESCE(ep.making_date_and_time, NOW()) AS created_at,
                     COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_name,
                     COALESCE(d.deal_number::text, '') AS deal_number,
-                    ep.citizen AS citizen_id,
-                    ep.deal AS deal_id
+                    c.id_citizens AS citizen_id,
+                    d.id_deal AS deal_id
                 FROM public.explanation_protocol ep
                 INNER JOIN public.deal d ON ep.deal = d.id_deal
                 LEFT JOIN public.citizens c ON ep.citizen = c.id_citizens
-                WHERE ep.deal = @dealId
+                WHERE (@dealId = -1 OR d.id_deal = @dealId)
                 
                 UNION ALL
                 
-                -- Административный протокол
+                -- Административные протоколы
                 SELECT 
                     ap.id_protocol AS id,
                     'administrative_protocol' AS table_name,
@@ -1682,16 +2025,16 @@ namespace CourseWork.Data
                     COALESCE(ap.making_date_and_time, NOW()) AS created_at,
                     COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_name,
                     COALESCE(d.deal_number::text, '') AS deal_number,
-                    d.offender AS citizen_id,
-                    ap.deal AS deal_id
+                    c.id_citizens AS citizen_id,
+                    d.id_deal AS deal_id
                 FROM public.administrative_protocol ap
                 INNER JOIN public.deal d ON ap.deal = d.id_deal
                 INNER JOIN public.citizens c ON d.offender = c.id_citizens
-                WHERE ap.deal = @dealId
+                WHERE (@dealId = -1 OR d.id_deal = @dealId)
                 
                 UNION ALL
                 
-                -- Направление на мед. освидетельствование
+                -- Направления на мед. освидетельствование
                 SELECT 
                     mer.id_medical_examination_report AS id,
                     'medical_examination_report' AS table_name,
@@ -1700,18 +2043,73 @@ namespace CourseWork.Data
                     COALESCE(mer.making_date_and_time, NOW()) AS created_at,
                     COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_name,
                     COALESCE(d.deal_number::text, '') AS deal_number,
-                    mer.patient AS citizen_id,
-                    mer.deal AS deal_id
+                    c.id_citizens AS citizen_id,
+                    d.id_deal AS deal_id
                 FROM public.medical_examination_report mer
                 INNER JOIN public.deal d ON mer.deal = d.id_deal
-                INNER JOIN public.citizens c ON mer.patient = c.id_citizens
-                WHERE mer.deal = @dealId
+                LEFT JOIN public.citizens c ON mer.patient = c.id_citizens
+                WHERE (@dealId = -1 OR d.id_deal = @dealId)
+                
+                UNION ALL
+                
+                -- Акты медицинского освидетельствования
+                SELECT 
+                    mec.id_medical_examination_certificate AS id,
+                    'medical_certificate' AS table_name,
+                    'Акт медицинского освидетельствования' AS document_type,
+                    COALESCE(mec.number::text, 'Б/Н') AS number,
+                    COALESCE(mec.making_date_and_time, NOW()) AS created_at,
+                    COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_name,
+                    COALESCE(d.deal_number::text, '') AS deal_number,
+                    c.id_citizens AS citizen_id,
+                    d.id_deal AS deal_id
+                FROM public.medical_examination_certificate mec
+                INNER JOIN public.medical_examination_report mer ON mec.medical_examination_report = mer.id_medical_examination_report
+                INNER JOIN public.deal d ON mer.deal = d.id_deal
+                LEFT JOIN public.citizens c ON mer.patient = c.id_citizens
+                WHERE (@dealId = -1 OR d.id_deal = @dealId)
+                
+                UNION ALL
+                
+                -- Судебно-медицинские экспертизы
+                SELECT 
+                    fe.id_forensic_medical_examination AS id,
+                    'forensic_medical_examination' AS table_name,
+                    'Судебно-медицинская экспертиза' AS document_type,
+                    COALESCE(fe.number::text, 'Б/Н') AS number,
+                    COALESCE(fe.making_date_and_time, NOW()) AS created_at,
+                    COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_name,
+                    COALESCE(d.deal_number::text, '') AS deal_number,
+                    c.id_citizens AS citizen_id,
+                    d.id_deal AS deal_id
+                FROM public.forensic_medical_examination fe
+                INNER JOIN public.deal d ON fe.deal = d.id_deal
+                LEFT JOIN public.citizens c ON d.offender = c.id_citizens
+                WHERE (@dealId = -1 OR d.id_deal = @dealId)
+                
+                UNION ALL
+                
+                -- Постановления
+                SELECT 
+                    r.id_resolution AS id,
+                    'resolution' AS table_name,
+                    'Постановление' AS document_type,
+                    COALESCE(r.protocol_number::text, 'Б/Н') AS number,
+                    COALESCE(r.making_date_and_time, NOW()) AS created_at,
+                    COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS citizen_name,
+                    COALESCE(d.deal_number::text, '') AS deal_number,
+                    c.id_citizens AS citizen_id,
+                    d.id_deal AS deal_id
+                FROM public.resolution r
+                INNER JOIN public.deal d ON r.deal = d.id_deal
+                LEFT JOIN public.citizens c ON d.offender = c.id_citizens
+                WHERE (@dealId = -1 OR d.id_deal = @dealId)
                 
                 ORDER BY created_at DESC";
 
             await using var cmd = new NpgsqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("dealId", dealId);
-    
+            cmd.Parameters.AddWithValue("@dealId", dealIdValue);
+            cmd.Parameters.AddWithValue("@userId", App.CurrentUserId);
             
             await using var reader = await cmd.ExecuteReaderAsync();
             
@@ -1730,14 +2128,13 @@ namespace CourseWork.Data
                     CitizenFullName = reader.IsDBNull(5) ? "Неизвестно" : reader.GetString(5),
                     DealInfo = reader.IsDBNull(6) ? "" : $"Дело №{reader.GetString(6)}",
                     CitizenId = reader.IsDBNull(7) ? null : reader.GetInt32(7),
-                    DealId = reader.GetInt32(8)
+                    DealId = reader.IsDBNull(8) ? null : reader.GetInt32(8)
                 });
             }
 
             return documents;
         }
-
-    private string MaskDocumentNumber(string number)
+        private string MaskDocumentNumber(string number)
     {
         if (string.IsNullOrEmpty(number) || number == "Б/Н") return "Б/Н";
         if (number.Length <= 4) return number;
@@ -1777,11 +2174,9 @@ namespace CourseWork.Data
             await conn.OpenAsync();
 
             var sql = @"
-                SELECT cap.id_citizens_and_posts
-                FROM users u
-                JOIN citizens c ON c.last_name = u.last_name AND c.first_name = u.first_name
-                JOIN citizens_and_posts cap ON cap.citizen = c.id_citizens
-                WHERE u.id = @userId
+                SELECT citizen_post_id 
+                FROM user_citizen_link 
+                WHERE user_id = @userId 
                 LIMIT 1";
 
             await using var cmd = new NpgsqlCommand(sql, conn);
@@ -1789,191 +2184,743 @@ namespace CourseWork.Data
             
             var result = await cmd.ExecuteScalarAsync();
             return result != null ? Convert.ToInt32(result) : null;
-        }   
-
-
-
-
-        public async Task<List<MyDocument>> GetUserDocumentsAsync(int userId)
-        {
-            var documents = new List<MyDocument>();
-            await using var conn = new NpgsqlConnection(_connectionString);
-            await conn.OpenAsync();
-
-
-            var appealsSql = @"
-                SELECT 
-                    a.id_appeals,
-                    a.number,
-                    a.making_date_and_time,
-                    c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
-                    a.content,
-                    c.id_citizens,
-                    EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'appeals' AND document_id = a.id_appeals) as is_favorite
-                FROM appeals a
-                JOIN citizens c ON a.appeal_citizen = c.id_citizens
-                WHERE a.police_officer = @userId";
-            
-            await using var cmd = new NpgsqlCommand(appealsSql, conn);
-            cmd.Parameters.AddWithValue("@userId", userId);
-            await using var reader = await cmd.ExecuteReaderAsync();
-            
-            while (await reader.ReadAsync())
-            {
-                documents.Add(new MyDocument
-                {
-                    Id = reader.GetInt32(0),
-                    DocumentType = "Обращение",
-                    TableName = "appeals",
-                    Number = reader.IsDBNull(1) ? null : reader.GetInt32(1),
-                    CreatedAt = reader.GetDateTime(2),
-                    CitizenFullName = reader.GetString(3),
-                    Content = reader.GetString(4),
-                    CitizenId = reader.GetInt32(5),
-                    IsFavorite = reader.GetBoolean(6)
-                });
-            }
-            await reader.CloseAsync();
-            
-
-            var statementsSql = @"
-                SELECT 
-                    s.id_statement,
-                    s.number,
-                    s.date_and_time,
-                    c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
-                    s.content,
-                    c.id_citizens,
-                    EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'statement' AND document_id = s.id_statement) as is_favorite
-                FROM statement s
-                JOIN citizens c ON s.applicant = c.id_citizens
-                WHERE s.police_officer = @userId";
-            
-            cmd.CommandText = statementsSql;
-            await using var reader2 = await cmd.ExecuteReaderAsync();
-            
-            while (await reader2.ReadAsync())
-            {
-                documents.Add(new MyDocument
-                {
-                    Id = reader2.GetInt32(0),
-                    DocumentType = "Заявление",
-                    TableName = "statement",
-                    Number = reader2.IsDBNull(1) ? null : reader2.GetInt32(1),
-                    CreatedAt = reader2.GetDateTime(2),
-                    CitizenFullName = reader2.GetString(3),
-                    Content = reader2.GetString(4),
-                    CitizenId = reader2.GetInt32(5),
-                    IsFavorite = reader2.GetBoolean(6)
-                });
-            }
-            await reader2.CloseAsync();
-            
-
-            var protocolsSql = @"
-                SELECT 
-                    ap.id_protocol,
-                    ap.protocol_number,
-                    ap.making_date_and_time,
-                    'Неизвестно' AS citizen_full_name,
-                    ap.description,
-                    0 AS citizen_id,
-                    EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'administrative_protocol' AND document_id = ap.id_protocol) as is_favorite
-                FROM administrative_protocol ap";
-            
-            cmd.CommandText = protocolsSql;
-            await using var reader3 = await cmd.ExecuteReaderAsync();
-            
-            while (await reader3.ReadAsync())
-            {
-                documents.Add(new MyDocument
-                {
-                    Id = reader3.GetInt32(0),
-                    DocumentType = "Административный протокол",
-                    TableName = "administrative_protocol",
-                    Number = reader3.GetInt32(1),
-                    CreatedAt = reader3.GetDateTime(2),
-                    CitizenFullName = reader3.GetString(3),
-                    Content = reader3.GetString(4),
-                    CitizenId = reader3.GetInt32(5),
-                    IsFavorite = reader3.GetBoolean(6)
-                });
-            }
-            await reader3.CloseAsync();
-            
-
-            var medicalSql = @"
-                SELECT 
-                    mer.id_medical_examination_report,
-                    mer.number,
-                    mer.making_date_and_time,
-                    c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
-                    mer.content,
-                    c.id_citizens,
-                    EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'medical_examination_report' AND document_id = mer.id_medical_examination_report) as is_favorite
-                FROM medical_examination_report mer
-                JOIN citizens c ON mer.patient = c.id_citizens";
-            
-            cmd.CommandText = medicalSql;
-            await using var reader4 = await cmd.ExecuteReaderAsync();
-            
-            while (await reader4.ReadAsync())
-            {
-                documents.Add(new MyDocument
-                {
-                    Id = reader4.GetInt32(0),
-                    DocumentType = "Направление на мед. освид.",
-                    TableName = "medical_examination_report",
-                    Number = reader4.IsDBNull(1) ? null : reader4.GetInt32(1),
-                    CreatedAt = reader4.GetDateTime(2),
-                    CitizenFullName = reader4.GetString(3),
-                    Content = reader4.GetString(4),
-                    CitizenId = reader4.GetInt32(5),
-                    IsFavorite = reader4.GetBoolean(6)
-                });
-            }
-            await reader4.CloseAsync();
-            
-
-            var explanationSql = @"
-                SELECT 
-                    ep.id_explanation_protocol,
-                    ep.number,
-                    ep.making_date_and_time,
-                    c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
-                    ep.content,
-                    c.id_citizens,
-                    EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'explanation_protocol' AND document_id = ep.id_explanation_protocol) as is_favorite
-                FROM explanation_protocol ep
-                JOIN citizens c ON ep.citizen = c.id_citizens";
-            
-            cmd.CommandText = explanationSql;
-            await using var reader5 = await cmd.ExecuteReaderAsync();
-            
-            while (await reader5.ReadAsync())
-            {
-                documents.Add(new MyDocument
-                {
-                    Id = reader5.GetInt32(0),
-                    DocumentType = "Протокол объяснения",
-                    TableName = "explanation_protocol",
-                    Number = reader5.IsDBNull(1) ? null : reader5.GetInt32(1),
-                    CreatedAt = reader5.GetDateTime(2),
-                    CitizenFullName = reader5.GetString(3),
-                    Content = reader5.GetString(4),
-                    CitizenId = reader5.GetInt32(5),
-                    IsFavorite = reader5.GetBoolean(6)
-                });
-            }
-            await reader5.CloseAsync();
-            
-
-            documents = documents.OrderByDescending(d => d.CreatedAt).ToList();
-            
-            return documents;
         }
-        public async Task RemoveFromFavoritesAsync(int userId, string targetTable, int documentId)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public async Task<List<MyDocument>> GetUserDocumentsAsync(int userId)
+{
+    var documents = new List<MyDocument>();
+    await using var conn = new NpgsqlConnection(_connectionString);
+    await conn.OpenAsync();
+
+    var role = App.CurrentUserRole;
+
+    // Для врача - только медицинские документы (все, не только свои)
+    if (role == UserRole.MedicalExpert)
+    {
+        // Направления на мед. освидетельствование
+        var reportsSql = @"
+            SELECT 
+                mer.id_medical_examination_report,
+                mer.number,
+                mer.making_date_and_time,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
+                COALESCE(mer.content, '') as content,
+                c.id_citizens,
+                'medical_examination_report' as table_name,
+                'Направление на мед. освид.' as document_type,
+                false as is_favorite,
+                NULL as deal_number
+            FROM medical_examination_report mer
+            JOIN citizens c ON mer.patient = c.id_citizens";
+
+        await using var cmd = new NpgsqlCommand(reportsSql, conn);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        
+        while (await reader.ReadAsync())
         {
+            documents.Add(new MyDocument
+            {
+                Id = reader.GetInt32(0),
+                DocumentType = reader.GetString(7),
+                TableName = reader.GetString(6),
+                Number = reader.IsDBNull(1) ? null : reader.GetInt32(1),
+                CreatedAt = reader.GetDateTime(2),
+                CitizenFullName = reader.GetString(3),
+                Content = reader.GetString(4),
+                CitizenId = reader.GetInt32(5),
+                IsFavorite = false,
+                DealNumber = null
+            });
+        }
+        await reader.CloseAsync();
+
+        // Акты медицинского освидетельствования
+        var certificatesSql = @"
+            SELECT 
+                mec.id_medical_examination_certificate,
+                mec.number,
+                mec.making_date_and_time,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
+                COALESCE(mec.signs_of_intoxication, '') as content,
+                c.id_citizens,
+                'medical_certificate' as table_name,
+                'Акт медицинского освидетельствования' as document_type,
+                false as is_favorite,
+                NULL as deal_number
+            FROM medical_examination_certificate mec
+            JOIN medical_examination_report mer ON mec.medical_examination_report = mer.id_medical_examination_report
+            JOIN citizens c ON mer.patient = c.id_citizens";
+
+        cmd.CommandText = certificatesSql;
+        await using var reader2 = await cmd.ExecuteReaderAsync();
+        
+        while (await reader2.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader2.GetInt32(0),
+                DocumentType = reader2.GetString(7),
+                TableName = reader2.GetString(6),
+                Number = reader2.IsDBNull(1) ? null : reader2.GetInt32(1),
+                CreatedAt = reader2.GetDateTime(2),
+                CitizenFullName = reader2.GetString(3),
+                Content = reader2.GetString(4),
+                CitizenId = reader2.GetInt32(5),
+                IsFavorite = false,
+                DealNumber = null
+            });
+        }
+        
+        return documents.OrderByDescending(d => d.CreatedAt).ToList();
+    }
+
+    // Для судьи - все документы из всех таблиц
+    if (role == UserRole.Judge)
+    {
+        // Обращения
+        var appealsSql = @"
+            SELECT 
+                a.id_appeals as id,
+                'Обращение' as document_type,
+                'appeals' as table_name,
+                a.number,
+                a.making_date_and_time as created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') as citizen_full_name,
+                a.content,
+                c.id_citizens,
+                NULL as deal_number
+            FROM appeals a
+            JOIN citizens c ON a.appeal_citizen = c.id_citizens";
+
+        await using var cmd = new NpgsqlCommand(appealsSql, conn);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        
+        while (await reader.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader.GetInt32(0),
+                DocumentType = reader.GetString(1),
+                TableName = reader.GetString(2),
+                Number = reader.IsDBNull(3) ? null : reader.GetInt32(3),
+                CreatedAt = reader.GetDateTime(4),
+                CitizenFullName = reader.GetString(5),
+                Content = reader.GetString(6),
+                CitizenId = reader.GetInt32(7),
+                DealNumber = reader.IsDBNull(8) ? null : reader.GetString(8),
+                IsFavorite = false
+            });
+        }
+        await reader.CloseAsync();
+
+        // Заявления
+        var statementsSql = @"
+            SELECT 
+                s.id_statement as id,
+                'Заявление' as document_type,
+                'statement' as table_name,
+                s.number,
+                s.date_and_time as created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') as citizen_full_name,
+                s.content,
+                c.id_citizens,
+                NULL as deal_number
+            FROM statement s
+            JOIN citizens c ON s.applicant = c.id_citizens";
+
+        cmd.CommandText = statementsSql;
+        await using var reader2 = await cmd.ExecuteReaderAsync();
+        
+        while (await reader2.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader2.GetInt32(0),
+                DocumentType = reader2.GetString(1),
+                TableName = reader2.GetString(2),
+                Number = reader2.IsDBNull(3) ? null : reader2.GetInt32(3),
+                CreatedAt = reader2.GetDateTime(4),
+                CitizenFullName = reader2.GetString(5),
+                Content = reader2.GetString(6),
+                CitizenId = reader2.GetInt32(7),
+                DealNumber = reader2.IsDBNull(8) ? null : reader2.GetString(8),
+                IsFavorite = false
+            });
+        }
+        await reader2.CloseAsync();
+
+        // Административные протоколы
+        var protocolsSql = @"
+            SELECT 
+                ap.id_protocol as id,
+                'Административный протокол' as document_type,
+                'administrative_protocol' as table_name,
+                ap.protocol_number as number,
+                ap.making_date_and_time as created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') as citizen_full_name,
+                ap.description as content,
+                c.id_citizens,
+                d.deal_number::text as deal_number
+            FROM administrative_protocol ap
+            JOIN deal d ON ap.deal = d.id_deal
+            JOIN citizens c ON d.offender = c.id_citizens";
+
+        cmd.CommandText = protocolsSql;
+        await using var reader3 = await cmd.ExecuteReaderAsync();
+        
+        while (await reader3.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader3.GetInt32(0),
+                DocumentType = reader3.GetString(1),
+                TableName = reader3.GetString(2),
+                Number = reader3.GetInt32(3),
+                CreatedAt = reader3.GetDateTime(4),
+                CitizenFullName = reader3.GetString(5),
+                Content = reader3.GetString(6),
+                CitizenId = reader3.GetInt32(7),
+                DealNumber = reader3.IsDBNull(8) ? null : reader3.GetString(8),
+                IsFavorite = false
+            });
+        }
+        await reader3.CloseAsync();
+
+        // Протоколы объяснения
+        var explanationsSql = @"
+            SELECT 
+                ep.id_explanation_protocol as id,
+                'Протокол объяснения' as document_type,
+                'explanation_protocol' as table_name,
+                ep.number,
+                ep.making_date_and_time as created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') as citizen_full_name,
+                ep.content,
+                c.id_citizens,
+                d.deal_number::text as deal_number
+            FROM explanation_protocol ep
+            JOIN citizens c ON ep.citizen = c.id_citizens
+            JOIN deal d ON ep.deal = d.id_deal";
+
+        cmd.CommandText = explanationsSql;
+        await using var reader4 = await cmd.ExecuteReaderAsync();
+        
+        while (await reader4.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader4.GetInt32(0),
+                DocumentType = reader4.GetString(1),
+                TableName = reader4.GetString(2),
+                Number = reader4.IsDBNull(3) ? null : reader4.GetInt32(3),
+                CreatedAt = reader4.GetDateTime(4),
+                CitizenFullName = reader4.GetString(5),
+                Content = reader4.GetString(6),
+                CitizenId = reader4.GetInt32(7),
+                DealNumber = reader4.IsDBNull(8) ? null : reader4.GetString(8),
+                IsFavorite = false
+            });
+        }
+        await reader4.CloseAsync();
+
+        // Направления на мед. освид.
+        var reportsSql = @"
+            SELECT 
+                mer.id_medical_examination_report as id,
+                'Направление на мед. освид.' as document_type,
+                'medical_examination_report' as table_name,
+                mer.number,
+                mer.making_date_and_time as created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') as citizen_full_name,
+                mer.content,
+                c.id_citizens,
+                d.deal_number::text as deal_number
+            FROM medical_examination_report mer
+            JOIN citizens c ON mer.patient = c.id_citizens
+            JOIN deal d ON mer.deal = d.id_deal";
+
+        cmd.CommandText = reportsSql;
+        await using var reader5 = await cmd.ExecuteReaderAsync();
+        
+        while (await reader5.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader5.GetInt32(0),
+                DocumentType = reader5.GetString(1),
+                TableName = reader5.GetString(2),
+                Number = reader5.IsDBNull(3) ? null : reader5.GetInt32(3),
+                CreatedAt = reader5.GetDateTime(4),
+                CitizenFullName = reader5.GetString(5),
+                Content = reader5.GetString(6),
+                CitizenId = reader5.GetInt32(7),
+                DealNumber = reader5.IsDBNull(8) ? null : reader5.GetString(8),
+                IsFavorite = false
+            });
+        }
+        await reader5.CloseAsync();
+
+        // Акты медицинского освидетельствования
+        var certificatesSql = @"
+            SELECT 
+                mec.id_medical_examination_certificate as id,
+                'Акт медицинского освидетельствования' as document_type,
+                'medical_certificate' as table_name,
+                mec.number,
+                mec.making_date_and_time as created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') as citizen_full_name,
+                COALESCE(mec.signs_of_intoxication, '') as content,
+                c.id_citizens,
+                d.deal_number::text as deal_number
+            FROM medical_examination_certificate mec
+            JOIN medical_examination_report mer ON mec.medical_examination_report = mer.id_medical_examination_report
+            JOIN citizens c ON mer.patient = c.id_citizens
+            JOIN deal d ON mer.deal = d.id_deal";
+
+        cmd.CommandText = certificatesSql;
+        await using var reader6 = await cmd.ExecuteReaderAsync();
+        
+        while (await reader6.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader6.GetInt32(0),
+                DocumentType = reader6.GetString(1),
+                TableName = reader6.GetString(2),
+                Number = reader6.IsDBNull(3) ? null : reader6.GetInt32(3),
+                CreatedAt = reader6.GetDateTime(4),
+                CitizenFullName = reader6.GetString(5),
+                Content = reader6.GetString(6),
+                CitizenId = reader6.GetInt32(7),
+                DealNumber = reader6.IsDBNull(8) ? null : reader6.GetString(8),
+                IsFavorite = false
+            });
+        }
+        await reader6.CloseAsync();
+
+        // Судебно-медицинские экспертизы
+        var forensicSql = @"
+            SELECT 
+                fe.id_forensic_medical_examination as id,
+                'Судебно-медицинская экспертиза' as document_type,
+                'forensic_medical_examination' as table_name,
+                fe.number,
+                fe.making_date_and_time as created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') as citizen_full_name,
+                fe.content,
+                c.id_citizens,
+                d.deal_number::text as deal_number
+            FROM forensic_medical_examination fe
+            JOIN deal d ON fe.deal = d.id_deal
+            JOIN citizens c ON d.offender = c.id_citizens";
+
+        cmd.CommandText = forensicSql;
+        await using var reader7 = await cmd.ExecuteReaderAsync();
+        
+        while (await reader7.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader7.GetInt32(0),
+                DocumentType = reader7.GetString(1),
+                TableName = reader7.GetString(2),
+                Number = reader7.GetInt32(3),
+                CreatedAt = reader7.GetDateTime(4),
+                CitizenFullName = reader7.GetString(5),
+                Content = reader7.GetString(6),
+                CitizenId = reader7.GetInt32(7),
+                DealNumber = reader7.IsDBNull(8) ? null : reader7.GetString(8),
+                IsFavorite = false
+            });
+        }
+        await reader7.CloseAsync();
+
+        // Постановления
+        var resolutionsSql = @"
+            SELECT 
+                r.id_resolution as id,
+                'Постановление' as document_type,
+                'resolution' as table_name,
+                r.protocol_number as number,
+                r.making_date_and_time as created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') as citizen_full_name,
+                r.resolution as content,
+                c.id_citizens,
+                d.deal_number::text as deal_number
+            FROM resolution r
+            JOIN deal d ON r.deal = d.id_deal
+            JOIN citizens c ON d.offender = c.id_citizens";
+
+        cmd.CommandText = resolutionsSql;
+        await using var reader8 = await cmd.ExecuteReaderAsync();
+        
+        while (await reader8.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = reader8.GetInt32(0),
+                DocumentType = reader8.GetString(1),
+                TableName = reader8.GetString(2),
+                Number = reader8.GetInt32(3),
+                CreatedAt = reader8.GetDateTime(4),
+                CitizenFullName = reader8.GetString(5),
+                Content = reader8.GetString(6),
+                CitizenId = reader8.GetInt32(7),
+                DealNumber = reader8.IsDBNull(8) ? null : reader8.GetString(8),
+                IsFavorite = false
+            });
+        }
+        await reader8.CloseAsync();
+
+        return documents.OrderByDescending(d => d.CreatedAt).ToList();
+    }
+
+    // Для полицейского и эксперта - только свои документы
+    // Обращения
+    var appealsSql2 = @"
+        SELECT 
+            a.id_appeals,
+            a.number,
+            a.making_date_and_time,
+            c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
+            a.content,
+            c.id_citizens,
+            'appeals' as table_name,
+            'Обращение' as document_type,
+            EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'appeals' AND document_id = a.id_appeals) as is_favorite,
+            NULL as deal_number
+        FROM appeals a
+        JOIN citizens c ON a.appeal_citizen = c.id_citizens
+        WHERE a.police_officer = @userId";
+
+    await using var cmdPolice = new NpgsqlCommand(appealsSql2, conn);
+    cmdPolice.Parameters.AddWithValue("@userId", userId);
+    await using var readerAppeals = await cmdPolice.ExecuteReaderAsync();
+
+    while (await readerAppeals.ReadAsync())
+    {
+        documents.Add(new MyDocument
+        {
+            Id = readerAppeals.GetInt32(0),
+            DocumentType = readerAppeals.GetString(7),
+            TableName = readerAppeals.GetString(6),
+            Number = readerAppeals.IsDBNull(1) ? null : readerAppeals.GetInt32(1),
+            CreatedAt = readerAppeals.GetDateTime(2),
+            CitizenFullName = readerAppeals.GetString(3),
+            Content = readerAppeals.GetString(4),
+            CitizenId = readerAppeals.GetInt32(5),
+            IsFavorite = readerAppeals.GetBoolean(8),
+            DealNumber = null
+        });
+    }
+    await readerAppeals.CloseAsync();
+
+    // Заявления
+    var statementsSql2 = @"
+        SELECT 
+            s.id_statement,
+            s.number,
+            s.date_and_time,
+            c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
+            s.content,
+            c.id_citizens,
+            'statement' as table_name,
+            'Заявление' as document_type,
+            EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'statement' AND document_id = s.id_statement) as is_favorite,
+            NULL as deal_number
+        FROM statement s
+        JOIN citizens c ON s.applicant = c.id_citizens
+        WHERE s.police_officer = @userId";
+
+    cmdPolice.CommandText = statementsSql2;
+    await using var readerStatements = await cmdPolice.ExecuteReaderAsync();
+
+    while (await readerStatements.ReadAsync())
+    {
+        documents.Add(new MyDocument
+        {
+            Id = readerStatements.GetInt32(0),
+            DocumentType = readerStatements.GetString(7),
+            TableName = readerStatements.GetString(6),
+            Number = readerStatements.IsDBNull(1) ? null : readerStatements.GetInt32(1),
+            CreatedAt = readerStatements.GetDateTime(2),
+            CitizenFullName = readerStatements.GetString(3),
+            Content = readerStatements.GetString(4),
+            CitizenId = readerStatements.GetInt32(5),
+            IsFavorite = readerStatements.GetBoolean(8),
+            DealNumber = null
+        });
+    }
+    await readerStatements.CloseAsync();
+
+    // Административные протоколы (для полицейского - только его)
+    if (role == UserRole.PoliceOfficer)
+    {
+        var protocolsSql2 = @"
+            SELECT 
+                ap.id_protocol,
+                ap.protocol_number,
+                ap.making_date_and_time,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
+                ap.description as content,
+                c.id_citizens,
+                'administrative_protocol' as table_name,
+                'Административный протокол' as document_type,
+                EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'administrative_protocol' AND document_id = ap.id_protocol) as is_favorite,
+                d.deal_number::text as deal_number
+            FROM administrative_protocol ap
+            JOIN deal d ON ap.deal = d.id_deal
+            JOIN citizens c ON d.offender = c.id_citizens
+            WHERE d.police_officer = (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)";
+        
+        cmdPolice.CommandText = protocolsSql2;
+        await using var readerProtocols = await cmdPolice.ExecuteReaderAsync();
+        
+        while (await readerProtocols.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = readerProtocols.GetInt32(0),
+                DocumentType = readerProtocols.GetString(7),
+                TableName = readerProtocols.GetString(6),
+                Number = readerProtocols.GetInt32(1),
+                CreatedAt = readerProtocols.GetDateTime(2),
+                CitizenFullName = readerProtocols.GetString(3),
+                Content = readerProtocols.GetString(4),
+                CitizenId = readerProtocols.GetInt32(5),
+                IsFavorite = readerProtocols.GetBoolean(8),
+                DealNumber = readerProtocols.IsDBNull(9) ? null : readerProtocols.GetString(9)
+            });
+        }
+        await readerProtocols.CloseAsync();
+    }
+
+    // Протоколы объяснения (для полицейского - только его)
+    if (role == UserRole.PoliceOfficer)
+    {
+        var explanationsSql2 = @"
+            SELECT 
+                ep.id_explanation_protocol,
+                ep.number,
+                ep.making_date_and_time,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
+                ep.content,
+                c.id_citizens,
+                'explanation_protocol' as table_name,
+                'Протокол объяснения' as document_type,
+                EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'explanation_protocol' AND document_id = ep.id_explanation_protocol) as is_favorite,
+                d.deal_number::text as deal_number
+            FROM explanation_protocol ep
+            JOIN citizens c ON ep.citizen = c.id_citizens
+            JOIN deal d ON ep.deal = d.id_deal
+            WHERE d.police_officer = (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)";
+        
+        cmdPolice.CommandText = explanationsSql2;
+        await using var readerExplanations = await cmdPolice.ExecuteReaderAsync();
+        
+        while (await readerExplanations.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = readerExplanations.GetInt32(0),
+                DocumentType = readerExplanations.GetString(7),
+                TableName = readerExplanations.GetString(6),
+                Number = readerExplanations.IsDBNull(1) ? null : readerExplanations.GetInt32(1),
+                CreatedAt = readerExplanations.GetDateTime(2),
+                CitizenFullName = readerExplanations.GetString(3),
+                Content = readerExplanations.GetString(4),
+                CitizenId = readerExplanations.GetInt32(5),
+                IsFavorite = readerExplanations.GetBoolean(8),
+                DealNumber = readerExplanations.IsDBNull(9) ? null : readerExplanations.GetString(9)
+            });
+        }
+        await readerExplanations.CloseAsync();
+    }
+
+    // Направления на мед. освид. (для полицейского - только его)
+    if (role == UserRole.PoliceOfficer)
+    {
+        var reportsSql2 = @"
+            SELECT 
+                mer.id_medical_examination_report,
+                mer.number,
+                mer.making_date_and_time,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
+                mer.content,
+                c.id_citizens,
+                'medical_examination_report' as table_name,
+                'Направление на мед. освид.' as document_type,
+                EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'medical_examination_report' AND document_id = mer.id_medical_examination_report) as is_favorite,
+                d.deal_number::text as deal_number
+            FROM medical_examination_report mer
+            JOIN citizens c ON mer.patient = c.id_citizens
+            JOIN deal d ON mer.deal = d.id_deal
+            WHERE d.police_officer = (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)";
+        
+        cmdPolice.CommandText = reportsSql2;
+        await using var readerReports = await cmdPolice.ExecuteReaderAsync();
+        
+        while (await readerReports.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = readerReports.GetInt32(0),
+                DocumentType = readerReports.GetString(7),
+                TableName = readerReports.GetString(6),
+                Number = readerReports.IsDBNull(1) ? null : readerReports.GetInt32(1),
+                CreatedAt = readerReports.GetDateTime(2),
+                CitizenFullName = readerReports.GetString(3),
+                Content = readerReports.GetString(4),
+                CitizenId = readerReports.GetInt32(5),
+                IsFavorite = readerReports.GetBoolean(8),
+                DealNumber = readerReports.IsDBNull(9) ? null : readerReports.GetString(9)
+            });
+        }
+        await readerReports.CloseAsync();
+    }
+
+    // Для эксперта - судебно-медицинские экспертизы
+    if (role == UserRole.ForensicExpert)
+    {
+        var forensicSql2 = @"
+            SELECT 
+                fe.id_forensic_medical_examination,
+                fe.number,
+                fe.making_date_and_time,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_full_name,
+                fe.content,
+                c.id_citizens,
+                'forensic_medical_examination' as table_name,
+                'Судебно-медицинская экспертиза' as document_type,
+                EXISTS(SELECT 1 FROM user_favorites WHERE user_id = @userId AND target_table = 'forensic_medical_examination' AND document_id = fe.id_forensic_medical_examination) as is_favorite,
+                d.deal_number::text as deal_number
+            FROM forensic_medical_examination fe
+            JOIN deal d ON fe.deal = d.id_deal
+            JOIN citizens c ON d.offender = c.id_citizens
+            WHERE fe.expert = (SELECT citizen_post_id FROM user_citizen_link WHERE user_id = @userId)";
+        
+        cmdPolice.CommandText = forensicSql2;
+        await using var readerForensic = await cmdPolice.ExecuteReaderAsync();
+        
+        while (await readerForensic.ReadAsync())
+        {
+            documents.Add(new MyDocument
+            {
+                Id = readerForensic.GetInt32(0),
+                DocumentType = readerForensic.GetString(7),
+                TableName = readerForensic.GetString(6),
+                Number = readerForensic.GetInt32(1),
+                CreatedAt = readerForensic.GetDateTime(2),
+                CitizenFullName = readerForensic.GetString(3),
+                Content = readerForensic.GetString(4),
+                CitizenId = readerForensic.GetInt32(5),
+                IsFavorite = readerForensic.GetBoolean(8),
+                DealNumber = readerForensic.IsDBNull(9) ? null : readerForensic.GetString(9)
+            });
+        }
+        await readerForensic.CloseAsync();
+    }
+
+    return documents.OrderByDescending(d => d.CreatedAt).ToList();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public async Task<int> RemoveFromFavoritesAsync(int userId, string targetTable, int documentId)
+        {
+            Console.WriteLine($"[DEBUG] RemoveFromFavorites: userId={userId}, table={targetTable}, docId={documentId}");
+            
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
@@ -1984,7 +2931,8 @@ namespace CourseWork.Data
             cmd.Parameters.AddWithValue("@documentId", documentId);
             
             int deleted = await cmd.ExecuteNonQueryAsync();
-            Console.WriteLine($"[DEBUG] RemoveFromFavorites: удалено {deleted} записей");
+            NotificationsControl.ShowSuccess("удалено", $"удалено записей {deleted}");
+            return deleted;
         }
 
         public async Task<DocumentFull> GetFullDocumentAsync(string tableName, int documentId)
@@ -1994,6 +2942,32 @@ namespace CourseWork.Data
 
             string sql = tableName switch
             {
+               "medical_certificate" => @"
+                    SELECT 
+                        'Акт медицинского освидетельствования' AS document_type,
+                        COALESCE(mec.number::text, 'Б/Н') AS number,
+                        mec.making_date_and_time AS created_at,
+                        COALESCE(patient.last_name || ' ' || patient.first_name || ' ' || COALESCE(patient.patronymic, ''), 'Неизвестно') AS citizen_name,
+                        COALESCE(mec.signs_of_intoxication, '') AS content,
+                        COALESCE(d.deal_number::text, '') AS deal_number,
+                        COALESCE(mec.signs_of_intoxication, '') AS description,
+                        COALESCE(mec.result, '') AS other_information,
+                        COALESCE(mec.doctor_signature, false) AS signature,
+                        'Не указан' AS first_witness,
+                        'Не указан' AS second_witness,
+                        COALESCE(doc.last_name || ' ' || doc.first_name || ' ' || COALESCE(doc.patronymic, ''), 'Не указан') AS officer_name,
+                        'Не указана' AS article_name,
+                        COALESCE(patient.last_name || ' ' || patient.first_name || ' ' || COALESCE(patient.patronymic, ''), 'Неизвестно') AS patient_name,
+                        COALESCE(tr.type_report, '') AS report_type,
+                        COALESCE(mec.signs_of_intoxication, '') AS signs_of_intoxication
+                    FROM medical_examination_certificate mec
+                    LEFT JOIN medical_examination_report mer ON mec.medical_examination_report = mer.id_medical_examination_report
+                    LEFT JOIN deal d ON mer.deal = d.id_deal
+                    LEFT JOIN citizens patient ON mer.patient = patient.id_citizens
+                    LEFT JOIN type_report tr ON mer.report = tr.id_type_report
+                    LEFT JOIN citizens doc ON mec.doctor = doc.id_citizens
+                    WHERE mec.id_medical_examination_certificate = @id",
+
                 "administrative_protocol" => @"
                     SELECT 
                         'Административный протокол' AS document_type,
@@ -2007,7 +2981,7 @@ namespace CourseWork.Data
                         false AS signature,
                         COALESCE(cw1.last_name || ' ' || cw1.first_name || ' ' || COALESCE(cw1.patronymic, ''), 'Не указан') AS first_witness,
                         COALESCE(cw2.last_name || ' ' || cw2.first_name || ' ' || COALESCE(cw2.patronymic, ''), 'Не указан') AS second_witness,
-                        COALESCE(co.last_name || ' ' || co.first_name || ' ' || COALESCE(co.patronymic, ''), 'Не указан') AS officer_name,
+                        COALESCE(officer.last_name || ' ' || officer.first_name || ' ' || COALESCE(officer.patronymic, ''), 'Не указан') AS officer_name,
                         COALESCE(a.number_of_article::text || ' - ' || a.description, 'Не указана') AS article_name,
                         '' AS patient_name,
                         '' AS report_type,
@@ -2018,7 +2992,7 @@ namespace CourseWork.Data
                     LEFT JOIN citizens cw1 ON ap.first_witness = cw1.id_citizens
                     LEFT JOIN citizens cw2 ON ap.second_witness = cw2.id_citizens
                     LEFT JOIN citizens_and_posts cap ON d.police_officer = cap.id_citizens_and_posts
-                    LEFT JOIN citizens co ON cap.citizen = co.id_citizens
+                    LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
                     LEFT JOIN article a ON d.article = a.id_article
                     WHERE ap.id_protocol = @id",
                     
@@ -2035,7 +3009,7 @@ namespace CourseWork.Data
                         false AS signature,
                         'Не указан' AS first_witness,
                         'Не указан' AS second_witness,
-                        'Не указан' AS officer_name,
+                        COALESCE(officer.last_name || ' ' || officer.first_name || ' ' || COALESCE(officer.patronymic, ''), 'Не указан') AS officer_name,
                         COALESCE(a.number_of_article::text || ' - ' || a.description, 'Не указана') AS article_name,
                         '' AS patient_name,
                         '' AS report_type,
@@ -2043,6 +3017,8 @@ namespace CourseWork.Data
                     FROM explanation_protocol ep
                     LEFT JOIN deal d ON ep.deal = d.id_deal
                     LEFT JOIN citizens c ON ep.citizen = c.id_citizens
+                    LEFT JOIN citizens_and_posts cap ON d.police_officer = cap.id_citizens_and_posts
+                    LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
                     LEFT JOIN article a ON d.article = a.id_article
                     WHERE ep.id_explanation_protocol = @id",
                     
@@ -2059,7 +3035,7 @@ namespace CourseWork.Data
                         COALESCE(mer.citizen_signature, false) AS signature,
                         'Не указан' AS first_witness,
                         'Не указан' AS second_witness,
-                        'Не указан' AS officer_name,
+                        COALESCE(officer.last_name || ' ' || officer.first_name || ' ' || COALESCE(officer.patronymic, ''), 'Не указан') AS officer_name,
                         'Не указана' AS article_name,
                         COALESCE(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, ''), 'Неизвестно') AS patient_name,
                         COALESCE(tr.type_report, '') AS report_type,
@@ -2067,6 +3043,8 @@ namespace CourseWork.Data
                     FROM medical_examination_report mer
                     LEFT JOIN deal d ON mer.deal = d.id_deal
                     LEFT JOIN citizens c ON mer.patient = c.id_citizens
+                    LEFT JOIN citizens_and_posts cap ON d.police_officer = cap.id_citizens_and_posts
+                    LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
                     LEFT JOIN type_report tr ON mer.report = tr.id_type_report
                     WHERE mer.id_medical_examination_report = @id",
                     
@@ -2083,7 +3061,7 @@ namespace CourseWork.Data
                         false AS signature,
                         'Не указан' AS first_witness,
                         'Не указан' AS second_witness,
-                        COALESCE(co.last_name || ' ' || co.first_name || ' ' || COALESCE(co.patronymic, ''), 'Не указан') AS officer_name,
+                        COALESCE(officer.last_name || ' ' || officer.first_name || ' ' || COALESCE(officer.patronymic, ''), 'Не указан') AS officer_name,
                         'Не указана' AS article_name,
                         '' AS patient_name,
                         '' AS report_type,
@@ -2091,7 +3069,7 @@ namespace CourseWork.Data
                     FROM appeals a
                     LEFT JOIN citizens c ON a.appeal_citizen = c.id_citizens
                     LEFT JOIN citizens_and_posts cap ON a.police_officer = cap.id_citizens_and_posts
-                    LEFT JOIN citizens co ON cap.citizen = co.id_citizens
+                    LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
                     WHERE a.id_appeals = @id",
                     
                 "statement" => @"
@@ -2107,7 +3085,7 @@ namespace CourseWork.Data
                         false AS signature,
                         'Не указан' AS first_witness,
                         'Не указан' AS second_witness,
-                        COALESCE(co.last_name || ' ' || co.first_name || ' ' || COALESCE(co.patronymic, ''), 'Не указан') AS officer_name,
+                        COALESCE(officer.last_name || ' ' || officer.first_name || ' ' || COALESCE(officer.patronymic, ''), 'Не указан') AS officer_name,
                         'Не указана' AS article_name,
                         '' AS patient_name,
                         '' AS report_type,
@@ -2115,7 +3093,7 @@ namespace CourseWork.Data
                     FROM statement s
                     LEFT JOIN citizens c ON s.applicant = c.id_citizens
                     LEFT JOIN citizens_and_posts cap ON s.police_officer = cap.id_citizens_and_posts
-                    LEFT JOIN citizens co ON cap.citizen = co.id_citizens
+                    LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
                     WHERE s.id_statement = @id",
                     
                 _ => throw new ArgumentException($"Неизвестная таблица: {tableName}")
@@ -2187,6 +3165,7 @@ namespace CourseWork.Data
                         WHEN 'statement' THEN s.date_and_time
                         WHEN 'appeals' THEN a.making_date_and_time
                         WHEN 'explanation_protocol' THEN ep.making_date_and_time
+                        WHEN 'medical_examination_certificate' THEN mc.making_date_and_time
                         WHEN 'medical_examination_report' THEN mer.making_date_and_time
                         WHEN 'administrative_protocol' THEN ap.making_date_and_time
                     END AS making_date,
@@ -2241,59 +3220,73 @@ namespace CourseWork.Data
             await conn.OpenAsync();
 
             var statementsSql = @"
-                SELECT 
-                    s.id_statement AS id,
-                    'statement' AS table_name,
-                    'Заявление' AS document_type,
-                    s.number,
-                    s.date_and_time AS created_at,
-                    c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name,
-                    s.content
-                FROM statement s
-                JOIN citizens c ON s.applicant = c.id_citizens
-                WHERE s.applicant = @citizenId";
+               SELECT 
+                s.id_statement AS id,
+                'statement' AS table_name,
+                'Заявление' AS document_type,
+                s.number,
+                s.date_and_time AS created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name,
+                s.content,
+                COALESCE(officer.last_name || ' ' || officer.first_name, 'Не указан') AS officer_name
+            FROM statement s
+            JOIN citizens c ON s.applicant = c.id_citizens
+            LEFT JOIN citizens_and_posts cap ON s.police_officer = cap.id_citizens_and_posts
+            LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
+            WHERE s.applicant = @citizenId";
 
 
             var appealsSql = @"
-                SELECT 
+               SELECT 
                     a.id_appeals AS id,
                     'appeals' AS table_name,
                     'Обращение' AS document_type,
                     a.number,
                     a.making_date_and_time AS created_at,
                     c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name,
-                    a.content
+                    a.content,
+                    COALESCE(officer.last_name || ' ' || officer.first_name, 'Не указан') AS officer_name
                 FROM appeals a
                 JOIN citizens c ON a.appeal_citizen = c.id_citizens
+                LEFT JOIN citizens_and_posts cap ON a.police_officer = cap.id_citizens_and_posts
+                LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
                 WHERE a.appeal_citizen = @citizenId";
 
 
             var explanationSql = @"
-                SELECT 
+               SELECT 
                     ep.id_explanation_protocol AS id,
                     'explanation_protocol' AS table_name,
                     'Протокол объяснения' AS document_type,
                     ep.number,
                     ep.making_date_and_time AS created_at,
                     c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name,
-                    ep.content
+                    ep.content,
+                    COALESCE(officer.last_name || ' ' || officer.first_name, 'Не указан') AS officer_name
                 FROM explanation_protocol ep
                 JOIN citizens c ON ep.citizen = c.id_citizens
+                LEFT JOIN deal d ON ep.deal = d.id_deal
+                LEFT JOIN citizens_and_posts cap ON d.police_officer = cap.id_citizens_and_posts
+                LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
                 WHERE ep.citizen = @citizenId";
 
 
             var medicalSql = @"
                 SELECT 
-                    mer.id_medical_examination_report AS id,
-                    'medical_examination_report' AS table_name,
-                    'Направление на мед. освид.' AS document_type,
-                    mer.number,
-                    mer.making_date_and_time AS created_at,
-                    c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name,
-                    mer.content
-                FROM medical_examination_report mer
-                JOIN citizens c ON mer.patient = c.id_citizens
-                WHERE mer.patient = @citizenId";
+                mer.id_medical_examination_report AS id,
+                'medical_examination_report' AS table_name,
+                'Направление на мед. освид.' AS document_type,
+                mer.number,
+                mer.making_date_and_time AS created_at,
+                c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name,
+                mer.content,
+                COALESCE(officer.last_name || ' ' || officer.first_name, 'Не указан') AS officer_name
+            FROM medical_examination_report mer
+            JOIN citizens c ON mer.patient = c.id_citizens
+            LEFT JOIN deal d ON mer.deal = d.id_deal
+            LEFT JOIN citizens_and_posts cap ON d.police_officer = cap.id_citizens_and_posts
+            LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
+            WHERE mer.patient = @citizenId";
 
 
             var protocolSql = @"
@@ -2304,10 +3297,13 @@ namespace CourseWork.Data
                     ap.protocol_number AS number,
                     ap.making_date_and_time AS created_at,
                     c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS citizen_name,
-                    ap.description AS content
+                    ap.description AS content,
+                    COALESCE(officer.last_name || ' ' || officer.first_name, 'Не указан') AS officer_name
                 FROM administrative_protocol ap
-                JOIN deal d ON ap.deal = d.id_deal
-                JOIN citizens c ON d.offender = c.id_citizens
+                LEFT JOIN deal d ON ap.deal = d.id_deal
+                LEFT JOIN citizens c ON d.offender = c.id_citizens
+                LEFT JOIN citizens_and_posts cap ON d.police_officer = cap.id_citizens_and_posts
+                LEFT JOIN citizens officer ON cap.citizen = officer.id_citizens
                 WHERE d.offender = @citizenId";
 
 
@@ -2368,8 +3364,244 @@ namespace CourseWork.Data
                 CreatedAt = reader.GetDateTime(4),
                 CitizenFullName = reader.IsDBNull(5) ? "Неизвестно" : reader.GetString(5),
                 Content = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
+                OfficerName = reader.IsDBNull(7) ? "Не указан" : reader.GetString(7),
                 IsFavorite = false
             };
+        }
+
+        public async Task<List<MedicalExaminationReport>> GetMedicalExaminationReportsAsync(string citizenName = "", string dealNumber = "", DateTime? date = null)
+        {
+            var reports = new List<MedicalExaminationReport>();
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var conditions = new List<string>();
+            var parameters = new Dictionary<string, object>();
+
+            if (!string.IsNullOrWhiteSpace(citizenName))
+            {
+                conditions.Add("(c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '')) ILIKE @citizenName");
+                parameters.Add("@citizenName", $"%{citizenName}%");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dealNumber))
+            {
+                conditions.Add("d.deal_number::text ILIKE @dealNumber");
+                parameters.Add("@dealNumber", $"%{dealNumber}%");
+            }
+
+            if (date.HasValue)
+            {
+                conditions.Add("mer.making_date_and_time::date = @date");
+                parameters.Add("@date", date.Value.Date);
+            }
+
+            string whereClause = conditions.Count > 0 ? $"WHERE {string.Join(" AND ", conditions)}" : "";
+
+            var sql = $@"
+                SELECT 
+                    mer.id_medical_examination_report,
+                    mer.number,
+                    mer.making_date_and_time,
+                    c.last_name || ' ' || c.first_name || ' ' || COALESCE(c.patronymic, '') AS patient_full_name,
+                    c.id_citizens,
+                    d.deal_number
+                FROM medical_examination_report mer
+                JOIN citizens c ON mer.patient = c.id_citizens
+                LEFT JOIN deal d ON mer.deal = d.id_deal
+                {whereClause}
+                ORDER BY mer.making_date_and_time DESC";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            foreach (var param in parameters)
+            {
+                cmd.Parameters.AddWithValue(param.Key, param.Value);
+            }
+            
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                reports.Add(new MedicalExaminationReport
+                {
+                    Id = reader.GetInt32(0),
+                    Number = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
+                    MakingDate = reader.GetDateTime(2),
+                    PatientFullName = reader.GetString(3),
+                    PatientId = reader.GetInt32(4),
+                    DealNumber = reader.IsDBNull(5) ? null : reader.GetInt32(5).ToString()
+                });
+            }
+            return reports;
+        }
+
+        public async Task<int> CreateMedicalCertificateAsync(
+            int medicalExaminationReportId,
+            string number, 
+            DateTime makingDateAndTime, 
+            string signsOfIntoxication, 
+            string typeIntoxication, 
+            string result, 
+            bool doctorSignature,
+            int medicalInstitutionId, // Добавлено
+            int doctorId) // Добавлено
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var sql = @"
+                INSERT INTO medical_examination_certificate 
+                    (number, medical_examination_report, making_date_and_time, 
+                    signs_of_intoxication, result, type_intoxication, 
+                    doctor_signature, medical_institution, doctor)
+                VALUES 
+                    (@number, @reportId, @dateTime, @signs, @result, @type, @signature, @institutionId, @doctorId) 
+                RETURNING id_medical_examination_certificate";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            
+            // Параметры
+            cmd.Parameters.AddWithValue("@number", int.Parse(number));
+            cmd.Parameters.AddWithValue("@reportId", medicalExaminationReportId);
+            cmd.Parameters.AddWithValue("@dateTime", makingDateAndTime);
+            cmd.Parameters.AddWithValue("@signs", signsOfIntoxication);
+            cmd.Parameters.AddWithValue("@result", result);
+            
+            // Приводим тип интоксикации к числу (пример)
+            int typeCode = typeIntoxication switch
+            {
+                "Алкогольное" => 1,
+                "Наркотическое" => 2,
+                "Токсическое" => 3,
+                _ => 0 // "Не выявлено"
+            };
+            cmd.Parameters.AddWithValue("@type", typeCode);
+            
+            cmd.Parameters.AddWithValue("@signature", doctorSignature);
+            
+            // --- Новые обязательные параметры ---
+            cmd.Parameters.AddWithValue("@institutionId", medicalInstitutionId);
+            cmd.Parameters.AddWithValue("@doctorId", doctorId);
+
+            var resultId = await cmd.ExecuteScalarAsync();
+            return resultId != null ? Convert.ToInt32(resultId) : 0;
+        }
+
+        /// <summary>
+        /// Создать Постановление (Resolution)
+        /// </summary>
+        public async Task<int> CreateResolutionAsync(
+            int dealId,
+            int protocolNumber,
+            DateTime dateTime,
+            string content,
+            int punishmentId,
+            int courtStaffId,
+            int? fineSum = null)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var sql = @"
+                INSERT INTO resolution 
+                (
+                    protocol_number,
+                    making_date_and_time,
+                    court_staff,
+                    deal,
+                    resolution,
+                    punishment,
+                    fine_sum
+                ) 
+                VALUES 
+                (
+                    @protocolNumber,
+                    @dateTime,
+                    @courtStaffId,
+                    @dealId,
+                    @content,
+                    @punishmentId,
+                    @fineSum
+                ) 
+                RETURNING id_resolution";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+
+            cmd.Parameters.AddWithValue("@protocolNumber", protocolNumber);
+            cmd.Parameters.AddWithValue("@dateTime", dateTime);
+            cmd.Parameters.AddWithValue("@courtStaffId", courtStaffId);
+            cmd.Parameters.AddWithValue("@dealId", dealId);
+            cmd.Parameters.AddWithValue("@content", content);
+            cmd.Parameters.AddWithValue("@punishmentId", punishmentId);
+            
+            if (fineSum.HasValue)
+                cmd.Parameters.AddWithValue("@fineSum", fineSum.Value);
+            else
+                cmd.Parameters.AddWithValue("@fineSum", DBNull.Value);
+
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : 0;
+        }
+
+        public async Task<int> CreateForensicExpertiseAsync(
+            int dealId,
+            int number,
+            DateTime dateTime,
+            int structureId,
+            int expertId,
+            string content,
+            bool physicalInjuries,
+            bool severityHarm,
+            bool couldOccur,
+            bool signatureExpert)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+           var sql = @"
+                INSERT INTO forensic_medical_examination 
+                (
+                    deal,
+                    number,
+                    making_date_and_time,
+                    structure,
+                    expert,
+                    content,
+                    physical_injuries,
+                    severity_of_harm_to_health,
+                    could_injuries_have_occurred_on_time,
+                    signature_expert
+                ) 
+                VALUES 
+                (
+                    @dealId,
+                    @number,
+                    @dateTime,
+                    @structureId,
+                    @expertId,
+                    @content,
+                    @physicalInjuries,
+                    @severityHarm,
+                    @couldOccur,
+                    @signatureExpert
+                ) 
+                RETURNING id_forensic_medical_examination";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+
+            cmd.Parameters.AddWithValue("@dealId", dealId);
+            cmd.Parameters.AddWithValue("@number", number);
+            cmd.Parameters.AddWithValue("@dateTime", dateTime);
+            cmd.Parameters.AddWithValue("@structureId", structureId);
+            cmd.Parameters.AddWithValue("@expertId", expertId);
+            cmd.Parameters.AddWithValue("@content", content);
+            cmd.Parameters.AddWithValue("@physicalInjuries", physicalInjuries);
+            cmd.Parameters.AddWithValue("@severityHarm", severityHarm);
+            cmd.Parameters.AddWithValue("@couldOccur", couldOccur);
+            cmd.Parameters.AddWithValue("@signatureExpert", signatureExpert);
+
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : 0;
         }
     }
 }

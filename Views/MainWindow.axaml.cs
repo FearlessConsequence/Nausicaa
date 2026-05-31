@@ -16,28 +16,40 @@ public partial class MainWindow : Window
 {
     private readonly int _currentUserId;
     private readonly DatabaseHelper? _db;
+    private UserRole _currentUserRole;
     private List<RecentDocument> _recentDocuments = new();
     private List<Draft> _drafts = new();
-    public MainWindow()
-    {
-        InitializeComponent();
-    } 
-    public MainWindow(int currentUserId)
+    
+    public MainWindow(int currentUserId, UserRole role = UserRole.PoliceOfficer)
     {
         InitializeComponent();
         _currentUserId = currentUserId;
         _db = new DatabaseHelper();
+        _currentUserRole = role;
+        ConfigureForRole();
         WindowState = WindowState.Maximized;
         
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, _currentUserRole);
         
+        // Кнопки создания документов
         btn_newAppel.Click += btn_newAppel_click;
         btn_newStatement.Click += btn_newStatement_click;
         btn_newExplanationProtocol.Click += btn_newExplanationProtocol_click;
         btn_newAdministrativeProtocol.Click += btn_newAdministrativeProtocol_click;
         btn_newExaminationReport.Click += btn_newExaminationReport_click;
-        btn_searchMain.Click += btn_search_main_click;
+        btn_newMedicalCertificate.Click += btn_newMedicalCertificate_Click;
+        btn_newResolution.Click += btn_newResolution_Click;
+        btn_newForensicExpertise.Click += btn_newForensicExpertise_Click;
+        
+        // Поиск гражданина
+        btn_citizen_search.Click += BtnCitizenSearch_Click;
+        
+        // Поиск документов для разных ролей
+        btn_police_doc_search.Click += BtnPoliceDocSearch_Click;
+        btn_doctor_doc_search.Click += BtnDoctorDocSearch_Click;
+        btn_judge_doc_search.Click += BtnJudgeDocSearch_Click;
+        btn_forensic_doc_search.Click += BtnForensicDocSearch_Click;
         
         this.Opened += async (s, e) => 
         {
@@ -46,80 +58,343 @@ public partial class MainWindow : Window
         };
     }
 
-    private void btn_search_main_click(object? sender, RoutedEventArgs e)
+    // ==========================================
+    // ПОИСК ГРАЖДАНИНА
+    // ==========================================
+    private void BtnCitizenSearch_Click(object? sender, RoutedEventArgs e)
     {
-        string deal = txbx_deal.Text?.Trim() ?? "";
-        string series = txbx_series_number.Text?.Trim() ?? "";
-        string fio = txbx_fio.Text?.Trim() ?? "";
-        string phone = txbx_phone_number.Text?.Trim() ?? "";
-        string address = txbx_address.Text?.Trim() ?? "";
-        
-        // Если номер дела не пустой
-        if (!string.IsNullOrWhiteSpace(deal))
+        // Проверяем, не включён ли чекбокс поиска по гражданину в блоке документа
+        if (chk_police_search_doc.IsChecked == true ||
+            chk_doctor_search_doc.IsChecked == true ||
+            chk_judge_search_doc.IsChecked == true ||
+            chk_forensic_search_doc.IsChecked == true)
         {
-            var yourDocumentsWindow = new YourDocumentsWindow(_currentUserId, deal);
-            yourDocumentsWindow.Show();
-            Close();
+            NotificationsControl.ShowWarning("Внимание", 
+                "Снимите галочку 'Искать по гражданину' в блоке поиска документа");
             return;
         }
         
-        // Если какие-то другие поля не пустые
-        if (!string.IsNullOrWhiteSpace(series) || !string.IsNullOrWhiteSpace(fio) || 
-            !string.IsNullOrWhiteSpace(phone) || !string.IsNullOrWhiteSpace(address))
+        string passport = txbx_citizen_passport.Text?.Trim() ?? "";
+        string fio = txbx_citizen_fio.Text?.Trim() ?? "";
+        
+        if (string.IsNullOrWhiteSpace(fio) && string.IsNullOrWhiteSpace(passport))
         {
-            var searchCitizensWindow = new SearchCitizensWindow(_currentUserId);
-            searchCitizensWindow.Show();
-            Close();
+            NotificationsControl.ShowWarning("Введите данные", 
+                "Для поиска гражданина укажите фамилию или паспортные данные");
             return;
         }
         
-        // Если всё пусто
-        NotificationsControl.ShowWarning("Внимание", "Введите хотя бы один параметр для поиска");
+        var searchParams = new CitizenSearchParams
+        {
+            Passport = passport,
+            FullName = fio,
+            Birthday = dp_citizen_birthday.SelectedDate?.DateTime,
+            Phone = txbx_citizen_phone.Text?.Trim(),
+            Address = txbx_citizen_address.Text?.Trim()
+        };
+        
+        // ✅ Разбираем ФИО на части
+        if (!string.IsNullOrWhiteSpace(fio))
+        {
+            var parts = fio.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length >= 1) searchParams.LastName = parts[0];
+            if (parts.Length >= 2) searchParams.FirstName = parts[1];
+            if (parts.Length >= 3) searchParams.Patronymic = parts[2];
+        }
+        
+        var searchWindow = new SearchCitizensWindow(App.CurrentUserId, searchParams);
+        searchWindow.Show();
+        Close();
+    }
+
+    // ==========================================
+    // ПОЛИЦЕЙСКИЙ - поиск документов
+    // ==========================================
+    private void BtnPoliceDocSearch_Click(object? sender, RoutedEventArgs e)
+    {
+        bool searchByCitizen = chk_police_search_doc.IsChecked == true;
+        
+        string dealNumber = txbx_police_deal.Text?.Trim() ?? "";
+        string docType = (cmb_police_doc_type.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Любой";
+        DateTime? date = dp_police_doc_date.SelectedDate?.DateTime;
+        
+        if (!searchByCitizen && string.IsNullOrWhiteSpace(dealNumber))
+        {
+            NotificationsControl.ShowWarning("Введите номер дела", 
+                "Для поиска документов укажите номер дела");
+            return;
+        }
+        
+        CitizenSearchParams? citizenParams = null;
+        if (searchByCitizen)
+        {
+            string passport = txbx_citizen_passport.Text?.Trim() ?? "";
+            string fio = txbx_citizen_fio.Text?.Trim() ?? "";
+            
+            if (string.IsNullOrWhiteSpace(passport) && string.IsNullOrWhiteSpace(fio))
+            {
+                NotificationsControl.ShowWarning("Введите данные гражданина", 
+                    "Для поиска по гражданину укажите ФИО или паспорт");
+                return;
+            }
+            
+            citizenParams = new CitizenSearchParams
+            {
+                Passport = passport,
+                FullName = fio,
+                Birthday = dp_citizen_birthday.SelectedDate?.DateTime,
+                Phone = txbx_citizen_phone.Text?.Trim(),
+                Address = txbx_citizen_address.Text?.Trim()
+            };
+            
+            if (!string.IsNullOrWhiteSpace(fio))
+            {
+                var parts = fio.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 1) citizenParams.LastName = parts[0];
+                if (parts.Length >= 2) citizenParams.FirstName = parts[1];
+                if (parts.Length >= 3) citizenParams.Patronymic = parts[2];
+            }
+        }
+        
+        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, dealNumber, docType, date, citizenParams);
+        documentsWindow.Show();
+        Close();
+    }
+
+    // ==========================================
+    // ВРАЧ - поиск документов
+    // ==========================================
+    private void BtnDoctorDocSearch_Click(object? sender, RoutedEventArgs e)
+    {
+        bool searchByCitizen = chk_doctor_search_doc.IsChecked == true;
+        
+        string reportNumber = txbx_doctor_report_number.Text?.Trim() ?? "";
+        string certNumber = txbx_doctor_cert_number.Text?.Trim() ?? "";
+        DateTime? date = dp_doctor_doc_date.SelectedDate?.DateTime;
+        
+        // ✅ Проверка: если оба поля заполнены - предупреждение
+        if (!string.IsNullOrWhiteSpace(reportNumber) && !string.IsNullOrWhiteSpace(certNumber))
+        {
+            NotificationsControl.ShowWarning("Внимание", 
+                "Заполните только одно поле: номер направления или номер акта");
+            return;
+        }
+        
+        // ✅ Проверка: если чекбокс НЕ включён, то нужно что-то ввести
+        if (!searchByCitizen && string.IsNullOrWhiteSpace(reportNumber) && string.IsNullOrWhiteSpace(certNumber))
+        {
+            NotificationsControl.ShowWarning("Введите номер", 
+                "Для поиска укажите номер направления или номер акта");
+            return;
+        }
+        
+        // Собираем параметры гражданина (если чекбокс включён)
+        CitizenSearchParams? citizenParams = null;
+        if (searchByCitizen)
+        {
+            string passport = txbx_citizen_passport.Text?.Trim() ?? "";
+            string fio = txbx_citizen_fio.Text?.Trim() ?? "";
+            
+            if (string.IsNullOrWhiteSpace(passport) && string.IsNullOrWhiteSpace(fio))
+            {
+                NotificationsControl.ShowWarning("Введите данные гражданина", 
+                    "Для поиска по гражданину укажите ФИО или паспорт");
+                return;
+            }
+            
+            citizenParams = new CitizenSearchParams
+            {
+                Passport = passport,
+                FullName = fio,
+                Birthday = dp_citizen_birthday.SelectedDate?.DateTime,
+                Phone = txbx_citizen_phone.Text?.Trim(),
+                Address = txbx_citizen_address.Text?.Trim()
+            };
+            
+            if (!string.IsNullOrWhiteSpace(fio))
+            {
+                var parts = fio.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 1) citizenParams.LastName = parts[0];
+                if (parts.Length >= 2) citizenParams.FirstName = parts[1];
+                if (parts.Length >= 3) citizenParams.Patronymic = parts[2];
+            }
+        }
+        
+        // ✅ Определяем тип документа и номер для поиска
+        string searchNumber = "";
+        string docType = "Все";
+        
+        if (!string.IsNullOrWhiteSpace(reportNumber))
+        {
+            searchNumber = reportNumber;
+            docType = "Направление на мед. освид.";
+        }
+        else if (!string.IsNullOrWhiteSpace(certNumber))
+        {
+            searchNumber = certNumber;
+            docType = "Акт медицинского освидетельствования";
+        }
+        
+        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, searchNumber, "", date, citizenParams, docType);
+        documentsWindow.Show();
+        Close();
+    }
+
+    // ==========================================
+    // СУДЬЯ - поиск документов
+    // ==========================================
+    private void BtnJudgeDocSearch_Click(object? sender, RoutedEventArgs e)
+    {
+        bool searchByCitizen = chk_judge_search_doc.IsChecked == true;
+        
+        string number = txbx_judge_number.Text?.Trim() ?? "";
+        string dealNumber = txbx_judge_deal.Text?.Trim() ?? "";
+        string docType = (cmb_judge_doc_type.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Все";
+        DateTime? date = dp_judge_doc_date.SelectedDate?.DateTime;
+        
+        if (!searchByCitizen && string.IsNullOrWhiteSpace(number) && string.IsNullOrWhiteSpace(dealNumber))
+        {
+            NotificationsControl.ShowWarning("Введите номер", 
+                "Для поиска укажите номер документа или номер дела");
+            return;
+        }
+        
+        CitizenSearchParams? citizenParams = null;
+        if (searchByCitizen)
+        {
+            string passport = txbx_citizen_passport.Text?.Trim() ?? "";
+            string fio = txbx_citizen_fio.Text?.Trim() ?? "";
+            
+            if (string.IsNullOrWhiteSpace(passport) && string.IsNullOrWhiteSpace(fio))
+            {
+                NotificationsControl.ShowWarning("Введите данные гражданина", 
+                    "Для поиска по гражданину укажите ФИО или паспорт");
+                return;
+            }
+            
+            citizenParams = new CitizenSearchParams
+            {
+                Passport = passport,
+                FullName = fio,
+                Birthday = dp_citizen_birthday.SelectedDate?.DateTime,
+                Phone = txbx_citizen_phone.Text?.Trim(),
+                Address = txbx_citizen_address.Text?.Trim()
+            };
+            
+            if (!string.IsNullOrWhiteSpace(fio))
+            {
+                var parts = fio.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 1) citizenParams.LastName = parts[0];
+                if (parts.Length >= 2) citizenParams.FirstName = parts[1];
+                if (parts.Length >= 3) citizenParams.Patronymic = parts[2];
+            }
+        }
+        
+        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, number, dealNumber, date, citizenParams, docType);
+        documentsWindow.Show();
+        Close();
     }
     
+    // ==========================================
+    // ЭКСПЕРТ - поиск документов
+    // ==========================================
+    private void BtnForensicDocSearch_Click(object? sender, RoutedEventArgs e)
+    {
+        bool searchByCitizen = chk_forensic_search_doc.IsChecked == true;
+        
+        string number = txbx_forensic_number.Text?.Trim() ?? "";
+        string dealNumber = txbx_forensic_deal.Text?.Trim() ?? "";
+        DateTime? date = dp_forensic_doc_date.SelectedDate?.DateTime;
+        
+        if (!searchByCitizen && string.IsNullOrWhiteSpace(number) && string.IsNullOrWhiteSpace(dealNumber))
+        {
+            NotificationsControl.ShowWarning("Введите номер", 
+                "Для поиска укажите номер экспертизы или номер дела");
+            return;
+        }
+        
+        CitizenSearchParams? citizenParams = null;
+        if (searchByCitizen)
+        {
+            string passport = txbx_citizen_passport.Text?.Trim() ?? "";
+            string fio = txbx_citizen_fio.Text?.Trim() ?? "";
+            
+            if (string.IsNullOrWhiteSpace(passport) && string.IsNullOrWhiteSpace(fio))
+            {
+                NotificationsControl.ShowWarning("Введите данные гражданина", 
+                    "Для поиска по гражданину укажите ФИО или паспорт");
+                return;
+            }
+            
+            citizenParams = new CitizenSearchParams
+            {
+                Passport = passport,
+                FullName = fio,
+                Birthday = dp_citizen_birthday.SelectedDate?.DateTime,
+                Phone = txbx_citizen_phone.Text?.Trim(),
+                Address = txbx_citizen_address.Text?.Trim()
+            };
+            
+            if (!string.IsNullOrWhiteSpace(fio))
+            {
+                var parts = fio.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 1) citizenParams.LastName = parts[0];
+                if (parts.Length >= 2) citizenParams.FirstName = parts[1];
+                if (parts.Length >= 3) citizenParams.Patronymic = parts[2];
+            }
+        }
+        
+        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, number, dealNumber, date, citizenParams);
+        documentsWindow.Show();
+        Close();
+    }
+        
+    // ==========================================
+    // ЗАГРУЗКА ДАННЫХ
+    // ==========================================
     private async Task LoadRecentDocumentsAsync()
     {
         try
         {
-            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
-            _recentDocuments = await _db.GetAllDocumentsAsync();
-            var recentDocs = _recentDocuments.Take(10).ToList();
-            recentDocumentsList.ItemsSource = recentDocs;
+            if (_db == null) return;
+        
             
-            // ✅ Подписываемся на кнопки открытия
+            var recentDocs = await _db.GetAllDocumentsAsync(_currentUserRole, App.CurrentUserId);
+            
+            
+            recentDocumentsList.ItemsSource = recentDocs.Take(10).ToList();
+            txtNoRecent.IsVisible = recentDocs.Count == 0;
+            
             await Task.Delay(100);
             SubscribeToRecentButtons();
-            
-            var txtNoRecent = this.FindControl<TextBlock>("txtNoRecent");
-            if (txtNoRecent != null) txtNoRecent.IsVisible = recentDocs.Count == 0;
         }
         catch (Exception ex)
         {
+            NotificationsControl.ShowError("Ошибка", $"LoadRecentDocuments: {ex.Message}");
             Console.WriteLine($"[ERROR] LoadRecentDocuments: {ex.Message}");
         }
     }
-    
+        
     private async Task LoadDraftsAsync()
     {
         try
         {
-            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
-            _drafts = await _db.GetDraftsAsync(_currentUserId);
-            var recentDrafts = _drafts.Take(10).ToList();
-            draftsList.ItemsSource = recentDrafts;
-            
-            // ✅ Подписываемся на кнопки открытия
+            if (_db == null) return;
+            _drafts = await _db.GetDraftsAsync(App.CurrentUserId);
+            draftsList.ItemsSource = _drafts.Take(10).ToList();
             await Task.Delay(100);
             SubscribeToDraftButtons();
-            
-            var txtNoDrafts = this.FindControl<TextBlock>("txtNoDrafts");
-            if (txtNoDrafts != null) txtNoDrafts.IsVisible = recentDrafts.Count == 0;
+            txtNoDrafts.IsVisible = _drafts.Count == 0;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"[ERROR] LoadDrafts: {ex.Message}");
         }
     }
+    
+    // ==========================================
+    // ПОДПИСКИ НА КНОПКИ В СПИСКАХ
+    // ==========================================
     private void SubscribeToRecentButtons()
     {
         var buttons = recentDocumentsList.GetVisualDescendants()
@@ -148,11 +423,13 @@ public partial class MainWindow : Window
         }
     }
 
+    // ==========================================
+    // ОТКРЫТИЕ ДОКУМЕНТОВ ИЗ СПИСКОВ
+    // ==========================================
     private async void OnRecentOpenClick(object? sender, RoutedEventArgs e)
     {
         if (sender is Button btn && btn.Tag is RecentDocument doc)
         {
-            // Получаем полный документ по ID и типу
             string tableName = doc.DocumentType switch
             {
                 "Заявление" => "statement",
@@ -160,16 +437,30 @@ public partial class MainWindow : Window
                 "Протокол объяснения" => "explanation_protocol",
                 "Направление на мед. освид." => "medical_examination_report",
                 "Административный протокол" => "administrative_protocol",
+                "Акт медицинского освидетельствования" => "medical_certificate",
+                "Судебно-медицинская экспертиза" => "forensic_medical_examination",
+                "Постановление" => "resolution",
                 _ => "unknown"
             };
             
             if (tableName != "unknown")
             {
-                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
-                var fullDoc = await _db.GetFullDocumentAsync(tableName, doc.Id);
-                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc);
-                viewer.Show();
-                this.Hide();
+                if (_db == null) return;
+                try
+                {
+                    var fullDoc = await _db.GetFullDocumentAsync(tableName, doc.Id);
+                    var viewer = new DocumentViewerWindow(App.CurrentUserId, fullDoc, this);
+                    viewer.Show();
+                    this.Hide();
+                }
+                catch (Exception ex)
+                {
+                    NotificationsControl.ShowError("Ошибка", $"Не удалось открыть документ: {ex.Message}");
+                }
+            }
+            else
+            {
+                NotificationsControl.ShowWarning("Внимание", $"Неизвестный тип документа: {doc.DocumentType}");
             }
         }
     }
@@ -180,88 +471,132 @@ public partial class MainWindow : Window
         {
             Window? targetWindow = draft.DocumentType switch
             {
-                "appeals" => new NewAppel(_currentUserId),
-                "statement" => new NewStatement(_currentUserId),
-                "explanation_protocol" => new NewExplanationProtocol(_currentUserId),
-                "medical_examination_report" => new NewExaminationReport(_currentUserId),
-                "administrative_protocol" => new NewAdministrativeProtocol(_currentUserId),
+                "appeals" => new NewAppel(App.CurrentUserId, this, draft.Id),
+                "statement" => new NewStatement(App.CurrentUserId, this, draft.Id),
+                "explanation_protocol" => new NewExplanationProtocol(App.CurrentUserId, this, draft.Id),
+                "medical_examination_report" => new NewExaminationReport(App.CurrentUserId, this, draft.Id),
+                "administrative_protocol" => new NewAdministrativeProtocol(App.CurrentUserId, this, draft.Id),
+                "medical_certificate" => new NewMedicalCertificate(App.CurrentUserId, this, draft.Id),
                 _ => null
             };
             
             if (targetWindow != null)
             {
-                // Загружаем черновик (если есть метод)
                 if (targetWindow is NewAppel appel) await appel.LoadDraftAsync(draft);
                 else if (targetWindow is NewStatement statement) await statement.LoadDraftAsync(draft);
                 else if (targetWindow is NewExplanationProtocol exp) await exp.LoadDraftAsync(draft);
                 else if (targetWindow is NewExaminationReport exam) await exam.LoadDraftAsync(draft);
                 else if (targetWindow is NewAdministrativeProtocol admin) await admin.LoadDraftAsync(draft);
+                else if (targetWindow is NewMedicalCertificate cert) await cert.LoadDraftAsync(draft);
                 
                 targetWindow.Show();
-                this.Close();
+                this.Hide();  // ← Hide вместо Close
             }
         }
     }
 
+    // ==========================================
+    // КНОПКИ БЫСТРОГО СОЗДАНИЯ ДОКУМЕНТОВ
+    // ==========================================
     private void btn_newAppel_click(object? sender, RoutedEventArgs e)
     {
-        var newAppel = new NewAppel(_currentUserId);
-        newAppel.Show();
-        this.Close();
+        new NewAppel(App.CurrentUserId, this).Show();
+        this.Hide();
     }
     
     private void btn_newStatement_click(object? sender, RoutedEventArgs e)
     {
-        var newStatement = new NewStatement(_currentUserId);
-        newStatement.Show();
+        new NewStatement(App.CurrentUserId, this).Show();
         this.Close();
     }
     
     private void btn_newExplanationProtocol_click(object? sender, RoutedEventArgs e)
     {
-        var newExplanationProtocol = new NewExplanationProtocol(_currentUserId);
-        newExplanationProtocol.Show();
+        new NewExplanationProtocol(App.CurrentUserId, this).Show();
         this.Close();
     }
     
     private void btn_newAdministrativeProtocol_click(object? sender, RoutedEventArgs e)
     {
-        var newAdministrativeProtocol = new NewAdministrativeProtocol(_currentUserId);
-        newAdministrativeProtocol.Show();
+        new NewAdministrativeProtocol(App.CurrentUserId, this).Show();
         this.Close();
     }
     
     private void btn_newExaminationReport_click(object? sender, RoutedEventArgs e)
     {
-        var newExaminationReport = new NewExaminationReport(_currentUserId);
-        newExaminationReport.Show();
+        new NewExaminationReport(App.CurrentUserId, this).Show();
         this.Close();
     }
 
-    private async Task ShowMessage(string title, string message)
+    private void btn_newMedicalCertificate_Click(object? sender, RoutedEventArgs e)
     {
-        var dialog = new Window
+        var newCertWindow = new NewMedicalCertificate(App.CurrentUserId, this);
+        newCertWindow.Show();
+        this.Hide();
+    }
+
+    private void btn_newResolution_Click(object? sender, RoutedEventArgs e)
+    {
+        var newResolutionWindow = new NewResolution(App.CurrentUserId, this);
+        newResolutionWindow.Show();
+        this.Close();
+    }
+
+    private void btn_newForensicExpertise_Click(object? sender, RoutedEventArgs e)
+    {
+        var newExpertiseWindow = new NewForensicExpertise(App.CurrentUserId, this);
+        newExpertiseWindow.Show();
+        this.Close();
+    }
+
+    // ==========================================
+    // НАСТРОЙКА РОЛЕЙ
+    // ==========================================
+    private async Task ConfigureForRole()
+    {
+        DocSearchPolice.IsVisible = false;
+        DocSearchDoctor.IsVisible = false;
+        DocSearchJudge.IsVisible = false;
+        DocSearchForensic.IsVisible = false;
+        
+        btn_newAppel.IsVisible = false;
+        btn_newStatement.IsVisible = false;
+        btn_newExplanationProtocol.IsVisible = false;
+        btn_newExaminationReport.IsVisible = false;
+        btn_newAdministrativeProtocol.IsVisible = false;
+        btn_newMedicalCertificate.IsVisible = false;
+        btn_newResolution.IsVisible = false;
+        btn_newForensicExpertise.IsVisible = false;
+        
+        switch (App.CurrentUserRole)
         {
-            Title = title,
-            Width = 350,
-            Height = 150,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
-            {
-                Margin = new Avalonia.Thickness(20),
-                Spacing = 15,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Children =
-                {
-                    new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap },
-                    new Button { Content = "OK", Width = 80, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center }
-                }
-            }
-        };
-        
-        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
-        if (okButton != null) okButton.Click += (s, args) => dialog.Close();
-        
-        await dialog.ShowDialog(this);
+            case UserRole.MedicalExpert:
+                DocSearchDoctor.IsVisible = true;
+                btn_newMedicalCertificate.IsVisible = true;
+                break;
+                
+            case UserRole.Judge:
+                DocSearchJudge.IsVisible = true;
+                btn_newResolution.IsVisible = true;
+                break;
+                
+            case UserRole.ForensicExpert:
+                DocSearchForensic.IsVisible = true;
+                btn_newForensicExpertise.IsVisible = true;
+                var expertPostId = await _db.GetCitizensAndPostsIdByUserIdAsync(App.CurrentUserId);
+                Console.WriteLine($"[DEBUG] citizen_post_id для эксперта: {expertPostId}");
+                break;
+                
+            case UserRole.AdminInspector:
+            case UserRole.PoliceOfficer:
+            default:
+                DocSearchPolice.IsVisible = true;
+                btn_newAppel.IsVisible = true;
+                btn_newStatement.IsVisible = true;
+                btn_newExplanationProtocol.IsVisible = true;
+                btn_newExaminationReport.IsVisible = true;
+                btn_newAdministrativeProtocol.IsVisible = true;
+                break;
+        }
     }
 }

@@ -16,20 +16,19 @@ public partial class NewExplanationProtocol : Window
     private readonly int _currentUserId;
     private readonly Window? _previousWindow;
     private int? _currentDraftId;
-
-    public NewExplanationProtocol() : this(0) { }
     
-    public NewExplanationProtocol(int currentUserId)
+    public NewExplanationProtocol(int currentUserId, Window? previousWindow = null, int? currentDraftId = null)
     {
         InitializeComponent();
         _currentUserId = currentUserId;
         _db = new DatabaseHelper();
-        _currentDraftId = null;
+        _previousWindow = previousWindow;
+        _currentDraftId = currentDraftId;
         dp_date.SelectedDate = DateTime.Now;
         tp_time.SelectedTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
         
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
         SetupFormButtons();
     }
 
@@ -46,7 +45,7 @@ public partial class NewExplanationProtocol : Window
     {
         try
         {
-            var citizensWindow = new SelectCitizenWindow(_currentUserId, _previousWindow);
+            var citizensWindow = new SelectCitizenWindow(App.CurrentUserId, this);
             
             citizensWindow.Closed += (s, args) =>
             {
@@ -75,7 +74,7 @@ public partial class NewExplanationProtocol : Window
     {
         try
         {
-            var dealWindow = new SelectDealWindow(_currentUserId, _previousWindow);
+            var dealWindow = new SelectDealWindow(App.CurrentUserId, this);
             
             dealWindow.Closed += (s, args) =>
             {
@@ -97,7 +96,7 @@ public partial class NewExplanationProtocol : Window
         catch (Exception ex)
         {
             Console.WriteLine($"[ERROR] Btn_select_deal_Click: {ex.Message}");
-            await ShowMessage("Ошибка", $"Не удалось открыть окно выбора дела: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Не удалось открыть окно выбора дела: {ex.Message}");
         }
     }
 
@@ -106,7 +105,7 @@ public partial class NewExplanationProtocol : Window
         if (txt_citizen.Tag == null)
         {
             txt_citizen_error.IsVisible = true;
-            await ShowMessage("Ошибка", "Пожалуйста, выберите гражданина");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, выберите гражданина");
             return;
         }
         txt_citizen_error.IsVisible = false;
@@ -114,14 +113,14 @@ public partial class NewExplanationProtocol : Window
         if (txt_deal.Tag == null)
         {
             txt_deal_error.IsVisible = true;
-            await ShowMessage("Ошибка", "Пожалуйста, выберите дело");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, выберите дело");
             return;
         }
         txt_deal_error.IsVisible = false;
 
         if (string.IsNullOrWhiteSpace(txt_content.Text))
         {
-            await ShowMessage("Ошибка", "Пожалуйста, заполните содержание объяснения");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, заполните содержание объяснения");
             return;
         }
 
@@ -140,13 +139,18 @@ public partial class NewExplanationProtocol : Window
             if (_currentDraftId.HasValue)
                 await _db.DeleteDraftAsync(_currentDraftId.Value);
 
-            await ShowMessage("Успех", "Протокол объяснения успешно создан!");
-            new RecentsWindow(_currentUserId).Show();
-            Close();
+            NotificationsControl.ShowSuccess("Успех", "Протокол объяснения успешно создан!");
+            
+            // ✅ Возврат в предыдущее окно
+            if (_previousWindow != null)
+            {
+                _previousWindow.Show();
+            }
+            this.Close();
         }
         catch (Exception ex)
         {
-            await ShowMessage("Ошибка", $"Не удалось создать протокол: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Не удалось создать протокол: {ex.Message}");
         }
     }
 
@@ -175,26 +179,42 @@ public partial class NewExplanationProtocol : Window
             if (_currentDraftId.HasValue)
             {
                 await _db.UpdateDraftAsync(_currentDraftId.Value, formDataJson);
-                await ShowMessage("Успех", "Черновик обновлён!");
+                NotificationsControl.ShowSuccess("Успех", "Черновик обновлён!");
             }
             else
             {
                 int newId = await _db.SaveDraftAsync(_currentUserId, "explanation_protocol", formDataJson);
                 _currentDraftId = newId;
-                await ShowMessage("Успех", "Черновик сохранён!");
+                NotificationsControl.ShowSuccess("Успех", "Черновик сохранён!");
             }
+            
+            new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
+            this.Close();
         }
         catch (Exception ex)
         {
-            await ShowMessage("Ошибка", $"Не удалось сохранить черновик: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Не удалось сохранить черновик: {ex.Message}");
         }
     }
 
     private void Btn_cancel_Click(object? sender, RoutedEventArgs e)
     {
-        Close();
+        try
+        {
+            // ✅ Возврат в предыдущее окно
+            if (_previousWindow != null)
+            {
+                _previousWindow.Show();
+            }
+        }
+        catch
+        {
+            new MainWindow(App.CurrentUserId).Show();
+        }
+        
+        this.Close();
     }
-
+    
     public async Task LoadDraftAsync(Draft draft)
     {
         try
@@ -245,32 +265,5 @@ public partial class NewExplanationProtocol : Window
         {
             Console.WriteLine($"[ERROR] LoadDraftAsync: {ex.Message}");
         }
-    }
-
-    private async Task ShowMessage(string title, string message)
-    {
-        var dialog = new Window
-        {
-            Title = title,
-            Width = 350,
-            Height = 150,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
-            {
-                Margin = new Avalonia.Thickness(20),
-                Spacing = 15,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Children =
-                {
-                    new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap },
-                    new Button { Content = "OK", Width = 80, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center }
-                }
-            }
-        };
-        
-        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
-        if (okButton != null) okButton.Click += (s, args) => dialog.Close();
-        
-        await dialog.ShowDialog(this);
     }
 }

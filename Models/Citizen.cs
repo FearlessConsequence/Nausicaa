@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CourseWork.Models;
 
@@ -28,4 +29,5 @@ public class Citizen
     public string? PostName { get; set; }
     
     public string FullName => $"{LastName} {FirstName} {Patronymic}".Trim();
+    public List<CitizenPhone> Phones { get; set; } = new();
 }

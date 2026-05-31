@@ -15,23 +15,21 @@ public partial class NewExaminationReport : Window
     private readonly DatabaseHelper? _db;
     private int? _currentDraftId;
     private readonly int _currentUserId;
-    private readonly Window? _previousWindow;
-    public NewExaminationReport()
-    {
-        InitializeComponent();
-    }    
-    public NewExaminationReport(int currentUserId)
+    private readonly Window? _previousWindow;   
+    
+    public NewExaminationReport(int currentUserId, Window? previousWindow = null, int? currentDraftId = null)
     {
         InitializeComponent();
         _currentUserId = currentUserId;
-        _currentDraftId = null;
+        _currentDraftId = currentDraftId;
         _db = new DatabaseHelper();
+        _previousWindow = previousWindow;
 
         dp_date.SelectedDate = DateTime.Now;
         tp_time.SelectedTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
 
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
         
         btn_create.Click += Btn_create_Click;
         btn_cancel.Click += Btn_cancel_Click;
@@ -39,11 +37,12 @@ public partial class NewExaminationReport : Window
         btn_select_deal.Click += Btn_select_deal_Click;
         btn_save_draft.Click += Btn_save_draft_Click;
     }
+    
     private async void Btn_select_patient_Click(object? sender, RoutedEventArgs e)
     {
         try
         {
-            var citizensWindow = new SelectCitizenWindow(_currentUserId, _previousWindow);
+            var citizensWindow = new SelectCitizenWindow(App.CurrentUserId, this);
             citizensWindow.Closed += (s, args) =>
             {
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -55,7 +54,7 @@ public partial class NewExaminationReport : Window
                         txt_patient.Tag = selected.Id;
                         txt_deal_error.IsVisible = false;
                     }
-                    this.Activate();
+                    Activate();
                 });
             };
             citizensWindow.Show();
@@ -70,7 +69,7 @@ public partial class NewExaminationReport : Window
     {
         try
         {
-            var dealWindow = new SelectDealWindow(_currentUserId, _previousWindow);
+            var dealWindow = new SelectDealWindow(App.CurrentUserId, this);
             
             dealWindow.Closed += (s, args) =>
             {
@@ -92,34 +91,35 @@ public partial class NewExaminationReport : Window
         catch (Exception ex)
         {
             Console.WriteLine($"[ERROR] Btn_select_deal_Click: {ex.Message}");
-            await ShowMessage("Ошибка", $"Не удалось открыть окно выбора дела: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Не удалось открыть окно выбора дела: {ex.Message}");
         }
     }
+    
     private async void Btn_create_Click(object? sender, RoutedEventArgs e)
     {
         if (txt_patient.Tag == null)
         {
             txt_deal_error.IsVisible = true;
-            await ShowMessage("Ошибка", "Пожалуйста, выберите пациента");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, выберите пациента");
             return;
         }
         txt_deal_error.IsVisible = false;
 
         if (string.IsNullOrWhiteSpace(txt_content.Text))
         {
-            await ShowMessage("Ошибка", "Пожалуйста, заполните содержание направления");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, заполните содержание направления");
             return;
         }
         
         if (cmb_report_type.SelectedItem == null)
         {
-            await ShowMessage("Ошибка", "Пожалуйста, выберите тип освидетельствования");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, выберите тип освидетельствования");
             return;
         }
         
         if (dp_date.SelectedDate == null || tp_time.SelectedTime == null)
         {
-            await ShowMessage("Ошибка", "Пожалуйста, выберите дату и время");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, выберите дату и время");
             return;
         }
 
@@ -128,7 +128,6 @@ public partial class NewExaminationReport : Window
             int patientId = (int)txt_patient.Tag;
             int? dealId = txt_deal.Tag as int?;
             
-            // ✅ Правильно получаем выбранный тип освидетельствования
             string reportType = "";
             if (cmb_report_type.SelectedItem is ComboBoxItem selectedItem)
             {
@@ -154,14 +153,18 @@ public partial class NewExaminationReport : Window
             bool citizenSig = chk_citizen_signature.IsChecked ?? false;
             bool officerSig = chk_officer_signature.IsChecked ?? false;
 
-            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
             int newId = await _db.CreateMedicalExaminationReportAsync(
                 patientId, dealId, reportType, content, signs, 
                 number, selectedDateTime, citizenSig, officerSig);
 
             NotificationsControl.ShowSuccess("Успех", "Направление создано!");
-            new RecentsWindow(_currentUserId).Show();
-            Close();
+            
+            // ✅ Возврат в предыдущее окно
+            if (_previousWindow != null)
+            {
+                _previousWindow.Show();
+            }
+            this.Close();
         }
         catch (Exception ex)
         {
@@ -169,6 +172,7 @@ public partial class NewExaminationReport : Window
             NotificationsControl.ShowError("Ошибка", ex.Message);
         }
     }
+    
     private async void Btn_save_draft_Click(object? sender, RoutedEventArgs e)
     {
         try
@@ -193,131 +197,41 @@ public partial class NewExaminationReport : Window
             
             if (_currentDraftId.HasValue)
             {
-                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 await _db.UpdateDraftAsync(_currentDraftId.Value, formDataJson);
-                await ShowMessage("Успех", "Черновик обновлён!");
+                NotificationsControl.ShowSuccess("Успех", "Черновик обновлён!");
             }
             else
             {
-                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 int newDraftId = await _db.SaveDraftAsync(_currentUserId, "medical_examination_report", formDataJson);
                 _currentDraftId = newDraftId;
-                await ShowMessage("Успех", "Черновик сохранён!");
+                NotificationsControl.ShowSuccess("Успех", "Черновик сохранён!");
             }
+            
+            new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
+            this.Close();
         }
         catch (Exception ex)
         {
-            await ShowMessage("Ошибка", $"Не удалось сохранить черновик: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Не удалось сохранить черновик: {ex.Message}");
         }
     }
-    private void Btn_cancel_Click(object? sender, RoutedEventArgs e)
-    {
-        new MainWindow(_currentUserId).Show();
-        this.Close();
-    }
 
-    private async Task ShowMessage(string title, string message)
-    {
-        var dialog = new Window
-        {
-            Title = title,
-            Width = 320,
-            Height = 160,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
-            {
-                Margin = new Avalonia.Thickness(20),
-                Spacing = 20,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Children =
-                {
-                    new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center },
-                    new Button { Content = "OK", HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center, Width = 100, Height = 32 }
-                }
-            }
-        };
-        
-        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
-        if (okButton != null)
-            okButton.Click += (s, args) => dialog.Close();
-        
-        await dialog.ShowDialog(this);
-    }
-    public void LoadDraft(string formDataJson)
+    private void Btn_cancel_Click(object? sender, RoutedEventArgs e)
     {
         try
         {
-            if (string.IsNullOrEmpty(formDataJson)) return;
-            
-            using var doc = JsonDocument.Parse(formDataJson);
-            var root = doc.RootElement;
-            
-
-            if (root.TryGetProperty("patient_id", out var p) && p.TryGetInt32(out int pid))
+            // ✅ Возврат в предыдущее окно
+            if (_previousWindow != null)
             {
-                Task.Run(async () =>
-                {
-                    if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
-                    var citizen = await _db.GetCitizenByIdAsync(pid);
-                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-                    {
-                        if (citizen != null)
-                        {
-                            txt_patient.Text = citizen.FullName;
-                            txt_patient.Tag = citizen.Id;
-                        }
-                    });
-                });
+                _previousWindow.Show();
             }
-            
-
-            if (root.TryGetProperty("deal_name", out var dn) && dn.ValueKind != JsonValueKind.Null)
-                txt_deal.Text = dn.GetString();
-            
-
-            if (root.TryGetProperty("number", out var num) && num.ValueKind != JsonValueKind.Null)
-                txt_number.Text = num.GetString();
-            
-
-            if (root.TryGetProperty("report_type", out var rt) && rt.ValueKind != JsonValueKind.Null)
-            {
-                var type = rt.GetString();
-                foreach (var item in cmb_report_type.Items)
-                {
-                    if (item is ComboBoxItem cbi && cbi.Content?.ToString() == type)
-                    {
-                        cmb_report_type.SelectedItem = cbi;
-                        break;
-                    }
-                }
-            }
-            
-
-            if (root.TryGetProperty("making_date", out var d) && d.ValueKind != JsonValueKind.Null && DateTime.TryParse(d.GetString(), out DateTime date))
-                dp_date.SelectedDate = date;
-            
-
-            if (root.TryGetProperty("making_time", out var t) && t.ValueKind != JsonValueKind.Null && TimeSpan.TryParse(t.GetString(), out TimeSpan time))
-                tp_time.SelectedTime = time;
-            
-
-            if (root.TryGetProperty("content", out var c) && c.ValueKind != JsonValueKind.Null)
-                txt_content.Text = c.GetString();
-            
-
-            if (root.TryGetProperty("signs", out var s) && s.ValueKind != JsonValueKind.Null)
-                txt_signs.Text = s.GetString();
-            
-
-            if (root.TryGetProperty("citizen_signature", out var cs) && cs.ValueKind != JsonValueKind.Null)
-                chk_citizen_signature.IsChecked = cs.GetBoolean();
-            if (root.TryGetProperty("officer_signature", out var os) && os.ValueKind != JsonValueKind.Null)
-                chk_officer_signature.IsChecked = os.GetBoolean();
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($"[ERROR] LoadDraft: {ex.Message}");
+            new MainWindow(App.CurrentUserId).Show();
         }
+        
+        this.Close();
     }
 
     public async Task LoadDraftAsync(Draft draft)
@@ -326,10 +240,8 @@ public partial class NewExaminationReport : Window
         {
             _currentDraftId = draft.Id;
             
-
             if (draft.PatientId.HasValue)
             {
-                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
                 var citizen = await _db.GetCitizenByIdAsync(draft.PatientId.Value);
                 if (citizen != null)
                 {
@@ -338,45 +250,38 @@ public partial class NewExaminationReport : Window
                 }
             }
             
-
             if (draft.DealId.HasValue)
             {
                 txt_deal.Tag = draft.DealId.Value;
                 txt_deal.Text = draft.DealId.Value.ToString();
             }
             
-
             if (!string.IsNullOrWhiteSpace(draft.Number))
             {
                 txt_number.Text = draft.Number;
             }
             
-
             if (draft.ReportTypeId.HasValue)
             {
                 cmb_report_type.SelectedIndex = draft.ReportTypeId.Value - 1;
             }
             
-
             if (draft.DocumentDate.HasValue)
             {
                 dp_date.SelectedDate = draft.DocumentDate.Value.Date;
                 tp_time.SelectedTime = new TimeSpan(draft.DocumentDate.Value.Hour, draft.DocumentDate.Value.Minute, 0);
             }
             
-
             if (!string.IsNullOrWhiteSpace(draft.Content))
             {
                 txt_content.Text = draft.Content;
             }
             
-
             if (!string.IsNullOrWhiteSpace(draft.Signs))
             {
                 txt_signs.Text = draft.Signs;
             }
             
-
             if (draft.SignatureApplicant.HasValue)
             {
                 chk_citizen_signature.IsChecked = draft.SignatureApplicant.Value;

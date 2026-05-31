@@ -40,7 +40,7 @@ public partial class SelectDealWindow : Window
 
     private async Task LoadDealsAsync()
     {
-        if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
+        if (_db == null) return; var drafts = await _db.GetDraftsAsync(App.CurrentUserId);
         _allDeals = await _db.GetDealsAsync();
         ApplyFilter();
     }

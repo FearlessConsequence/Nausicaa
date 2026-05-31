@@ -13,4 +13,6 @@ public class MyDocument
     public string Content { get; set; } = string.Empty;
     public int CitizenId { get; set; }
     public bool IsFavorite { get; set; } = false;
+    public string OfficerName { get; set; } = string.Empty;
+     public string? DealNumber { get; set; } 
 }

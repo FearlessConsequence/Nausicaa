@@ -21,8 +21,8 @@
                     <StackPanel Margin="0,0,0,10">
                         <TextBlock Text="Поиск граждан" 
                                    FontSize="28" 
-                                   FontWeight="SemiBold"
-                                   Foreground="#1E2A3A"/>
+                                    FontWeight="Bold" 
+                                    Foreground="#0F4B5E"/>
                         <TextBlock Text="Введите данные для поиска граждан" 
                                    FontSize="14" 
                                    Foreground="#6C757D"

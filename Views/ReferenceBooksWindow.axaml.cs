@@ -14,13 +14,15 @@ public partial class ReferenceBooksWindow : Window
     private readonly int _currentUserId = 0;
 
 
-    public ReferenceBooksWindow()
+    public ReferenceBooksWindow(int currentUserId)
     {
         InitializeComponent();
         _db = new DatabaseHelper();
-        
+        _currentUserId = currentUserId;
+        App.CurrentUserId = currentUserId;
+
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
         
         btn_search.Click += OnSearchClick;
         
@@ -29,6 +31,11 @@ public partial class ReferenceBooksWindow : Window
         txt_current_title.Text = string.Empty;
         
         cmb_search_type.SelectedIndex = 0;
+        if (App.CurrentUserId == 0)
+        {
+            NotificationsControl.ShowError("Ошибка", "ReferenceBooksWindow: пользователь не авторизован");
+            Close();
+        }
     }
     private async void OnSearchClick(object? sender, RoutedEventArgs e)
     {

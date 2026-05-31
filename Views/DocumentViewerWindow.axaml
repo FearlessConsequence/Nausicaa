@@ -41,7 +41,9 @@
                                 <TextBlock Grid.Row="3" Grid.Column="1" x:Name="txt_article" Foreground="#1E2A3A"/>
                                 
                                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Сотрудник:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
-                                <TextBlock Grid.Row="4" Grid.Column="1" x:Name="txt_officer" Foreground="#1E2A3A"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1" x:Name="txt_officer" 
+                                        Text="{Binding OfficerName}"
+                                        Foreground="#1E2A3A"/>
                             </Grid>
                         </StackPanel>
                     </Border>

@@ -39,7 +39,7 @@ public partial class CitizenDocumentsWindow : Window
         
         // Настройка левой панели
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
         
         // Заголовки
         txtTitle.Text = "Документы гражданина";
@@ -51,11 +51,6 @@ public partial class CitizenDocumentsWindow : Window
         // Подписка на кнопки
         btnBack.Click += BtnBack_Click;
         btn_search.Click += BtnSearch_Click;
-        
-        // ❌ Убрана авто-применение фильтров даты и текста
-        // dp_date_from.SelectedDateChanged += (s, e) => ApplyFilters();
-        // dp_date_to.SelectedDateChanged += (s, e) => ApplyFilters();
-        // txt_search.TextChanged += (s, e) => ApplyFilters();
     }
 
     // Настройка кнопок фильтрации
@@ -203,7 +198,7 @@ public partial class CitizenDocumentsWindow : Window
     // Обработчик кнопки "Назад"
     private void BtnBack_Click(object? sender, RoutedEventArgs e)
     {
-        var searchWindow = new SearchCitizensWindow(_currentUserId);
+        var searchWindow = new SearchCitizensWindow(App.CurrentUserId);
         searchWindow.Show();
         this.Close();
     }
@@ -226,22 +221,23 @@ public partial class CitizenDocumentsWindow : Window
     // Открытие документа
     private async void OnOpenClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button   .Tag is MyDocument doc)
+        if (sender is Button button && button.Tag is MyDocument doc)
         {
             try
             {
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
                 
-                // ✅ ShowDialog блокирует родительское окно
-                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc);
-                await viewer.ShowDialog(this);
+                this.Hide();  // ← сначала прячем текущее окно
                 
-                // ✅ После закрытия диалога управление возвращается сюда,
-                // все поля (_citizenId, _citizenFullName) сохраняются
+                var viewer = new DocumentViewerWindow(App.CurrentUserId, fullDoc, this);
+                viewer.Show();  // ← открываем просмотр
+                
+                // Не закрываем текущее окно, оно просто скрыто
             }
             catch (Exception ex)
             {
                 NotificationsControl.ShowError("Ошибка", ex.Message);
+                this.Show();  // ← если ошибка, показываем окно обратно
             }
         }
     }

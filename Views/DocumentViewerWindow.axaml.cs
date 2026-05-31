@@ -9,27 +9,33 @@ namespace CourseWork.Views;
 public partial class DocumentViewerWindow : Window
 {
     private readonly int _currentUserId;
+    private readonly Window? _previousWindow;
     
     // ✅ Упрощённый конструктор — убираем лишние параметры
-    public DocumentViewerWindow()
-    {
-        InitializeComponent();
-    }
-    public DocumentViewerWindow(int currentUserId, DocumentFull? document)
+    public DocumentViewerWindow(int currentUserId, DocumentFull? document, Window? previousWindow = null)
     {
         InitializeComponent();
         _currentUserId = currentUserId;
-        
+        _previousWindow = previousWindow;
+
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
         
         // ✅ Кнопка "Назад" просто закрывает это окно
-        btn_back.Click += (s, e) => Close();
+        btn_back.Click += (s, e) =>
+        {
+            if (_previousWindow != null)
+            {
+                _previousWindow.Show();   // ← показать скрытое окно
+            }
+            Close();
+        };
         
         if (document != null)
         {
             LoadDocument(document);
         }
+        
     }
 
     public void LoadDocument(DocumentFull doc)

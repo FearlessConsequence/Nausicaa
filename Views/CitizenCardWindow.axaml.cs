@@ -67,7 +67,7 @@ public partial class CitizenCardWindow : Window
         if (!string.IsNullOrWhiteSpace(reason))
         {
             // 1️⃣ Открываем целевое окно
-            var documentsWindow = new CitizenDocumentsWindow(_currentUserId, _citizen.Id, _citizen.FullName, this);
+            var documentsWindow = new CitizenDocumentsWindow(App.CurrentUserId, _citizen.Id, _citizen.FullName, this);
             documentsWindow.Show();
 
             // 2️⃣ Закрываем ВСЕ остальные окна (правильный способ для Avalonia)

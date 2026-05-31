@@ -19,6 +19,7 @@ public class Draft
     // для отображения в UI
     public string Preview { get; set; } = string.Empty;
     public int ProgressPercent { get; set; }
+    public string? CitizenName { get; set; }  // ← ДОБАВИТЬ (для отображения ФИО)
     
     // для обращения и заявления
     public int? CitizenId { get; set; }
@@ -45,16 +46,32 @@ public class Draft
     public bool? SignatureApplicant { get; set; }
     public bool? SignatureOfficer { get; set; }
     
+    // для медицинского акта
+    public string? Result { get; set; }
+    public string? IntoxicationType { get; set; }
+    
+    // для постановления
+    public string? Resolution { get; set; }
+    public int DraftNumber { get; set; }
+    public string? Punishment { get; set; }
+    public int? FineSum { get; set; }
+    
+    // для экспертизы
+    public string? Conclusion { get; set; }
+    
     // вычисляемые свойства для отображения
     public string TypeDisplayName => DocumentType switch
     {
         "appeals" => "Обращение",
         "statement" => "Заявление",
         "administrative_protocol" => "Административный протокол",
-        "examination_report" => "Направление на мед. освидетельствование",
+        "medical_examination_report" => "Направление на мед. освид.",
         "explanation_protocol" => "Протокол объяснения",
+        "medical_certificate" => "Акт медицинского освидетельствования",  // ← ДОБАВИТЬ
+        "resolution" => "Постановление",                                 // ← ДОБАВИТЬ
+        "forensic_expertise" => "Судебно-медицинская экспертиза",        // ← ДОБАВИТЬ
         _ => DocumentType
     };
     
     public string DateFormatted => UpdatedAt.ToString("dd.MM.yyyy HH:mm");
-}
+}   

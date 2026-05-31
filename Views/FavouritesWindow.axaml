@@ -20,148 +20,264 @@
                 Background="#F8F9FA" 
                 Padding="30">
             
-            <Grid RowDefinitions="Auto, Auto, *">
-                
-                <StackPanel Grid.Row="0" 
-                            Margin="0,0,0,20">
-                    <TextBlock Text="Избранные документы" 
-                               FontSize="24" 
-                               FontWeight="Bold" 
-                               Foreground="#0F4B5E"/>
-                    <TextBlock Text="Документы, добавленные в избранное" 
-                               FontSize="14" 
-                               Foreground="#6C757D"
-                               Margin="0,5,0,0"/>
-                </StackPanel>
-                
-                <Border Grid.Row="1"
-                        Background="White"
-                        CornerRadius="12"
-                        BorderBrush="#E9ECEF"
-                        BorderThickness="1"
-                        Padding="12,10"
-                        Margin="0,0,0,24">
-                    <TextBox x:Name="txt_search" 
-                             Watermark="Поиск по номеру, содержанию или ФИО гражданина..."
-                             Background="Transparent"
-                             BorderThickness="0"
-                             FontSize="14">
-                        <TextBox.InnerLeftContent>
-                            <TextBlock Text="🔍 " FontSize="16" VerticalAlignment="Center"/>
-                        </TextBox.InnerLeftContent>
-                    </TextBox>
-                </Border>
-                
-                <ScrollViewer Grid.Row="2">
-                    <ItemsControl x:Name="documentsContainer" 
-                                  VerticalAlignment="Top">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="White"
-                                        CornerRadius="12"
-                                        BorderBrush="#E9ECEF"
-                                        BorderThickness="1"
-                                        Padding="20,16"
-                                        Margin="0,0,0,16"
-                                        Cursor="Hand">
-                                    
-                                    <Grid ColumnDefinitions="*, Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="20">
+                    
+                    <StackPanel Margin="0,0,0,0">
+                        <TextBlock Text="Избранные документы" 
+                                   FontSize="28" 
+                                   FontWeight="Bold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBlock Text="Документы, добавленные в избранное" 
+                                   FontSize="14" 
+                                   Foreground="#6C757D"
+                                   Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <!-- Фильтр по типу -->
+                    <Border Background="White"
+                            CornerRadius="12"
+                            BorderBrush="#E9ECEF"
+                            BorderThickness="1"
+                            Padding="16">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Фильтр по типу" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left">
+                                <Button Content="Все" 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#0F4B5E" 
+                                        Foreground="White"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_all"/>
+                                <Button Content="Обращения" 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#E9ECEF" 
+                                        Foreground="#0F4B5E"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_appeals"/>
+                                <Button Content="Заявления" 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#E9ECEF" 
+                                        Foreground="#0F4B5E"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_statements"/>
+                                <Button Content="Адм. протоколы" 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#E9ECEF" 
+                                        Foreground="#0F4B5E"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_protocols"/>
+                                <Button Content="Протоколы объяснения" 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#E9ECEF" 
+                                        Foreground="#0F4B5E"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_explanations"/>
+                                <Button Content="Направления на мед. освид." 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#E9ECEF" 
+                                        Foreground="#0F4B5E"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_reports"/>
+                                <Button Content="Акт мед. освид." 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#E9ECEF" 
+                                        Foreground="#0F4B5E"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_medical_cert"
+                                        IsVisible="False"/>
+                                <Button Content="Судмедэкспертиза" 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#E9ECEF" 
+                                        Foreground="#0F4B5E"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_forensic"
+                                        IsVisible="False"/>
+                                <Button Content="Постановление" 
+                                        Height="34" 
+                                        Padding="15,0"
+                                        VerticalContentAlignment="Center"
+                                        Background="#E9ECEF" 
+                                        Foreground="#0F4B5E"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        x:Name="btn_filter_resolution"
+                                        IsVisible="False"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Фильтр по дате -->
+                    <Border Background="White"
+                            CornerRadius="12"
+                            BorderBrush="#E9ECEF"
+                            BorderThickness="1"
+                            Padding="16">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Фильтр по дате" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <StackPanel Orientation="Horizontal" Spacing="15">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="От:" FontSize="12" VerticalAlignment="Center"/>
+                                    <DatePicker x:Name="dp_date_from" 
+                                                Height="36"
+                                                FontSize="12"
+                                                CornerRadius="6"
+                                                Width="140"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="До:" FontSize="12" VerticalAlignment="Center"/>
+                                    <DatePicker x:Name="dp_date_to" 
+                                                Height="36"
+                                                FontSize="12"
+                                                CornerRadius="6"
+                                                Width="140"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Результаты -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="600">
+                        <ItemsControl x:Name="documentsContainer" 
+                                      VerticalAlignment="Top">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="White"
+                                            CornerRadius="12"
+                                            BorderBrush="#E9ECEF"
+                                            BorderThickness="1"
+                                            Padding="20,16"
+                                            Margin="0,0,0,12"
+                                            Cursor="Hand">
                                         
-                                        <StackPanel Grid.Column="0" Spacing="12">
+                                        <Grid ColumnDefinitions="*, Auto">
                                             
-                                            <StackPanel Orientation="Horizontal" Spacing="12">
-                                                <!-- ✅ Тип документа -->
-                                                <Border Background="#E8F4F8" 
-                                                        CornerRadius="4" 
-                                                        Padding="6,2"
-                                                        HorizontalAlignment="Left">
-                                                    <TextBlock Text="{Binding DocumentType}"
-                                                               FontSize="12"
-                                                               FontWeight="SemiBold"
-                                                               Foreground="#0F4B5E"/>
-                                                </Border>
+                                            <StackPanel Grid.Column="0" Spacing="12">
                                                 
-                                                <TextBlock Text="{Binding Number, StringFormat='№ {0}'}"
-                                                           FontSize="14"
-                                                           FontWeight="SemiBold"
+                                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                                    <Border Background="#E8F4F8" 
+                                                            CornerRadius="4" 
+                                                            Padding="6,2"
+                                                            HorizontalAlignment="Left">
+                                                        <TextBlock Text="{Binding DocumentType}"
+                                                                   FontSize="12"
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="#0F4B5E"/>
+                                                    </Border>
+                                                    
+                                                    <TextBlock Text="{Binding Number, StringFormat='№ {0}'}"
+                                                               FontSize="14"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="#1E2A3A"/>
+                                                    <TextBlock Text="{Binding CreatedAt, StringFormat='dd.MM.yyyy HH:mm'}"
+                                                               FontSize="12"
+                                                               Foreground="#6C757D"/>
+                                                </StackPanel>
+                                                
+                                                <TextBlock Text="{Binding CitizenFullName}"
+                                                           FontSize="16"
+                                                           FontWeight="Medium"
                                                            Foreground="#1E2A3A"/>
-                                                <TextBlock Text="{Binding CreatedAt, StringFormat='dd.MM.yyyy HH:mm'}"
-                                                           FontSize="12"
-                                                           Foreground="#6C757D"/>
+                                                
+                                                <TextBlock Text="{Binding Content}"
+                                                           FontSize="13"
+                                                           Foreground="#495057"
+                                                           TextWrapping="Wrap"
+                                                           MaxHeight="60"/>
                                             </StackPanel>
                                             
-                                            <TextBlock Text="{Binding CitizenFullName}"
-                                                       FontSize="16"
-                                                       FontWeight="Medium"
-                                                       Foreground="#1E2A3A"/>
-                                            
-                                            <TextBlock Text="{Binding Content}"
-                                                       FontSize="13"
-                                                       Foreground="#495057"
-                                                       TextWrapping="Wrap"
-                                                       MaxHeight="60"/>
-                                        </StackPanel>
-                                        
-                                        <StackPanel Grid.Column="1"
-                                                    Orientation="Horizontal"
-                                                    Spacing="16"
-                                                    VerticalAlignment="Center">
-                                            
-                                            <Button x:Name="FavoriteButton"
-                                                    Content="★"
-                                                    FontSize="24"
-                                                    Background="Transparent"
-                                                    Foreground="#FFB800"
-                                                    BorderThickness="0"
-                                                    Width="40"
-                                                    Height="40"
-                                                    Cursor="Hand"/>
-                                            
-                                            <Button x:Name="OpenButton"
-                                                    Content="→"
-                                                    FontSize="24"
-                                                    Background="#0F4B5E"
-                                                    Foreground="White"
-                                                    CornerRadius="8"
-                                                    Width="44"
-                                                    Height="44"
-                                                    Cursor="Hand"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-                
-                <Border Grid.Row="2"
-                        Background="Transparent"
-                        IsVisible="False"
-                        x:Name="emptyStateBorder">
-                    <StackPanel HorizontalAlignment="Center" 
-                                VerticalAlignment="Center"
-                                Spacing="16">
-                        <TextBlock Text="⭐" 
-                                   FontSize="64"
-                                   HorizontalAlignment="Center"/>
-                        <TextBlock Text="Нет избранных документов" 
-                                   FontSize="18" 
-                                   Foreground="#6C757D"
-                                   HorizontalAlignment="Center"/>
-                        <Button Content="Перейти к недавним документам"
-                                Background="#0F4B5E"
-                                Foreground="White"
-                                CornerRadius="8"
-                                Padding="20,10"
-                                HorizontalAlignment="Center"
-                                Margin="0,16,0,0"
-                                x:Name="btn_goToRecents"
-                                Cursor="Hand"/>
-                    </StackPanel>
-                </Border>
-                
-            </Grid>
+                                            <StackPanel Grid.Column="1"
+                                                        Orientation="Horizontal"
+                                                        Spacing="16"
+                                                        VerticalAlignment="Center">
+                                                
+                                                <Button x:Name="FavoriteButton"
+                                                        Content="★"
+                                                        FontSize="24"
+                                                        Background="Transparent"
+                                                        Foreground="#FFB800"
+                                                        BorderThickness="0"
+                                                        Width="40"
+                                                        Height="40"
+                                                        Cursor="Hand"/>
+                                                
+                                                <Button x:Name="OpenButton"
+                                                        Content="→"
+                                                        FontSize="24"
+                                                        Background="#0F4B5E"
+                                                        Foreground="White"
+                                                        CornerRadius="8"
+                                                        Width="44"
+                                                        Height="44"
+                                                        Cursor="Hand"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    
+                    <!-- Пустое состояние с кнопкой перехода к недавним -->
+                    <Border Background="White"
+                            CornerRadius="16"
+                            IsVisible="False"
+                            x:Name="emptyStateBorder"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            MinHeight="400">
+                        <StackPanel HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center"
+                                    Spacing="20">
+                            <TextBlock Text="⭐" 
+                                       FontSize="72"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Нет избранных документов" 
+                                       FontSize="20" 
+                                       FontWeight="SemiBold"
+                                       Foreground="#1E2A3A"
+                                       HorizontalAlignment="Center"/>
+                            <Button Content="Перейти к недавним документам"
+                                    Background="#0F4B5E"
+                                    Foreground="White"
+                                    CornerRadius="10"
+                                    Padding="30,14"
+                                    FontSize="14"
+                                    FontWeight="SemiBold"
+                                    HorizontalAlignment="Center"
+                                    Cursor="Hand"
+                                    x:Name="btn_goToRecents"/>
+                        </StackPanel>
+                    </Border>
+                    
+                </StackPanel>
+            </ScrollViewer>
         </Border>
+        
         <controls:NotificationsControl x:Name="NotificationsControl" 
                                Grid.Column="0" 
                                Grid.ColumnSpan="2"

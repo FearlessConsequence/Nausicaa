@@ -1,0 +1,129 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:CourseWork.Controls"
+        x:Class="CourseWork.Views.NewResolution"
+        Title="Создание постановления"
+        WindowState="Maximized"
+        Background="#F5F7FA">
+
+    <Grid RowDefinitions="*, Auto" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                            Grid.Column="0" 
+                            Grid.Row="0" 
+                            Grid.RowSpan="2"/>
+
+        <ScrollViewer Grid.Column="1" Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <Border Background="#F8F9FA" Padding="40">
+                <StackPanel Spacing="25" MaxWidth="700" HorizontalAlignment="Left">
+                    
+                    <TextBlock Text="Создание постановления" 
+                               FontSize="28" FontWeight="SemiBold" Foreground="#1E2A3A"/>
+
+                    <!-- Дело -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Дело *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <StackPanel Spacing="8" Orientation="Horizontal">
+                            <TextBox x:Name="txt_deal" Height="44" IsReadOnly="True"
+                                     Watermark="Выберите дело..." 
+                                     VerticalContentAlignment="Center"
+                                     Background="White" BorderBrush="#E9ECEF" 
+                                     CornerRadius="8" Width="230"/>
+                            <Button x:Name="btn_select_deal" Content="Выбрать" Width="100" Height="44" 
+                                    Background="#0F4B5E" Foreground="White" CornerRadius="8" FontSize="14"
+                                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Номер постановления -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Номер постановления *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_number" Height="44" Watermark="Введите номер"
+                                 BorderBrush="#E9ECEF" CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Дата и время -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Дата и время *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <DatePicker x:Name="dp_date" 
+                                        Height="44"
+                                        Width="220"
+                                        FontSize="14"
+                                        CornerRadius="8"/>
+                            <TimePicker x:Name="tp_time" 
+                                        Height="44"
+                                        Width="160"
+                                        FontSize="14"
+                                        ClockIdentifier="24HourClock"
+                                        CornerRadius="8"/>
+                        </StackPanel>
+                    </StackPanel>   
+
+                    <!-- Текст постановления -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Текст постановления *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_resolution" Height="120" TextWrapping="Wrap" AcceptsReturn="True"
+                                 Watermark="Текст постановления..." BorderBrush="#E9ECEF" CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Наказание -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Наказание" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <ComboBox x:Name="cmb_punishment" Height="44" CornerRadius="8" SelectedIndex="0"
+                                  SelectionChanged="CmbPunishment_SelectionChanged">
+                            <ComboBoxItem Content="Штраф"/>
+                            <ComboBoxItem Content="Арест"/>
+                            <ComboBoxItem Content="Предупреждение"/>
+                            <ComboBoxItem Content="Принудительные работы"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Сумма штрафа -->
+                    <StackPanel Spacing="8" x:Name="panel_fine" IsVisible="True">
+                        <TextBlock Text="Сумма штрафа" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_fine" Height="44" Watermark="Введите сумму"
+                                 BorderBrush="#E9ECEF" CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Дни ареста -->
+                    <StackPanel Spacing="8" x:Name="panel_arrest" IsVisible="False">
+                        <TextBlock Text="Количество дней ареста" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_days" Height="44" Watermark="Введите количество дней"
+                                 BorderBrush="#E9ECEF" CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Дни принудительных работ -->
+                    <StackPanel Spacing="8" x:Name="panel_forced_labor" IsVisible="False">
+                        <TextBlock Text="Количество дней принудительных работ" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_forced_labor" Height="44" Watermark="Введите количество дней"
+                                 BorderBrush="#E9ECEF" CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Подпись судьи -->
+                    <CheckBox x:Name="chk_signature" Content="Подпись судьи" FontSize="14"/>
+
+                    <!-- Кнопки -->
+                    <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,16,0,0">
+                        <Button x:Name="btn_cancel" Content="Отмена" Width="120" Height="44"
+                                Background="#6C757D" Foreground="White" CornerRadius="8" FontSize="14"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <Button x:Name="btn_save_draft" Content="Сохранить как черновик" Width="195" Height="44"
+                                Background="#6C757D" Foreground="White" CornerRadius="8" FontSize="14"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <Button x:Name="btn_create" Content="Создать" Width="120" Height="44"
+                                Background="#0F4B5E" Foreground="White" CornerRadius="8" FontSize="14"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                                       Grid.Column="0" 
+                                       Grid.ColumnSpan="2"
+                                       Grid.Row="1"      
+                                       VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

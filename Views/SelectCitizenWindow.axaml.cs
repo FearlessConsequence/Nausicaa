@@ -96,7 +96,7 @@ public partial class SelectCitizenWindow : Window
             {
                 searchParams.FullName = $"{lastName} {firstName} {patronymic}".Trim();
             }
-            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
+            if (_db == null) return; var drafts = await _db.GetDraftsAsync(App.CurrentUserId);
             var results = await _db.SearchCitizensAsync(searchParams);
             
             citizensContainer.ItemsSource = results;

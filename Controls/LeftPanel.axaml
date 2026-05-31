@@ -68,24 +68,24 @@
                         x:Name="btn_createNewDocument"/>
 
                 <Popup x:Name="pop_documentType"
-                       PlacementTarget="{Binding #btn_createNewDocument}"
-                       Placement="Right"
-                       IsLightDismissEnabled="True"
-                       VerticalOffset="0"
-                       HorizontalOffset="0">
-                    <Border Background="#0F4B5E" 
-                            BorderBrush="#2A6B8A" 
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Padding="5">
-                        <StackPanel MinWidth="250">
+                        PlacementTarget="{Binding #btn_createNewDocument}"
+                        Placement="Right"
+                        IsLightDismissEnabled="True"
+                        VerticalOffset="0"
+                        HorizontalOffset="0">
+                        <Border Background="#0F4B5E" 
+                                BorderBrush="#2A6B8A" 
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="5">
+                                <StackPanel MinWidth="250">
                                 <Button Content="Обращение"
                                         Classes="popup-button"
                                         x:Name="pop_documentType_btn_appel"/>
                                 <Button Content="Заявление"
                                         Classes="popup-button"
                                         x:Name="pop_documentType_btn_statement"/>
-                                        <Button Content="Протокол объяснения"
+                                <Button Content="Протокол объяснения"
                                         Classes="popup-button"
                                         x:Name="pop_documentType_btn_explanation_protocol"/>
                                 <Button Content="Направление на мед. освид."
@@ -94,9 +94,23 @@
                                 <Button Content="Административный протокол"
                                         Classes="popup-button"
                                         x:Name="pop_documentType_btn_administrative_protocol"/>
-                        </StackPanel>
-                    </Border>
-                </Popup>
+                                
+                                <!-- ✅ Добавляем новые кнопки -->
+                                <Button Content="Акт медицинского освидетельствования"
+                                        Classes="popup-button"
+                                        x:Name="pop_documentType_btn_medical_certificate"
+                                        IsVisible="False"/>
+                                <Button Content="Постановление"
+                                        Classes="popup-button"
+                                        x:Name="pop_documentType_btn_resolution"
+                                        IsVisible="False"/>
+                                <Button Content="Судебно-медицинская экспертиза"
+                                        Classes="popup-button"
+                                        x:Name="pop_documentType_btn_forensic_expertise"
+                                        IsVisible="False"/>
+                                </StackPanel>
+                        </Border>
+                        </Popup>
 
                 <Button Content="Избранные"
                         Classes="menu-button"

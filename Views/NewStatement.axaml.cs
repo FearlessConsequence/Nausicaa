@@ -1,5 +1,6 @@
 #pragma warning disable CS0649
 using System;
+using System.Data.Common;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -15,21 +16,21 @@ public partial class NewStatement : Window
     private readonly DatabaseHelper _db;
     private readonly int _currentUserId;
     private int? _currentDraftId;
-
-    public NewStatement() : this(0) { }
+    private readonly Window? _previousWindow;
     
-    public NewStatement(int currentUserId)
+    public NewStatement(int currentUserId, Window? previousWindow = null, int? currentDraftId = null)
     {
         InitializeComponent();
         _currentUserId = currentUserId;
         _db = new DatabaseHelper();
-        _currentDraftId = null;
+        _previousWindow = previousWindow;
+        _currentDraftId = currentDraftId;
 
         dp_date.SelectedDate = DateTime.Now;
         tp_time.SelectedTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
 
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(_currentUserId, App.CurrentUserRole);
         
         btn_create.Click += Btn_create_Click;
         btn_cancel.Click += Btn_cancel_Click;
@@ -71,26 +72,26 @@ public partial class NewStatement : Window
         if (txt_applicant.Tag == null)
         {
             txt_applicant_error.IsVisible = true;
-            await ShowMessage("Ошибка", "Пожалуйста, выберите заявителя");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, выберите заявителя");
             return;
         }
         txt_applicant_error.IsVisible = false;
 
         if (string.IsNullOrWhiteSpace(txt_content.Text))
         {
-            await ShowMessage("Ошибка", "Пожалуйста, заполните содержание заявления");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, заполните содержание заявления");
             return;
         }
         
         if (dp_date.SelectedDate == null)
         {
-            await ShowMessage("Ошибка", "Пожалуйста, выберите дату");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, выберите дату");
             return;
         }
         
         if (tp_time.SelectedTime == null)
         {
-            await ShowMessage("Ошибка", "Пожалуйста, выберите время");
+            NotificationsControl.ShowError("Ошибка", "Пожалуйста, выберите время");
             return;
         }
 
@@ -118,17 +119,20 @@ public partial class NewStatement : Window
             if (_currentDraftId.HasValue)
             {
                 await _db.DeleteDraftAsync(_currentDraftId.Value);
-                Console.WriteLine($"[DEBUG] Черновик {_currentDraftId} удалён после создания документа");
             }
 
-            await ShowMessage("Успех", "Заявление успешно создано!");
+            NotificationsControl.ShowSuccess("Успех", "Заявление успешно создано!");
             
-            new RecentsWindow(_currentUserId).Show();
+            // ✅ Возврат в предыдущее окно
+            if (_previousWindow != null)
+            {
+                _previousWindow.Show();
+            }
             this.Close();
         }
         catch (Exception ex)
         {
-            await ShowMessage("Ошибка", $"Не удалось создать заявление: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Не удалось создать заявление: {ex.Message}");
         }
     }
 
@@ -152,70 +156,42 @@ public partial class NewStatement : Window
             if (_currentDraftId.HasValue)
             {
                 await _db.UpdateDraftAsync(_currentDraftId.Value, formDataJson);
-                await ShowMessage("Успех", "Черновик обновлён!");
-                Console.WriteLine($"[DEBUG] Обновлён черновик ID: {_currentDraftId}");
+                NotificationsControl.ShowSuccess("Успех", "Черновик обновлён!");
             }
             else
             {
                 int newDraftId = await _db.SaveDraftAsync(_currentUserId, "statement", formDataJson);
                 _currentDraftId = newDraftId;
-                await ShowMessage("Успех", "Черновик сохранён!");
-                Console.WriteLine($"[DEBUG] Создан новый черновик ID: {_currentDraftId}");
+                NotificationsControl.ShowSuccess("Успех", "Черновик сохранён!");
             }
+            
+            new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
+            this.Close();
         }
         catch (Exception ex)
         {
-            await ShowMessage("Ошибка", $"Не удалось сохранить черновик: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Не удалось сохранить черновик: {ex.Message}");
         }
     }
 
     private void Btn_cancel_Click(object? sender, RoutedEventArgs e)
     {
-        var MainWindow = new MainWindow(_currentUserId);
-        MainWindow.Show();
+        try
+        {
+            // ✅ Возврат в предыдущее окно
+            if (_previousWindow != null)
+            {
+                _previousWindow.Show();
+            }
+        }
+        catch
+        {
+            new MainWindow(App.CurrentUserId).Show();
+        }
+        
         this.Close();
     }
     
-    private async Task ShowMessage(string title, string message)
-    {
-        var dialog = new Window
-        {
-            Title = title,
-            Width = 320,
-            Height = 160,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
-            {
-                Margin = new Avalonia.Thickness(20),
-                Spacing = 20,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Children =
-                {
-                    new TextBlock 
-                    { 
-                        Text = message, 
-                        TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center
-                    },
-                    new Button 
-                    { 
-                        Content = "OK", 
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                        Width = 100,
-                        Height = 32
-                    }
-                }
-            }
-        };
-        
-        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
-        if (okButton != null)
-        {
-            okButton.Click += (s, args) => dialog.Close();
-        }
-        
-        await dialog.ShowDialog(this);
-    }
     public async Task LoadDraftAsync(Draft draft)
     {
         try

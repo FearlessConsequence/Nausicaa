@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using CourseWork.Data;
 using CourseWork.Models;
 using CourseWork.Controls;
@@ -16,55 +17,137 @@ public partial class DraftsWindow : Window
     private readonly int _currentUserId;
     private List<Draft> _all = new();
     private List<Draft> _shown = new();
-    public DraftsWindow()
-    {
-        InitializeComponent();
-    }
+    private readonly Window? _previousWindow;
 
-    public DraftsWindow(int userId)
+    public DraftsWindow(int userId, Window? previousWindow = null)
     {
         InitializeComponent();
         _currentUserId = userId;
-        cmb_filterType.SelectedIndex = 0;
         _db = new DatabaseHelper();
+        _previousWindow = previousWindow;
+        
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
+        
+        // ✅ Настраиваем ComboBox в зависимости от роли
+        ConfigureFilterByRole();
+        
+        cmb_filterType.SelectedIndex = 0;
         
         this.Opened += async (_, _) => await _load();
+    }
+
+    // ✅ Настройка ComboBox по роли
+    private void ConfigureFilterByRole()
+    {
+        var role = App.CurrentUserRole;
+        
+        switch (role)
+        {
+            case UserRole.PoliceOfficer:
+            case UserRole.AdminInspector:
+                // Полицейский/Инспектор: показываем бордер с ComboBox
+                FilterBorder.IsVisible = true;
+                cmb_filterType.Items.Clear();
+                cmb_filterType.Items.Add(new ComboBoxItem { Content = "Все" });
+                cmb_filterType.Items.Add(new ComboBoxItem { Content = "Обращение" });
+                cmb_filterType.Items.Add(new ComboBoxItem { Content = "Заявление" });
+                cmb_filterType.Items.Add(new ComboBoxItem { Content = "Административный протокол" });
+                cmb_filterType.Items.Add(new ComboBoxItem { Content = "Протокол объяснения" });
+                cmb_filterType.Items.Add(new ComboBoxItem { Content = "Направление на мед. освид." });
+                cmb_filterType.SelectedIndex = 0;
+                break;
+                
+            case UserRole.MedicalExpert:
+            case UserRole.Judge:
+            case UserRole.ForensicExpert:
+                // Врач, судья, эксперт - скрываем весь бордер
+                FilterBorder.IsVisible = false;
+                break;
+        }
     }
 
     private async Task _load()
     {
         try
         {
-            if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
-            _all = await _db.GetDraftsAsync(_currentUserId);
+            if (_db == null) return;
+            _all = await _db.GetDraftsAsync(App.CurrentUserId);
             _applyFilter();
+            
+            await Task.Delay(100);
+            SubscribeToButtons();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"[ERR] {ex.Message}");
-            await ShowMessage("Ошибка", $"Не удалось загрузить черновики: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Не удалось загрузить черновики: {ex.Message}");
+        }
+    }
+
+    private void SubscribeToButtons()
+    {
+        var buttons = draftsList.GetVisualDescendants()
+            .OfType<Button>()
+            .ToList();
+            
+        foreach (var button in buttons)
+        {
+            if (button.Name == "BtnEdit")
+            {
+                button.Click -= BtnEdit_Click;
+                button.Click += BtnEdit_Click;
+            }
+            else if (button.Name == "BtnDelete")
+            {
+                button.Click -= BtnDelete_Click;
+                button.Click += BtnDelete_Click;
+            }
         }
     }
 
     private void _applyFilter()
     {
-        var sel = (cmb_filterType.SelectedItem as ComboBoxItem)?.Content?.ToString();
+        var role = App.CurrentUserRole;
+        var sel = cmb_filterType.IsVisible ? (cmb_filterType.SelectedItem as ComboBoxItem)?.Content?.ToString() : "Все";
+        
         _shown = string.IsNullOrEmpty(sel) || sel == "Все" 
             ? _all 
             : _all.Where(d => d.TypeDisplayName == sel).ToList();
+        
+        // Если роль не полицейский - показываем только их тип документов
+        if (role == UserRole.MedicalExpert)
+        {
+            _shown = _shown.Where(d => d.TypeDisplayName == "Акт медицинского освидетельствования").ToList();
+        }
+        else if (role == UserRole.Judge)
+        {
+            _shown = _shown.Where(d => d.TypeDisplayName == "Постановление").ToList();
+        }
+        else if (role == UserRole.ForensicExpert)
+        {
+            _shown = _shown.Where(d => d.TypeDisplayName == "Судебно-медицинская экспертиза").ToList();
+        }
+        
+        for (int i = 0; i < _shown.Count; i++)
+        {
+            _shown[i].DraftNumber = i + 1;
+        }
         
         draftsList.ItemsSource = _shown;
         txt_empty.IsVisible = _shown.Count == 0;
         txt_draftsCount.Text = $"Всего: {_all.Count}";
     }
     
-    private void CmbFilter_SelectionChanged(object? s, SelectionChangedEventArgs e) => _applyFilter();
-
-    private async void BtnEdit_Click(object? s, RoutedEventArgs e)
+    private void CmbFilter_SelectionChanged(object? s, SelectionChangedEventArgs e)
     {
-        if (s is Button b && b.Tag is int id)
+        _applyFilter();
+        SubscribeToButtons();
+    }
+
+    private async void BtnEdit_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is int id)
         {
             var draft = _all.FirstOrDefault(x => x.Id == id);
             if (draft != null)
@@ -76,40 +159,62 @@ public partial class DraftsWindow : Window
                     switch (draft.DocumentType)
                     {
                         case "appeals":
-                            var appelWindow = new NewAppel(_currentUserId);
+                            var appelWindow = new NewAppel(App.CurrentUserId, this, draft.Id);
                             await appelWindow.LoadDraftAsync(draft);
                             targetWindow = appelWindow;
                             break;
                             
                         case "statement":
-                            var statementWindow = new NewStatement(_currentUserId);
+                            var statementWindow = new NewStatement(App.CurrentUserId, this, draft.Id);
                             await statementWindow.LoadDraftAsync(draft);
                             targetWindow = statementWindow;
                             break;
                             
                         case "administrative_protocol":
-                            var adminWindow = new NewAdministrativeProtocol(_currentUserId);
+                            var adminWindow = new NewAdministrativeProtocol(App.CurrentUserId, this, draft.Id);
                             await adminWindow.LoadDraftAsync(draft);
                             targetWindow = adminWindow;
                             break;
                             
                         case "explanation_protocol":
-                            var explanationWindow = new NewExplanationProtocol(_currentUserId);
+                            var explanationWindow = new NewExplanationProtocol(App.CurrentUserId, this, draft.Id);
                             await explanationWindow.LoadDraftAsync(draft);
                             targetWindow = explanationWindow;
                             break;
                             
-                        case "examination_report":
-                            var examWindow = new NewExaminationReport(_currentUserId);
+                        case "medical_examination_report":
+                            var examWindow = new NewExaminationReport(App.CurrentUserId, this, draft.Id);
                             await examWindow.LoadDraftAsync(draft);
                             targetWindow = examWindow;
+                            break;
+                            
+                        case "medical_certificate":
+                            var certWindow = new NewMedicalCertificate(App.CurrentUserId, this, draft.Id);
+                            await certWindow.LoadDraftAsync(draft);
+                            targetWindow = certWindow;
+                            break;
+                            
+                        case "resolution":
+                            var resolutionWindow = new NewResolution(App.CurrentUserId, this, draft.Id);
+                            await resolutionWindow.LoadDraftAsync(draft);
+                            targetWindow = resolutionWindow;
+                            break;
+                            
+                        case "forensic_expertise":
+                            var forensicWindow = new NewForensicExpertise(App.CurrentUserId, this, draft.Id);
+                            await forensicWindow.LoadDraftAsync(draft);
+                            targetWindow = forensicWindow;
                             break;
                     }
                     
                     if (targetWindow != null)
                     {
                         targetWindow.Show();
-                        this.Close();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        NotificationsControl.ShowError("Ошибка", $"Неизвестный тип документа: {draft.DocumentType}");
                     }
                 }
                 catch (Exception ex)
@@ -121,55 +226,21 @@ public partial class DraftsWindow : Window
         }
     }
 
-    private void Btn_back_Click(object? sender, RoutedEventArgs e)
+    private async void BtnDelete_Click(object? sender, RoutedEventArgs e)
     {
-        var mainWindow = new MainWindow(_currentUserId);
-        mainWindow.Show();
-        this.Close();
-    }
-
-    private async void BtnDelete_Click(object? s, RoutedEventArgs e)
-    {
-        if (s is Button b && b.Tag is int id)
+        if (sender is Button button && button.Tag is int id)
         {
             try
             {
-                if (_db == null) return; var drafts = await _db.GetDraftsAsync(_currentUserId);
+                if (_db == null) return;
                 await _db.DeleteDraftAsync(id);
                 await _load();
-                NotificationsControl.ShowSuccess("Черновик удален", $"Черновик ID {id} успешно удален");
+                NotificationsControl.ShowSuccess("Черновик удален", $"Черновик успешно удален");
             }
             catch (Exception ex)
             {
                 NotificationsControl.ShowError("Ошибка", $"Не удалось удалить черновик: {ex.Message}");
             }
         }
-    }
-
-    private async Task ShowMessage(string title, string message)
-    {
-        var dialog = new Window
-        {
-            Title = title,
-            Width = 350,
-            Height = 150,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
-            {
-                Margin = new Avalonia.Thickness(20),
-                Spacing = 15,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Children =
-                {
-                    new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap },
-                    new Button { Content = "OK", Width = 80, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center }
-                }
-            }
-        };
-        
-        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
-        if (okButton != null) okButton.Click += (s, args) => dialog.Close();
-        
-        await dialog.ShowDialog(this);
     }
 }

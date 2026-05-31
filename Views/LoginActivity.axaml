@@ -2,15 +2,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="CourseWork.Views.LoginActitvity"
         Title="Вход"
-        Width="400" Height="350"
+        Width="400" Height="400"
         WindowStartupLocation="CenterScreen">
 
     <Border Background="#0F4B5E" Padding="40">
         <StackPanel Spacing="15" HorizontalAlignment="Center" 
-        VerticalAlignment="Center">
+                    VerticalAlignment="Center">
             
             <TextBlock Text="Вход в систему" FontSize="24" 
-            FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                       FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
             
             <TextBox x:Name="txtUsername" 
                      Watermark="Логин" 
@@ -23,13 +23,48 @@
                      Background="White" 
                      Height="40"
                      FontSize="14"
-                     PasswordChar= "*"/>
+                     PasswordChar="*"/>
             
+            <!-- Блоки для отладки -->
+            <TextBlock x:Name="txtDebug1" 
+                       Text="" 
+                       Foreground="Yellow" 
+                       FontSize="11"
+                       IsVisible="False"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"/>
+            
+            <TextBlock x:Name="txtDebug2" 
+                       Text="" 
+                       Foreground="Yellow" 
+                       FontSize="11"
+                       IsVisible="False"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"/>
+            
+            <TextBlock x:Name="txtDebug3" 
+                       Text="" 
+                       Foreground="Yellow" 
+                       FontSize="11"
+                       IsVisible="False"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"/>
+            
+            <TextBlock x:Name="txtDebug4" 
+                       Text="" 
+                       Foreground="Yellow" 
+                       FontSize="11"
+                       IsVisible="False"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"/>
+            
+            <!-- Основная ошибка -->
             <TextBlock x:Name="txtError" 
-                       Text="Ошибка" 
+                       Text="" 
                        Foreground="Red" 
                        IsVisible="False"
                        FontSize="12"
+                       TextWrapping="Wrap"
                        HorizontalAlignment="Center"/>
             
             <Button x:Name="btnLogin" 

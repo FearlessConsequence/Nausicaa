@@ -18,18 +18,21 @@
             
             <Grid RowDefinitions="Auto, Auto, Auto, Auto, *">
                 
+                <!-- Заголовок -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,20">
                     <TextBlock Text="Мои документы" 
                                FontSize="28" 
-                               FontWeight="SemiBold"
-                               Foreground="#1E2A3A"/>
+                               FontWeight="Bold" 
+                               Foreground="#0F4B5E"/>
                     <TextBlock Text="Документы, созданные вами" 
                                FontSize="14" 
                                Foreground="#6C757D"
                                Margin="0,5,0,0"/>
                 </StackPanel>
                 
-                <Border Grid.Row="1"
+                <!-- Фильтр по типу -->
+                <Border x:Name="FilterTypeBorder"
+                        Grid.Row="1"
                         Background="White"
                         CornerRadius="12"
                         BorderBrush="#E9ECEF"
@@ -39,65 +42,96 @@
                     
                     <StackPanel Spacing="12">
                         <TextBlock Text="Фильтр по типу" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
-                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Left">
                             <Button Content="Все" 
-                                    Height="32" 
+                                    Height="34" 
                                     Padding="15,0"
                                     VerticalContentAlignment="Center"
                                     Background="#0F4B5E" 
                                     Foreground="White"
-                                    FontSize="12"
+                                    FontSize="13"
                                     CornerRadius="6"
                                     x:Name="btn_filter_all"/>
                             <Button Content="Обращения" 
-                                    Height="32" 
+                                    Height="34" 
                                     Padding="15,0"
                                     VerticalContentAlignment="Center"
                                     Background="#E9ECEF" 
                                     Foreground="#0F4B5E"
-                                    FontSize="12"
+                                    FontSize="13"
                                     CornerRadius="6"
                                     x:Name="btn_filter_appeals"/>
                             <Button Content="Заявления" 
-                                    Height="32" 
+                                    Height="34" 
                                     Padding="15,0"
                                     VerticalContentAlignment="Center"
                                     Background="#E9ECEF" 
                                     Foreground="#0F4B5E"
-                                    FontSize="12"
+                                    FontSize="13"
                                     CornerRadius="6"
                                     x:Name="btn_filter_statements"/>
                             <Button Content="Адм. протоколы" 
-                                    Height="32" 
+                                    Height="34" 
                                     Padding="15,0"
                                     VerticalContentAlignment="Center"
                                     Background="#E9ECEF" 
                                     Foreground="#0F4B5E"
-                                    FontSize="12"
+                                    FontSize="13"
                                     CornerRadius="6"
                                     x:Name="btn_filter_protocols"/>
                             <Button Content="Протоколы объяснения" 
-                                    Height="32" 
+                                    Height="34" 
                                     Padding="15,0"
                                     VerticalContentAlignment="Center"
                                     Background="#E9ECEF" 
                                     Foreground="#0F4B5E"
-                                    FontSize="12"
+                                    FontSize="13"
                                     CornerRadius="6"
                                     x:Name="btn_filter_explanations"/>
                             <Button Content="Направления на мед. освид." 
-                                    Height="32" 
+                                    Height="34" 
                                     Padding="15,0"
                                     VerticalContentAlignment="Center"
                                     Background="#E9ECEF" 
                                     Foreground="#0F4B5E"
-                                    FontSize="12"
+                                    FontSize="13"
                                     CornerRadius="6"
                                     x:Name="btn_filter_reports"/>
+                            <Button Content="Акт мед. освид." 
+                                    Height="34" 
+                                    Padding="15,0"
+                                    VerticalContentAlignment="Center"
+                                    Background="#E9ECEF" 
+                                    Foreground="#0F4B5E"
+                                    FontSize="13"
+                                    CornerRadius="6"
+                                    x:Name="btn_filter_medical_cert"
+                                    IsVisible="False"/>
+                            <Button Content="Судмедэкспертиза" 
+                                    Height="34" 
+                                    Padding="15,0"
+                                    VerticalContentAlignment="Center"
+                                    Background="#E9ECEF" 
+                                    Foreground="#0F4B5E"
+                                    FontSize="13"
+                                    CornerRadius="6"
+                                    x:Name="btn_filter_forensic"
+                                    IsVisible="False"/>
+                            <Button Content="Постановление" 
+                                    Height="34" 
+                                    Padding="15,0"
+                                    VerticalContentAlignment="Center"
+                                    Background="#E9ECEF" 
+                                    Foreground="#0F4B5E"
+                                    FontSize="13"
+                                    CornerRadius="6"
+                                    x:Name="btn_filter_resolution"
+                                    IsVisible="False"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
                 
+                <!-- Фильтр по дате -->
                 <Border Grid.Row="2"
                         Background="White"
                         CornerRadius="12"
@@ -129,37 +163,102 @@
                     </StackPanel>
                 </Border>
                 
-                    <Border Grid.Row="3"
-                    Background="White"
-                    CornerRadius="12"
-                    BorderBrush="#E9ECEF"
-                    BorderThickness="1"
-                    Padding="16"
-                    Margin="0,0,0,24">
-
-                    <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12">
-                    <Button Content="Найти" 
-                            Height="39" 
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Width="80"
-                            Background="#0F4B5E" 
-                            Foreground="White"
-                            FontSize="14"
-                            CornerRadius="6"
-                            x:Name="btn_search"/>
-                    <TextBox x:Name="txt_search" 
-                            Grid.Column="1"
-                            Height="40" 
-                            Watermark="Поиск по номеру, содержанию или ФИО гражданина..."
-                            FontSize="13"
-                            BorderBrush="#E0E0E0"
-                            CornerRadius="6"/>
-                    </Grid>
-                    </Border>
+                <!-- Поиск: номер документа + кнопки -->
+                <Border Grid.Row="3"
+                        Background="White"
+                        CornerRadius="12"
+                        BorderBrush="#E9ECEF"
+                        BorderThickness="1"
+                        Padding="16"
+                        Margin="0,0,0,24">
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Номер документа" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_document_number" 
+                                 Height="40" 
+                                 Width="350"
+                                 Watermark="Введите номер документа..."
+                                 FontSize="13"
+                                 BorderBrush="#E0E0E0"
+                                 CornerRadius="6"
+                                 HorizontalAlignment="Left"/>
+                        
+                        <!-- Выбор гражданина (для полицейского, судьи и судмедэксперта) -->
+                        <StackPanel x:Name="SelectCitizenPanel" IsVisible="False" Spacing="8">
+                            <TextBlock Text="Гражданин" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <Grid ColumnDefinitions="350, Auto" ColumnSpacing="12">
+                                <TextBox x:Name="txt_citizen" 
+                                         Height="40" 
+                                         Watermark="Гражданин не выбран..."
+                                         FontSize="13"
+                                         IsReadOnly="True"
+                                         Width="350"
+                                         Background="White"
+                                         BorderBrush="#E0E0E0"
+                                         CornerRadius="6"
+                                         Grid.Column="0"
+                                         HorizontalAlignment="Left"/>
+                                <Button Content="Выбрать гражданина" 
+                                        Height="40" 
+                                        Background="#0F4B5E" 
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Foreground="White"
+                                        FontSize="13"
+                                        Margin="20,0,0,0"
+                                        CornerRadius="6"
+                                        Grid.Column="1"
+                                        Padding="15,0"
+                                        x:Name="btn_select_citizen"/>
+                            </Grid>
+                        </StackPanel>
+                        
+                        <!-- Выбор дела (для полицейского и судьи) -->
+                        <StackPanel x:Name="SelectDealPanel" IsVisible="False" Spacing="8">
+                            <TextBlock Text="Дело" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                            <Grid ColumnDefinitions="350, Auto" ColumnSpacing="12">
+                                <TextBox x:Name="txt_deal" 
+                                         Height="40" 
+                                         Watermark="Дело не выбрано..."
+                                         FontSize="13"
+                                         Width="350"
+                                         IsReadOnly="True"
+                                         Background="White"
+                                         BorderBrush="#E0E0E0"
+                                         CornerRadius="6"
+                                         Grid.Column="0"
+                                         HorizontalAlignment="Left"/>
+                                <Button Content="Выбрать дело" 
+                                        Height="40" 
+                                        Margin="20,0,0,0"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Background="#0F4B5E" 
+                                        Foreground="White"
+                                        FontSize="13"
+                                        CornerRadius="6"
+                                        Grid.Column="1"
+                                        Padding="15,0"
+                                        x:Name="btn_select_deal"/>
+                            </Grid>
+                        </StackPanel>
+                        
+                        <Button Content="Найти" 
+                                Height="40" 
+                                Width="90"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Background="#0F4B5E" 
+                                Foreground="White"
+                                FontSize="14"
+                                CornerRadius="8"
+                                x:Name="btn_search"
+                                HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </Border>
                 
-                <ScrollViewer Grid.Row="4" 
-                              VerticalScrollBarVisibility="Auto">
+                <!-- Результаты -->
+                <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="documentsContainer" x:DataType="models:MyDocument">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="models:MyDocument">
@@ -233,24 +332,35 @@
                     </ItemsControl>
                 </ScrollViewer>
                 
+                <!-- Пустое состояние -->
                 <Border Grid.Row="4"
                         Background="White"
+                        CornerRadius="16"
                         IsVisible="False"
                         x:Name="emptyStateBorder"
-                        VerticalAlignment="Center">
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        MinHeight="400">
                     <StackPanel HorizontalAlignment="Center" 
                                 VerticalAlignment="Center"
-                                Spacing="16">
-                        <TextBlock Text="📄" FontSize="64" HorizontalAlignment="Center"/>
-                        <TextBlock Text="Нет созданных документов" 
-                                   FontSize="18" 
-                                   Foreground="#6C757D"
+                                Spacing="20">
+                        <TextBlock Text="📄" 
+                                   FontSize="72"
                                    HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="emptyStateText"
+                                   Text="Введите номер документа и нажмите 'Найти'" 
+                                   FontSize="20" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#1E2A3A"
+                                   HorizontalAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   MaxWidth="600"/>
                     </StackPanel>
                 </Border>
                 
             </Grid>
         </Border>
+        
         <controls:NotificationsControl x:Name="NotificationsControl" 
                                Grid.Column="0" 
                                Grid.ColumnSpan="2"

@@ -15,8 +15,10 @@ public partial class SearchCitizensWindow : Window
     private readonly DatabaseHelper _db;
     private Window? _citizensWindow;
     private readonly int _currentUserId;
-     public Citizen? SelectedCitizen { get; private set; }
+    public Citizen? SelectedCitizen { get; private set; }
+    
     public SearchCitizensWindow() : this(0) { }
+    
     public SearchCitizensWindow(int currentUserId)
     {
         InitializeComponent();
@@ -24,7 +26,7 @@ public partial class SearchCitizensWindow : Window
         _db = new DatabaseHelper();
         
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
         
         btn_search.Click += OnSearchClick;
         
@@ -32,10 +34,12 @@ public partial class SearchCitizensWindow : Window
         citizensContainer.IsVisible = false;
     }
     
+    // ✅ Конструктор с предустановленными параметрами поиска
     public SearchCitizensWindow(int currentUserId, CitizenSearchParams? searchParams) : this(currentUserId)
     {
         if (searchParams != null)
         {
+            // Заполняем поля формы
             if (!string.IsNullOrWhiteSpace(searchParams.Passport))
                 txt_passport.Text = searchParams.Passport;
             
@@ -45,14 +49,19 @@ public partial class SearchCitizensWindow : Window
             if (!string.IsNullOrWhiteSpace(searchParams.Address))
                 txt_address.Text = searchParams.Address;
             
-            if (!string.IsNullOrWhiteSpace(searchParams.FullName))
-            {
-                var parts = searchParams.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length > 0) txt_last_name.Text = parts[0];
-                if (parts.Length > 1) txt_first_name.Text = parts[1];
-                if (parts.Length > 2) txt_patronymic.Text = parts[2];
-            }
+            if (!string.IsNullOrWhiteSpace(searchParams.LastName))
+                txt_last_name.Text = searchParams.LastName;
             
+            if (!string.IsNullOrWhiteSpace(searchParams.FirstName))
+                txt_first_name.Text = searchParams.FirstName;
+            
+            if (!string.IsNullOrWhiteSpace(searchParams.Patronymic))
+                txt_patronymic.Text = searchParams.Patronymic;
+            
+            if (searchParams.Birthday.HasValue)
+                dp_birthday.SelectedDate = searchParams.Birthday.Value;
+            
+            // ✅ Автоматически выполняем поиск при открытии окна
             this.Opened += async (s, e) => await PerformSearch();
         }
     }
@@ -64,57 +73,134 @@ public partial class SearchCitizensWindow : Window
     
     private async Task PerformSearch()
     {
-        try
+        try        
         {
-            var searchParams = new CitizenSearchParams
-            {
-                LastName = txt_last_name.Text?.Trim(),
-                FirstName = txt_first_name.Text?.Trim(),
-                Patronymic = txt_patronymic.Text?.Trim(),
-                Birthday = dp_birthday.SelectedDate?.DateTime,
-                Address = txt_address.Text?.Trim(),
-                Phone = txt_phone.Text?.Trim(),
-                Passport = txt_passport.Text?.Trim()
-            };
+            string lastName = txt_last_name.Text?.Trim() ?? "";
+            string firstName = txt_first_name.Text?.Trim() ?? "";
+            string patronymic = txt_patronymic.Text?.Trim() ?? "";
+            string passport = txt_passport.Text?.Trim() ?? "";
+            string phone = txt_phone.Text?.Trim() ?? "";
+            string address = txt_address.Text?.Trim() ?? "";
             
-            // Собираем ФИО для поиска
-            string lastName = searchParams.LastName ?? "";
-            string firstName = searchParams.FirstName ?? "";
-            string patronymic = searchParams.Patronymic ?? "";
-            if (!string.IsNullOrWhiteSpace(lastName) || !string.IsNullOrWhiteSpace(firstName))
+            // ✅ Приоритет: если есть паспорт - ищем только по паспорту
+            if (!string.IsNullOrWhiteSpace(passport))
             {
-                searchParams.FullName = $"{lastName} {firstName} {patronymic}".Trim();
-            }
-            
-            // Проверяем, что хоть что-то введено
-            if (string.IsNullOrWhiteSpace(searchParams.LastName) && 
-                string.IsNullOrWhiteSpace(searchParams.FirstName) && 
-                string.IsNullOrWhiteSpace(searchParams.Patronymic) &&
-                !searchParams.Birthday.HasValue &&
-                string.IsNullOrWhiteSpace(searchParams.Address) &&
-                string.IsNullOrWhiteSpace(searchParams.Phone) &&
-                string.IsNullOrWhiteSpace(searchParams.Passport))
-            {
-                NotificationsControl.ShowWarning("Внимание", "Введите хотя бы один параметр для поиска");
+                var searchParams = new CitizenSearchParams
+                {
+                    Passport = passport
+                };
+                
+                var results = await _db.SearchCitizensAsync(searchParams);
+                
+                citizensContainer.ItemsSource = results;
+                emptyStateBorder.IsVisible = results.Count == 0;
+                citizensContainer.IsVisible = results.Count > 0;
+                
+                if (results.Count == 0)
+                {
+                    NotificationsControl.ShowInfo("Не найдено", $"Гражданин с паспортом '{passport}' не найден");
+                }
+                else
+                {
+                    await Task.Delay(100);
+                    SubscribeToButtons();
+                }
                 return;
             }
             
-            var results = await _db.SearchCitizensAsync(searchParams);
+            // ✅ Если есть телефон - ищем по телефону
+            if (!string.IsNullOrWhiteSpace(phone))
+            {
+                var searchParams = new CitizenSearchParams
+                {
+                    Phone = phone
+                };
+                
+                var results = await _db.SearchCitizensAsync(searchParams);
+                
+                citizensContainer.ItemsSource = results;
+                emptyStateBorder.IsVisible = results.Count == 0;
+                citizensContainer.IsVisible = results.Count > 0;
+                
+                if (results.Count == 0)
+                {
+                    NotificationsControl.ShowInfo("Не найдено", $"Гражданин с телефоном '{phone}' не найден");
+                }
+                else
+                {
+                    await Task.Delay(100);
+                    SubscribeToButtons();
+                }
+                return;
+            }
             
-            citizensContainer.ItemsSource = results;
-            emptyStateBorder.IsVisible = results.Count == 0;
-            citizensContainer.IsVisible = results.Count > 0;
+            // ✅ Если есть адрес - ищем по адресу
+            if (!string.IsNullOrWhiteSpace(address))
+            {
+                var searchParams = new CitizenSearchParams
+                {
+                    Address = address
+                };
+                
+                var results = await _db.SearchCitizensAsync(searchParams);
+                
+                citizensContainer.ItemsSource = results;
+                emptyStateBorder.IsVisible = results.Count == 0;
+                citizensContainer.IsVisible = results.Count > 0;
+                
+                if (results.Count == 0)
+                {
+                    NotificationsControl.ShowInfo("Не найдено", $"Гражданин с адресом '{address}' не найден");
+                }
+                else
+                {
+                    await Task.Delay(100);
+                    SubscribeToButtons();
+                }
+                return;
+            }
             
-            if (results.Count > 0)
+            // ✅ Если есть ФИО - проверяем фамилию (обязательна)
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                NotificationsControl.ShowWarning("Введите фамилию", 
+                    "Для поиска гражданина укажите фамилию, паспорт, телефон или адрес");
+                return;
+            }
+            
+            var searchParamsFio = new CitizenSearchParams
+            {
+                LastName = lastName,
+                FirstName = firstName,
+                Patronymic = patronymic,
+                Birthday = dp_birthday.SelectedDate?.DateTime,
+                Address = address,
+                Phone = phone,
+                Passport = passport
+            };
+            
+            // Собираем полное ФИО для поиска
+            searchParamsFio.FullName = $"{lastName} {firstName} {patronymic}".Trim();
+            
+            var resultsFio = await _db.SearchCitizensAsync(searchParamsFio);
+            
+            citizensContainer.ItemsSource = resultsFio;
+            emptyStateBorder.IsVisible = resultsFio.Count == 0;
+            citizensContainer.IsVisible = resultsFio.Count > 0;
+            
+            if (resultsFio.Count > 0)
             {
                 await Task.Delay(100);
                 SubscribeToButtons();
             }
+            else
+            {
+                NotificationsControl.ShowInfo("Не найдено", $"Граждане с фамилией '{lastName}' не найдены");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] PerformSearch: {ex.Message}");
-            await ShowMessage("Ошибка", $"Ошибка при поиске: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", $"Ошибка при поиске: {ex.Message}");
         }
     }
     
@@ -128,60 +214,32 @@ public partial class SearchCitizensWindow : Window
         {
             if (button.Name == "btnViewCard")
             {
+                button.Click -= OnViewCardClick;
                 button.Click += OnViewCardClick;
             }
         }
     }
     
-    // В SearchCitizensWindow.cs, метод OnViewCardClick:
     private async void OnViewCardClick(object? sender, RoutedEventArgs e)
     {
         if (sender is Button button && button.Tag is Citizen citizen)
         {
             try
             {
-                // ✅ Загружаем полные данные с телефоном
                 var fullCitizen = await _db.GetCitizenByIdAsync(citizen.Id);
                 if (fullCitizen != null)
                 {
-                    var cardWindow = new CitizenCardWindow(_currentUserId, fullCitizen);
+                    var cardWindow = new CitizenCardWindow(App.CurrentUserId, fullCitizen);
                     await cardWindow.ShowDialog(this);
                 }
             }
             catch (Exception ex)
             {
-                await ShowMessage("Ошибка", $"Ошибка при открытии карточки: {ex.Message}");
+                NotificationsControl.ShowError("Ошибка", $"Ошибка при открытии карточки: {ex.Message}");
             }
         }
     }
-            
     
-    private async Task ShowMessage(string title, string message)
-    {
-        var dialog = new Window
-        {
-            Title = title,
-            Width = 350,
-            Height = 150,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
-            {
-                Margin = new Avalonia.Thickness(20),
-                Spacing = 15,
-                Children =
-                {
-                    new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap },
-                    new Button { Content = "OK", Width = 80, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center }
-                }
-            }
-        };
-        
-        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
-        if (okButton != null) okButton.Click += (s, args) => dialog.Close();
-        
-        await dialog.ShowDialog(this);
-    }
-
     public void SetCitizensWindow(Window citizensWindow)
     {
         _citizensWindow = citizensWindow;

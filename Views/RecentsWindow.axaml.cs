@@ -17,8 +17,8 @@ public partial class RecentsWindow : Window
     private readonly DatabaseHelper _db;
     private readonly int _currentUserId;
     private List<MyDocument> _allDocuments = new();
-
-    public RecentsWindow() : this(0) { }
+    private List<MyDocument> _currentDocuments = new();
+    private string _selectedFilterType = "Все";
 
     public RecentsWindow(int currentUserId)
     {
@@ -27,15 +27,112 @@ public partial class RecentsWindow : Window
         _db = new DatabaseHelper();
         
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
         
-        txt_search.TextChanged += OnSearchTextChanged;
+        // Настройка кнопок фильтрации
+        btn_filter_all.Click += (s, e) => SelectFilter("Все");
+        btn_filter_appeals.Click += (s, e) => SelectFilter("Обращение");
+        btn_filter_statements.Click += (s, e) => SelectFilter("Заявление");
+        btn_filter_protocols.Click += (s, e) => SelectFilter("Административный протокол");
+        btn_filter_explanations.Click += (s, e) => SelectFilter("Протокол объяснения");
+        btn_filter_reports.Click += (s, e) => SelectFilter("Направление на мед. освид.");
+        btn_filter_medical_cert.Click += (s, e) => SelectFilter("Акт медицинского освидетельствования");
+        btn_filter_forensic.Click += (s, e) => SelectFilter("Судебно-медицинская экспертиза");
+        btn_filter_resolution.Click += (s, e) => SelectFilter("Постановление");
+        
+        dp_date_from.SelectedDateChanged += (s, e) => ApplyFilters();
+        dp_date_to.SelectedDateChanged += (s, e) => ApplyFilters();
+        
+        ConfigureFiltersByRole();
+        
         this.Opened += async (s, e) => await LoadDocumentsAsync();
+    }
+    
+    private void ConfigureFiltersByRole()
+    {
+        var role = App.CurrentUserRole;
         
-        if (_currentUserId == 0)
+        btn_filter_medical_cert.IsVisible = false;
+        btn_filter_forensic.IsVisible = false;
+        btn_filter_resolution.IsVisible = false;
+        
+        switch (role)
         {
-            NotificationsControl.ShowError("Ошибка", "Пользователь не авторизован");
-            return;
+            case UserRole.PoliceOfficer:
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = true;
+                break;
+                
+            case UserRole.MedicalExpert:
+                btn_filter_appeals.IsVisible = false;
+                btn_filter_statements.IsVisible = false;
+                btn_filter_protocols.IsVisible = false;
+                btn_filter_explanations.IsVisible = false;
+                btn_filter_medical_cert.IsVisible = true;
+                break;
+                
+            case UserRole.Judge:
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = true;
+                break;
+                
+            case UserRole.ForensicExpert:
+                btn_filter_all.IsVisible = false;
+                btn_filter_appeals.IsVisible = false;
+                btn_filter_statements.IsVisible = false;
+                btn_filter_protocols.IsVisible = false;
+                btn_filter_explanations.IsVisible = false;
+                btn_filter_reports.IsVisible = false;
+                btn_filter_medical_cert.IsVisible = false;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = false;
+                break;
+        }
+    }
+    
+    private void SelectFilter(string filterType)
+    {
+        _selectedFilterType = filterType;
+        UpdateFilterButtonsUI(filterType);
+        ApplyFilters();
+    }
+    
+    private void UpdateFilterButtonsUI(string filterType)
+    {
+        var activeColor = new SolidColorBrush(Color.Parse("#0F4B5E"));
+        var inactiveColor = new SolidColorBrush(Color.Parse("#E9ECEF"));
+        var activeForeground = new SolidColorBrush(Color.Parse("White"));
+        var inactiveForeground = new SolidColorBrush(Color.Parse("#0F4B5E"));
+        
+        var buttons = new Dictionary<string, Button>
+        {
+            {"Все", btn_filter_all},
+            {"Обращение", btn_filter_appeals},
+            {"Заявление", btn_filter_statements},
+            {"Административный протокол", btn_filter_protocols},
+            {"Протокол объяснения", btn_filter_explanations},
+            {"Направление на мед. освид.", btn_filter_reports},
+            {"Акт медицинского освидетельствования", btn_filter_medical_cert},
+            {"Судебно-медицинская экспертиза", btn_filter_forensic},
+            {"Постановление", btn_filter_resolution}
+        };
+        
+        foreach (var btn in buttons)
+        {
+            if (!btn.Value.IsVisible) continue;
+            
+            if (btn.Key == filterType)
+            {
+                btn.Value.Background = activeColor;
+                btn.Value.Foreground = activeForeground;
+            }
+            else
+            {
+                btn.Value.Background = inactiveColor;
+                btn.Value.Foreground = inactiveForeground;
+            }
         }
     }
 
@@ -43,11 +140,24 @@ public partial class RecentsWindow : Window
     {
         try
         {
-            _allDocuments = await _db.GetUserDocumentsAsync(_currentUserId);
-            var recentDocs = _allDocuments.OrderByDescending(d => d.CreatedAt).Take(50).ToList();
+            var role = App.CurrentUserRole;
+            var userId = App.CurrentUserId;
             
-            documentsContainer.ItemsSource = recentDocs;
-            emptyStateBorder.IsVisible = recentDocs.Count == 0;
+            var recentDocs = await _db.GetAllDocumentsAsync(role, userId);
+            
+            _allDocuments = recentDocs.Select(d => new MyDocument
+            {
+                Id = d.Id,
+                DocumentType = d.DocumentType,
+                TableName = GetTableName(d.DocumentType),
+                Number = d.Number,
+                CreatedAt = d.MakingDateAndTime,
+                CitizenFullName = d.CitizenName ?? "Неизвестно",
+                Content = "",
+                IsFavorite = false
+            }).ToList();
+            
+            ApplyFilters();
             
             await Task.Delay(100);
             SubscribeToButtons();
@@ -58,34 +168,52 @@ public partial class RecentsWindow : Window
             emptyStateBorder.IsVisible = true;
         }
     }
-
-    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
+    
+    private void ApplyFilters()
     {
-        string searchText = txt_search.Text?.Trim() ?? "";
+        var filtered = _allDocuments;
         
-        if (string.IsNullOrWhiteSpace(searchText))
+        // Фильтр по типу
+        if (_selectedFilterType != "Все")
         {
-            var recentDocs = _allDocuments.OrderByDescending(d => d.CreatedAt).Take(50).ToList();
-            documentsContainer.ItemsSource = recentDocs;
-        }
-        else
-        {
-            var filtered = _allDocuments.Where(d => 
-                (d.Number?.ToString().Contains(searchText) ?? false) ||
-                d.CitizenFullName?.ToLower().Contains(searchText.ToLower()) == true ||
-                d.Content?.ToLower().Contains(searchText.ToLower()) == true ||
-                d.DocumentType?.ToLower().Contains(searchText.ToLower()) == true
-            ).OrderByDescending(d => d.CreatedAt).Take(50).ToList();
-            
-            documentsContainer.ItemsSource = filtered;
+            filtered = filtered.Where(d => d.DocumentType == _selectedFilterType).ToList();
         }
         
-        emptyStateBorder.IsVisible = documentsContainer.ItemsSource is ICollection<MyDocument> list && list.Count == 0;
-        
-        Task.Delay(100).ContinueWith(_ => 
+        // Фильтр по дате от
+        if (dp_date_from.SelectedDate.HasValue)
         {
-            Avalonia.Threading.Dispatcher.UIThread.Post(() => SubscribeToButtons());
-        });
+            var dateFrom = dp_date_from.SelectedDate.Value.Date;
+            filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom).ToList();
+        }
+        
+        // Фильтр по дате до
+        if (dp_date_to.SelectedDate.HasValue)
+        {
+            var dateTo = dp_date_to.SelectedDate.Value.Date;
+            filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo).ToList();
+        }
+        
+        _currentDocuments = filtered;
+        documentsContainer.ItemsSource = _currentDocuments;
+        emptyStateBorder.IsVisible = _currentDocuments.Count == 0;
+        
+        SubscribeToButtons();
+    }
+
+    private string GetTableName(string documentType)
+    {
+        return documentType switch
+        {
+            "Заявление" => "statement",
+            "Обращение" => "appeals",
+            "Протокол объяснения" => "explanation_protocol",
+            "Направление на мед. освид." => "medical_examination_report",
+            "Административный протокол" => "administrative_protocol",
+            "Акт медицинского освидетельствования" => "medical_certificate",
+            "Судебно-медицинская экспертиза" => "forensic_medical_examination",
+            "Постановление" => "resolution",
+            _ => "unknown"
+        };
     }
 
     private void SubscribeToButtons()
@@ -120,12 +248,8 @@ public partial class RecentsWindow : Window
         {
             try
             {
-                Console.WriteLine($"[DEBUG] Toggle: userId={_currentUserId}, table={doc.TableName}, docId={doc.Id}");
-                
                 await _db.ToggleFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
                 bool isFavorite = await _db.IsFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
-                
-                Console.WriteLine($"[DEBUG] Новый статус: {isFavorite}");
                 
                 button.Content = isFavorite ? "★" : "☆";
                 button.Foreground = isFavorite 
@@ -134,13 +258,19 @@ public partial class RecentsWindow : Window
                 
                 doc.IsFavorite = isFavorite;
                 
+                // Обновляем в списке
+                var existingDoc = _currentDocuments.FirstOrDefault(d => d.Id == doc.Id && d.TableName == doc.TableName);
+                if (existingDoc != null)
+                {
+                    existingDoc.IsFavorite = isFavorite;
+                }
+                
                 NotificationsControl.ShowSuccess("Избранное", isFavorite ? "Добавлено" : "Удалено");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[ERROR] {ex.Message}");
-                Console.WriteLine($"[ERROR] {ex.StackTrace}");
-                NotificationsControl.ShowError("Ошибка", ex.Message);
+                NotificationsControl.ShowError("Ошибка", $"{ex.Message}");
             }
         }
     }
@@ -149,38 +279,17 @@ public partial class RecentsWindow : Window
     {
         if (sender is Button button && button.Tag is MyDocument doc)
         {
-            var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-            // ✅ Передаём "Recents" как источник
-            var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc);
-            viewerWindow.Show();
-            Hide();
-        }
-    }
-    
-    private async Task ShowMessage(string title, string message)
-    {
-        var dialog = new Window
-        {
-            Title = title,
-            Width = 350,
-            Height = 150,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new StackPanel
+            try
             {
-                Margin = new Avalonia.Thickness(20),
-                Spacing = 15,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Children =
-                {
-                    new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap },
-                    new Button { Content = "OK", Width = 80, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center }
-                }
+                var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
+                var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
+                viewerWindow.Show();
+                this.Hide();
             }
-        };
-        
-        var okButton = (dialog.Content as StackPanel)?.Children[1] as Button;
-        if (okButton != null) okButton.Click += (s, args) => dialog.Close();
-        
-        await dialog.ShowDialog(this);
+            catch (Exception ex)
+            {
+                NotificationsControl.ShowError("Ошибка", ex.Message);
+            }
+        }
     }
 }
