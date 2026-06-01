@@ -23,8 +23,8 @@ public partial class YourDocumentsWindow : Window
     private string _selectedFilterType = "Все";
     private CitizenSearchParams? _citizenSearchParams;
 
-   public YourDocumentsWindow(Window? previousWindow, int currentUserId, string searchValue = "", string filterValue = "", 
-            DateTime? date = null, CitizenSearchParams? citizenParams = null, string documentType = "")
+    public YourDocumentsWindow(Window? previousWindow, int currentUserId, string searchValue = "", 
+    DateTime? date = null, CitizenSearchParams? citizenParams = null, string documentType = "")
     {
         InitializeComponent();
         _currentUserId = currentUserId;
@@ -49,37 +49,28 @@ public partial class YourDocumentsWindow : Window
         
         btn_search.Click += OnSearchClick;
         btn_select_citizen.Click += Btn_select_citizen_Click;
-        btn_select_deal.Click += Btn_select_deal_Click;
         
         ConfigureFiltersByRole();
         
-        // Заполняем поля
+        // Заполняем поле номера документа
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
             txt_document_number.Text = searchValue;
         }
         
-        if (!string.IsNullOrWhiteSpace(filterValue))
+        // ✅ ПРИМЕНЯЕМ ТИП ДОКУМЕНТА ДЛЯ ВСЕХ РОЛЕЙ
+        if (!string.IsNullOrWhiteSpace(documentType) && documentType != "Все" && documentType != "Любой")
         {
-            var role = App.CurrentUserRole;
-            if (role == UserRole.PoliceOfficer)
-            {
-                if (filterValue != "Любой") SelectFilter(filterValue);
-            }
-            else if (role == UserRole.Judge || role == UserRole.ForensicExpert)
-            {
-                txt_deal.Text = filterValue;
-                txt_deal.Tag = filterValue;
-            }
+            SelectFilter(documentType);
         }
         
-        // ✅ Для судьи - применяем тип документа из ComboBox
+        // Для судьи - применяем тип документа из ComboBox (дублируем на всякий случай)
         if (App.CurrentUserRole == UserRole.Judge && !string.IsNullOrWhiteSpace(documentType) && documentType != "Все")
         {
             SelectFilter(documentType);
         }
         
-        // ✅ Для врача - применяем тип документа
+        // Для врача - применяем тип документа
         if (App.CurrentUserRole == UserRole.MedicalExpert && !string.IsNullOrWhiteSpace(documentType) && documentType != "Все")
         {
             SelectFilter(documentType);
@@ -105,6 +96,7 @@ public partial class YourDocumentsWindow : Window
             await LoadDocumentsAsync();
         };
     }
+    
     private void ConfigureFiltersByRole()
     {
         var role = App.CurrentUserRole;
@@ -114,9 +106,8 @@ public partial class YourDocumentsWindow : Window
         btn_filter_forensic.IsVisible = false;
         btn_filter_resolution.IsVisible = false;
         
-        // Скрываем панели выбора
+        // Скрываем панель выбора гражданина
         SelectCitizenPanel.IsVisible = false;
-        SelectDealPanel.IsVisible = false;
         
         // По умолчанию фильтр по типу виден
         FilterTypeBorder.IsVisible = true;
@@ -124,12 +115,10 @@ public partial class YourDocumentsWindow : Window
         switch (role)
         {
             case UserRole.PoliceOfficer:
-                // Показываем все кнопки фильтров
                 btn_filter_medical_cert.IsVisible = true;
                 btn_filter_forensic.IsVisible = true;
                 btn_filter_resolution.IsVisible = true;
                 SelectCitizenPanel.IsVisible = true;
-                SelectDealPanel.IsVisible = true;
                 break;
                 
             case UserRole.MedicalExpert:
@@ -142,13 +131,10 @@ public partial class YourDocumentsWindow : Window
                 break;
                 
             case UserRole.Judge:
-                // ✅ Судья - показывает ВСЕ кнопки фильтров (все типы документов)
                 btn_filter_medical_cert.IsVisible = true;
                 btn_filter_forensic.IsVisible = true;
                 btn_filter_resolution.IsVisible = true;
-                // Также показывает выбор гражданина и дела
                 SelectCitizenPanel.IsVisible = true;
-                SelectDealPanel.IsVisible = true;
                 break;
                 
             case UserRole.ForensicExpert:
@@ -209,16 +195,11 @@ public partial class YourDocumentsWindow : Window
             
             _allDocuments = await _db.GetUserDocumentsAsync(App.CurrentUserId);
             
-            // ✅ Показываем пустой список с подсказкой
-            documentsContainer.ItemsSource = null;
-            emptyStateBorder.IsVisible = true;
+            NotificationsControl.ShowInfo("Отладка", $"Загружено документов: {_allDocuments.Count}");
             
-            // Изменяем текст подсказки
-            var emptyText = this.FindControl<TextBlock>("emptyStateText");
-            if (emptyText != null)
-            {
-                emptyText.Text = "Введите номер документа и нажмите 'Найти'";
-            }
+            // Показываем все документы
+            documentsContainer.ItemsSource = _allDocuments;
+            emptyStateBorder.IsVisible = _allDocuments.Count == 0;
             
             await Task.Delay(100);
             SubscribeToButtons();
@@ -235,30 +216,18 @@ public partial class YourDocumentsWindow : Window
         await PerformSearch();
     }
     
-   private async Task PerformSearch()
+    private async Task PerformSearch()
     {
-        var role = App.CurrentUserRole;
-        
         // Получаем значения полей
         string docNumber = txt_document_number.Text?.Trim() ?? "";
         string citizenName = txt_citizen.Text?.Trim() ?? "";
-        string dealInfo = txt_deal.Text?.Trim() ?? "";
         
-        // ✅ Проверка: должен быть заполнен хотя бы один критерий поиска
-        if (string.IsNullOrWhiteSpace(docNumber) && 
-            string.IsNullOrWhiteSpace(citizenName) && 
-            string.IsNullOrWhiteSpace(dealInfo))
+        // Если ничего не введено - показываем все документы
+        if (string.IsNullOrWhiteSpace(docNumber) && string.IsNullOrWhiteSpace(citizenName))
         {
-            NotificationsControl.ShowWarning("Введите данные", 
-                "Для поиска укажите хотя бы номер документа");
-            return;
-        }
-        
-        // Если номер документа не заполнен, но есть гражданин или дело - пока не ищем
-        if (string.IsNullOrWhiteSpace(docNumber))
-        {
-            NotificationsControl.ShowWarning("Введите номер документа", 
-                "Для поиска документов необходимо ввести номер документа");
+            documentsContainer.ItemsSource = _allDocuments;
+            emptyStateBorder.IsVisible = _allDocuments.Count == 0;
+            NotificationsControl.ShowInfo("Поиск", "Введите номер документа для поиска");
             return;
         }
         
@@ -283,12 +252,17 @@ public partial class YourDocumentsWindow : Window
             filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo).ToList();
         }
         
-        // Поиск по номеру документа (обязательно)
-        filtered = filtered.Where(d => 
-            (d.Number?.ToString().Contains(docNumber) ?? false)
-        ).ToList();
+        // Поиск по номеру документа
+        if (!string.IsNullOrWhiteSpace(docNumber))
+        {
+            int beforeCount = filtered.Count();
+            filtered = filtered.Where(d => 
+                (d.Number?.ToString().Contains(docNumber) ?? false)
+            ).ToList();
+            NotificationsControl.ShowInfo("Отладка", $"Поиск по номеру '{docNumber}': было {beforeCount}, стало {filtered.Count()}");
+        }
         
-        // Поиск по гражданину (дополнительно)
+        // Поиск по гражданину
         if (!string.IsNullOrWhiteSpace(citizenName))
         {
             filtered = filtered.Where(d => 
@@ -296,19 +270,11 @@ public partial class YourDocumentsWindow : Window
             ).ToList();
         }
         
-        // Поиск по делу (дополнительно)
-        if (!string.IsNullOrWhiteSpace(dealInfo))
-        {
-            filtered = filtered.Where(d => 
-                d.Content?.ToLower().Contains(dealInfo.ToLower()) == true
-            ).ToList();
-        }
-        
-        _currentDocuments = filtered;
+        _currentDocuments = filtered.ToList();
         documentsContainer.ItemsSource = _currentDocuments;
         emptyStateBorder.IsVisible = _currentDocuments.Count == 0;
         
-        if (_currentDocuments.Count == 0)
+        if (_currentDocuments.Count == 0 && !string.IsNullOrWhiteSpace(docNumber))
         {
             NotificationsControl.ShowInfo("Результаты поиска", 
                 $"Документы с номером '{docNumber}' не найдены");
@@ -334,6 +300,9 @@ public partial class YourDocumentsWindow : Window
                 if (button.DataContext is MyDocument doc)
                 {
                     button.Content = doc.IsFavorite ? "★" : "☆";
+                    button.Foreground = doc.IsFavorite 
+                        ? new SolidColorBrush(Color.Parse("#FFB800")) 
+                        : new SolidColorBrush(Color.Parse("#CCCCCC"));
                 }
             }
             else if (button.Name == "OpenButton")
@@ -355,6 +324,9 @@ public partial class YourDocumentsWindow : Window
                 bool isFavorite = await _db.IsFavoriteAsync(App.CurrentUserId, doc.TableName, doc.Id);
                 
                 button.Content = isFavorite ? "★" : "☆";
+                button.Foreground = isFavorite 
+                    ? new SolidColorBrush(Color.Parse("#FFB800")) 
+                    : new SolidColorBrush(Color.Parse("#CCCCCC"));
                 
                 var existingDoc = _currentDocuments.FirstOrDefault(d => d.Id == doc.Id && d.TableName == doc.TableName);
                 if (existingDoc != null)
@@ -364,7 +336,7 @@ public partial class YourDocumentsWindow : Window
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Toggle favorite: {ex.Message}");
+                Console.WriteLine($"[ERROR] OnFavoriteClick: {ex.Message}");
                 NotificationsControl.ShowError("Ошибка", ex.Message);
             }
         }
@@ -406,24 +378,5 @@ public partial class YourDocumentsWindow : Window
             });
         };
         citizensWindow.Show();
-    }
-    
-    private async void Btn_select_deal_Click(object? sender, RoutedEventArgs e)
-    {
-        var dealWindow = new SelectDealWindow(App.CurrentUserId, this);
-        dealWindow.Closed += (s, args) =>
-        {
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-            {
-                var selectedDeal = dealWindow.SelectedDeal;
-                if (selectedDeal != null)
-                {
-                    txt_deal.Text = $"{selectedDeal.Number} - {selectedDeal.CitizenFullName}";
-                    txt_deal.Tag = selectedDeal.Id;
-                }
-                Activate();
-            });
-        };
-        await dealWindow.ShowDialog(this);
     }
 }

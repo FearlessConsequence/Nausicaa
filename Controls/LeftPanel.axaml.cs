@@ -82,7 +82,7 @@ public partial class LeftPanel : UserControl
     }
     private void OnMainClick(object? sender, RoutedEventArgs e)
     {
-        new MainWindow(App.CurrentUserId, _currentUserRole).Show();
+        new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
         CloseParent();
     }
     
@@ -113,7 +113,7 @@ public partial class LeftPanel : UserControl
     private void OnYourDocumentsClick(object? sender, RoutedEventArgs e)
     {
         var window = this.VisualRoot as Window;
-        new YourDocumentsWindow(window, App.CurrentUserId).Show();
+        new YourDocumentsWindow(null, App.CurrentUserId).Show();
         window?.Close();
     }
     

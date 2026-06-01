@@ -51,7 +51,6 @@ public partial class OtherDocumentsWindow : Window
         
         btn_search.Click += OnSearchClick;
         btn_select_citizen.Click += Btn_select_citizen_Click;
-        btn_select_deal.Click += Btn_select_deal_Click;
         
         ConfigureFiltersByRole();
         
@@ -74,7 +73,6 @@ public partial class OtherDocumentsWindow : Window
         btn_filter_resolution.IsVisible = false;
         
         SelectCitizenPanel.IsVisible = false;
-        SelectDealPanel.IsVisible = false;
         
         FilterTypeBorder.IsVisible = true;
         
@@ -85,7 +83,6 @@ public partial class OtherDocumentsWindow : Window
                 btn_filter_forensic.IsVisible = true;
                 btn_filter_resolution.IsVisible = true;
                 SelectCitizenPanel.IsVisible = true;
-                SelectDealPanel.IsVisible = true;
                 break;
                 
             case UserRole.MedicalExpert:
@@ -102,7 +99,6 @@ public partial class OtherDocumentsWindow : Window
                 btn_filter_forensic.IsVisible = true;
                 btn_filter_resolution.IsVisible = true;
                 SelectCitizenPanel.IsVisible = true;
-                SelectDealPanel.IsVisible = true;
                 break;
                 
             case UserRole.ForensicExpert:
@@ -246,15 +242,6 @@ public partial class OtherDocumentsWindow : Window
                 ).ToList();
             }
             
-            // Поиск по делу
-            string dealInfo = txt_deal.Text?.Trim() ?? "";
-            if (!string.IsNullOrWhiteSpace(dealInfo))
-            {
-                filtered = filtered.Where(d => 
-                    d.DealInfo?.ToLower().Contains(dealInfo.ToLower()) == true
-                ).ToList();
-            }
-            
             _currentDocuments = filtered;
             documentsContainer.ItemsSource = _currentDocuments;
             emptyStateBorder.IsVisible = _currentDocuments.Count == 0;
@@ -338,24 +325,5 @@ public partial class OtherDocumentsWindow : Window
             });
         };
         citizensWindow.Show();
-    }
-    
-    private async void Btn_select_deal_Click(object? sender, RoutedEventArgs e)
-    {
-        var dealWindow = new SelectDealWindow(_currentUserId, this);
-        dealWindow.Closed += (s, args) =>
-        {
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-            {
-                var selectedDeal = dealWindow.SelectedDeal;
-                if (selectedDeal != null)
-                {
-                    txt_deal.Text = $"{selectedDeal.Number} - {selectedDeal.CitizenFullName}";
-                    txt_deal.Tag = selectedDeal.Id;
-                }
-                Activate();
-            });
-        };
-        await dealWindow.ShowDialog(this);
     }
 }

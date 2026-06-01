@@ -212,36 +212,6 @@
                             </Grid>
                         </StackPanel>
                         
-                        <!-- Выбор дела -->
-                        <StackPanel x:Name="SelectDealPanel" IsVisible="False" Spacing="8">
-                            <TextBlock Text="Дело" FontSize="13" FontWeight="SemiBold" Foreground="#0F4B5E"/>
-                            <Grid ColumnDefinitions="350, Auto" ColumnSpacing="12">
-                                <TextBox x:Name="txt_deal" 
-                                         Height="40" 
-                                         Watermark="Дело не выбрано..."
-                                         FontSize="13"
-                                         Width="350"
-                                         IsReadOnly="True"
-                                         Background="White"
-                                         BorderBrush="#E0E0E0"
-                                         CornerRadius="6"
-                                         Grid.Column="0"
-                                         HorizontalAlignment="Left"/>
-                                <Button Content="Выбрать дело" 
-                                        Height="40" 
-                                        Margin="20,0,0,0"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Center"
-                                        Background="#0F4B5E" 
-                                        Foreground="White"
-                                        FontSize="13"
-                                        CornerRadius="6"
-                                        Grid.Column="1"
-                                        Padding="15,0"
-                                        x:Name="btn_select_deal"/>
-                            </Grid>
-                        </StackPanel>
-                        
                         <Button Content="Найти" 
                                 Height="40" 
                                 Width="90"
@@ -287,15 +257,6 @@
                                                            FontSize="12"
                                                            Foreground="#6C757D"/>
                                             </StackPanel>
-                                            
-                                            <TextBlock Text="{Binding CitizenFullName}"
-                                                       FontSize="15"
-                                                       FontWeight="Medium"
-                                                       Foreground="#1E2A3A"/>
-                                            
-                                            <TextBlock Text="{Binding DealInfo}"
-                                                       FontSize="12"
-                                                       Foreground="#6C757D"/>
                                         </StackPanel>
                                         
                                         <Button Grid.Column="1"
@@ -338,7 +299,7 @@
                                    Foreground="#1E2A3A"
                                    HorizontalAlignment="Center"
                                    TextWrapping="Wrap"
-                                   MaxWidth="400"/>
+                                   MaxWidth="500"/>
                     </StackPanel>
                 </Border>
                 

@@ -113,17 +113,10 @@ public partial class MainWindow : Window
     private void BtnPoliceDocSearch_Click(object? sender, RoutedEventArgs e)
     {
         bool searchByCitizen = chk_police_search_doc.IsChecked == true;
-        
-        string dealNumber = txbx_police_deal.Text?.Trim() ?? "";
+    
+        string docNumber = txbx_police_doc_number.Text?.Trim() ?? "";
         string docType = (cmb_police_doc_type.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Любой";
         DateTime? date = dp_police_doc_date.SelectedDate?.DateTime;
-        
-        if (!searchByCitizen && string.IsNullOrWhiteSpace(dealNumber))
-        {
-            NotificationsControl.ShowWarning("Введите номер дела", 
-                "Для поиска документов укажите номер дела");
-            return;
-        }
         
         CitizenSearchParams? citizenParams = null;
         if (searchByCitizen)
@@ -156,9 +149,9 @@ public partial class MainWindow : Window
             }
         }
         
-        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, dealNumber, docType, date, citizenParams);
-        documentsWindow.Show();
-        Close();
+        // ✅ searchValue = "" (пустая строка - номер документа), filterValue = dealNumber (номер дела)
+        new YourDocumentsWindow(this, App.CurrentUserId, docNumber, date, citizenParams, docType).Show();
+        this.Close();
     }
 
     // ==========================================
@@ -172,7 +165,6 @@ public partial class MainWindow : Window
         string certNumber = txbx_doctor_cert_number.Text?.Trim() ?? "";
         DateTime? date = dp_doctor_doc_date.SelectedDate?.DateTime;
         
-        // ✅ Проверка: если оба поля заполнены - предупреждение
         if (!string.IsNullOrWhiteSpace(reportNumber) && !string.IsNullOrWhiteSpace(certNumber))
         {
             NotificationsControl.ShowWarning("Внимание", 
@@ -180,7 +172,6 @@ public partial class MainWindow : Window
             return;
         }
         
-        // ✅ Проверка: если чекбокс НЕ включён, то нужно что-то ввести
         if (!searchByCitizen && string.IsNullOrWhiteSpace(reportNumber) && string.IsNullOrWhiteSpace(certNumber))
         {
             NotificationsControl.ShowWarning("Введите номер", 
@@ -188,7 +179,6 @@ public partial class MainWindow : Window
             return;
         }
         
-        // Собираем параметры гражданина (если чекбокс включён)
         CitizenSearchParams? citizenParams = null;
         if (searchByCitizen)
         {
@@ -220,7 +210,6 @@ public partial class MainWindow : Window
             }
         }
         
-        // ✅ Определяем тип документа и номер для поиска
         string searchNumber = "";
         string docType = "Все";
         
@@ -235,9 +224,10 @@ public partial class MainWindow : Window
             docType = "Акт медицинского освидетельствования";
         }
         
-        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, searchNumber, "", date, citizenParams, docType);
+        // ✅ Врач: searchValue - номер документа, filterValue - пустая строка
+        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, searchNumber, date, citizenParams, docType);
         documentsWindow.Show();
-        Close();
+        this.Close();
     }
 
     // ==========================================
@@ -248,14 +238,13 @@ public partial class MainWindow : Window
         bool searchByCitizen = chk_judge_search_doc.IsChecked == true;
         
         string number = txbx_judge_number.Text?.Trim() ?? "";
-        string dealNumber = txbx_judge_deal.Text?.Trim() ?? "";
         string docType = (cmb_judge_doc_type.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Все";
         DateTime? date = dp_judge_doc_date.SelectedDate?.DateTime;
         
-        if (!searchByCitizen && string.IsNullOrWhiteSpace(number) && string.IsNullOrWhiteSpace(dealNumber))
+        // Проверка: если не ищем по гражданину, то номер обязателен
+        if (!searchByCitizen && string.IsNullOrWhiteSpace(number))
         {
-            NotificationsControl.ShowWarning("Введите номер", 
-                "Для поиска укажите номер документа или номер дела");
+            NotificationsControl.ShowWarning("Введите номер", "Укажите номер документа");
             return;
         }
         
@@ -290,11 +279,11 @@ public partial class MainWindow : Window
             }
         }
         
-        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, number, dealNumber, date, citizenParams, docType);
-        documentsWindow.Show();
-        Close();
+        // ✅ Судья: searchValue = number, filterValue = "" (пустая строка)
+        new YourDocumentsWindow(this, App.CurrentUserId, number, date, citizenParams, docType).Show();
+        this.Close();
     }
-    
+
     // ==========================================
     // ЭКСПЕРТ - поиск документов
     // ==========================================
@@ -303,13 +292,12 @@ public partial class MainWindow : Window
         bool searchByCitizen = chk_forensic_search_doc.IsChecked == true;
         
         string number = txbx_forensic_number.Text?.Trim() ?? "";
-        string dealNumber = txbx_forensic_deal.Text?.Trim() ?? "";
         DateTime? date = dp_forensic_doc_date.SelectedDate?.DateTime;
         
-        if (!searchByCitizen && string.IsNullOrWhiteSpace(number) && string.IsNullOrWhiteSpace(dealNumber))
+        // Проверка: если не ищем по гражданину, то номер обязателен
+        if (!searchByCitizen && string.IsNullOrWhiteSpace(number))
         {
-            NotificationsControl.ShowWarning("Введите номер", 
-                "Для поиска укажите номер экспертизы или номер дела");
+            NotificationsControl.ShowWarning("Введите номер", "Укажите номер экспертизы");
             return;
         }
         
@@ -344,9 +332,9 @@ public partial class MainWindow : Window
             }
         }
         
-        var documentsWindow = new YourDocumentsWindow(this, App.CurrentUserId, number, dealNumber, date, citizenParams);
-        documentsWindow.Show();
-        Close();
+        // ✅ Эксперт: searchValue = number, filterValue = "" (пустая строка)
+        new YourDocumentsWindow(this, App.CurrentUserId, number, date, citizenParams).Show();
+        this.Close();
     }
         
     // ==========================================
