@@ -62,6 +62,9 @@ public partial class RecentsWindow : Window
                 btn_filter_medical_cert.IsVisible = true;
                 btn_filter_forensic.IsVisible = true;
                 btn_filter_resolution.IsVisible = true;
+                btn_filter_medical_cert.IsVisible = false;
+                btn_filter_forensic.IsVisible = false;
+                btn_filter_resolution.IsVisible = false;
                 break;
                 
             case UserRole.MedicalExpert:
@@ -73,9 +76,17 @@ public partial class RecentsWindow : Window
                 break;
                 
             case UserRole.Judge:
-                btn_filter_medical_cert.IsVisible = true;
-                btn_filter_forensic.IsVisible = true;
+                btn_filter_medical_cert.IsVisible = false;
+                btn_filter_forensic.IsVisible = false;
+                btn_filter_all.IsVisible = false;
                 btn_filter_resolution.IsVisible = true;
+                btn_filter_appeals.IsVisible = false;
+                btn_filter_explanations.IsVisible = false;
+                btn_filter_forensic.IsVisible = false;
+                btn_filter_medical_cert.IsVisible = false;
+                btn_filter_protocols.IsVisible = false;
+                btn_filter_reports.IsVisible = false;
+                btn_filter_statements.IsVisible = false;
                 break;
                 
             case UserRole.ForensicExpert:
