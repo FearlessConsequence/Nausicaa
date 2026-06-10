@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CourseWork.Controls;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using Avalonia.Threading;
+using CourseWork.Controls;
 using CourseWork.Data;
 using CourseWork.Models;
 
@@ -62,9 +63,6 @@ public partial class RecentsWindow : Window
                 btn_filter_medical_cert.IsVisible = true;
                 btn_filter_forensic.IsVisible = true;
                 btn_filter_resolution.IsVisible = true;
-                btn_filter_medical_cert.IsVisible = false;
-                btn_filter_forensic.IsVisible = false;
-                btn_filter_resolution.IsVisible = false;
                 break;
                 
             case UserRole.MedicalExpert:
@@ -76,29 +74,14 @@ public partial class RecentsWindow : Window
                 break;
                 
             case UserRole.Judge:
-                btn_filter_medical_cert.IsVisible = false;
-                btn_filter_forensic.IsVisible = false;
-                btn_filter_all.IsVisible = false;
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
                 btn_filter_resolution.IsVisible = true;
-                btn_filter_appeals.IsVisible = false;
-                btn_filter_explanations.IsVisible = false;
-                btn_filter_forensic.IsVisible = false;
-                btn_filter_medical_cert.IsVisible = false;
-                btn_filter_protocols.IsVisible = false;
-                btn_filter_reports.IsVisible = false;
-                btn_filter_statements.IsVisible = false;
                 break;
                 
             case UserRole.ForensicExpert:
                 btn_filter_all.IsVisible = false;
-                btn_filter_appeals.IsVisible = false;
-                btn_filter_statements.IsVisible = false;
-                btn_filter_protocols.IsVisible = false;
-                btn_filter_explanations.IsVisible = false;
-                btn_filter_reports.IsVisible = false;
-                btn_filter_medical_cert.IsVisible = false;
                 btn_filter_forensic.IsVisible = true;
-                btn_filter_resolution.IsVisible = false;
                 break;
         }
     }
@@ -160,7 +143,7 @@ public partial class RecentsWindow : Window
             {
                 Id = d.Id,
                 DocumentType = d.DocumentType,
-                TableName = GetTableName(d.DocumentType),
+                TableName = GetTableName(d.DocumentType), // ← правильное получение имени таблицы
                 Number = d.Number,
                 CreatedAt = d.MakingDateAndTime,
                 CitizenFullName = d.CitizenName ?? "Неизвестно",
@@ -168,10 +151,14 @@ public partial class RecentsWindow : Window
                 IsFavorite = false
             }).ToList();
             
-            ApplyFilters();
+            // Загружаем реальный статус избранного
+            for (int i = 0; i < _allDocuments.Count; i++)
+            {
+                var doc = _allDocuments[i];
+                doc.IsFavorite = await _db.IsFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
+            }
             
-            await Task.Delay(100);
-            SubscribeToButtons();
+            ApplyFilters();
         }
         catch (Exception ex)
         {
@@ -182,35 +169,34 @@ public partial class RecentsWindow : Window
     
     private void ApplyFilters()
     {
-        var filtered = _allDocuments;
+        var filtered = _allDocuments.AsEnumerable();
         
-        // Фильтр по типу
         if (_selectedFilterType != "Все")
         {
-            filtered = filtered.Where(d => d.DocumentType == _selectedFilterType).ToList();
+            filtered = filtered.Where(d => d.DocumentType == _selectedFilterType);
         }
         
-        // Фильтр по дате от
         if (dp_date_from.SelectedDate.HasValue)
         {
             var dateFrom = dp_date_from.SelectedDate.Value.Date;
-            filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom).ToList();
+            filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom);
         }
         
-        // Фильтр по дате до
         if (dp_date_to.SelectedDate.HasValue)
         {
             var dateTo = dp_date_to.SelectedDate.Value.Date;
-            filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo).ToList();
+            filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo);
         }
         
-        _currentDocuments = filtered;
+        _currentDocuments = filtered.ToList();
         documentsContainer.ItemsSource = _currentDocuments;
         emptyStateBorder.IsVisible = _currentDocuments.Count == 0;
         
-        SubscribeToButtons();
+        // Подписываем кнопки после обновления списка
+        Dispatcher.UIThread.Post(() => SubscribeToButtons(), DispatcherPriority.Render);
     }
 
+    // ✅ ПРАВИЛЬНЫЙ метод получения имени таблицы
     private string GetTableName(string documentType)
     {
         return documentType switch
@@ -220,7 +206,7 @@ public partial class RecentsWindow : Window
             "Протокол объяснения" => "explanation_protocol",
             "Направление на мед. освид." => "medical_examination_report",
             "Административный протокол" => "administrative_protocol",
-            "Акт медицинского освидетельствования" => "medical_certificate",
+            "Акт медицинского освидетельствования" => "medical_examination_certificate", // ← правильное имя!
             "Судебно-медицинская экспертиза" => "forensic_medical_examination",
             "Постановление" => "resolution",
             _ => "unknown"
@@ -229,27 +215,45 @@ public partial class RecentsWindow : Window
 
     private void SubscribeToButtons()
     {
-        var buttons = documentsContainer.GetVisualDescendants()
-            .OfType<Button>()
-            .ToList();
-            
-        foreach (var button in buttons)
+        try
         {
-            if (button.Name == "FavoriteButton" && button.Tag is MyDocument doc)
+            var allButtons = this.GetVisualDescendants()
+                .OfType<Button>()
+                .ToList();
+            
+            foreach (var button in allButtons)
             {
-                button.Content = doc.IsFavorite ? "★" : "☆";
-                button.Foreground = doc.IsFavorite 
-                    ? new SolidColorBrush(Color.Parse("#FFB800")) 
-                    : new SolidColorBrush(Color.Parse("#6C757D"));
-                
-                button.Click -= OnFavoriteClick;
-                button.Click += OnFavoriteClick;
+                if (button.Name == "FavoriteButton")
+                {
+                    button.Click -= OnFavoriteClick;
+                    button.Click += OnFavoriteClick;
+                    
+                    var doc = button.DataContext as MyDocument;
+                    if (doc != null)
+                    {
+                        button.Tag = doc;
+                        button.Content = doc.IsFavorite ? "★" : "☆";
+                        button.Foreground = doc.IsFavorite 
+                            ? new SolidColorBrush(Color.Parse("#FFB800")) 
+                            : new SolidColorBrush(Color.Parse("#6C757D"));
+                    }
+                }
+                else if (button.Name == "OpenButton")
+                {
+                    button.Click -= OnOpenClick;
+                    button.Click += OnOpenClick;
+                    
+                    var doc = button.DataContext as MyDocument;
+                    if (doc != null)
+                    {
+                        button.Tag = doc;
+                    }
+                }
             }
-            else if (button.Name == "OpenButton" && button.Tag is MyDocument doc2)
-            {
-                button.Click -= OnOpenClick;
-                button.Click += OnOpenClick;
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] SubscribeToButtons: {ex.Message}");
         }
     }
 
@@ -262,27 +266,35 @@ public partial class RecentsWindow : Window
                 await _db.ToggleFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
                 bool isFavorite = await _db.IsFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
                 
+                // Обновляем кнопку
                 button.Content = isFavorite ? "★" : "☆";
                 button.Foreground = isFavorite 
                     ? new SolidColorBrush(Color.Parse("#FFB800")) 
                     : new SolidColorBrush(Color.Parse("#6C757D"));
                 
+                // Обновляем статус в списке
                 doc.IsFavorite = isFavorite;
-                
-                // Обновляем в списке
                 var existingDoc = _currentDocuments.FirstOrDefault(d => d.Id == doc.Id && d.TableName == doc.TableName);
                 if (existingDoc != null)
                 {
                     existingDoc.IsFavorite = isFavorite;
                 }
                 
-                NotificationsControl.ShowSuccess("Избранное", isFavorite ? "Добавлено" : "Удалено");
+                // Обновляем в _allDocuments
+                var allDoc = _allDocuments.FirstOrDefault(d => d.Id == doc.Id && d.TableName == doc.TableName);
+                if (allDoc != null)
+                {
+                    allDoc.IsFavorite = isFavorite;
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] {ex.Message}");
-                NotificationsControl.ShowError("Ошибка", $"{ex.Message}");
+                NotificationsControl.ShowError("Ошибка", ex.Message);
             }
+        }
+        else
+        {
+            NotificationsControl.ShowError("Ошибка", "Не удалось определить документ");
         }
     }
 
@@ -293,14 +305,25 @@ public partial class RecentsWindow : Window
             try
             {
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                var viewerWindow = new DocumentViewerWindow(_currentUserId, fullDoc, this);
-                viewerWindow.Show();
+                
+                if (fullDoc == null)
+                {
+                    NotificationsControl.ShowError("Ошибка", "Документ не найден");
+                    return;
+                }
+                
+                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc, this);
+                viewer.Show();
                 this.Hide();
             }
             catch (Exception ex)
             {
                 NotificationsControl.ShowError("Ошибка", ex.Message);
             }
+        }
+        else
+        {
+            NotificationsControl.ShowError("Ошибка", "Не удалось определить документ");
         }
     }
 }
