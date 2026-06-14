@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using Avalonia.Threading;
 using CourseWork.Data;
 using CourseWork.Controls;
 using CourseWork.Models;
@@ -28,7 +29,7 @@ public partial class FavouritesWindow : Window
         _db = new DatabaseHelper();
         
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
-        leftPanel?.SetUserId(_currentUserId);
+        leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
         
         // Подписка на кнопки фильтров
         btn_filter_all.Click += (s, e) => SelectFilter("Все");
@@ -41,7 +42,6 @@ public partial class FavouritesWindow : Window
         btn_filter_forensic.Click += (s, e) => SelectFilter("Судебно-медицинская экспертиза");
         btn_filter_resolution.Click += (s, e) => SelectFilter("Постановление");
         
-        // Скрываем ненужные кнопки по роли
         ConfigureFiltersByRole();
         
         btn_goToRecents.Click += Btn_goToRecents_Click;
@@ -53,41 +53,23 @@ public partial class FavouritesWindow : Window
     {
         var role = App.CurrentUserRole;
         
-        // Сначала показываем все кнопки
-        btn_filter_all.IsVisible = true;
-        btn_filter_appeals.IsVisible = true;
-        btn_filter_statements.IsVisible = true;
-        btn_filter_protocols.IsVisible = true;
-        btn_filter_explanations.IsVisible = true;
-        btn_filter_reports.IsVisible = true;
-        btn_filter_medical_cert.IsVisible = true;
-        btn_filter_forensic.IsVisible = true;
-        btn_filter_resolution.IsVisible = true;
+        // Скрываем все кнопки фильтров по умолчанию
+        btn_filter_all.IsVisible = false;
+        btn_filter_appeals.IsVisible = false;
+        btn_filter_statements.IsVisible = false;
+        btn_filter_protocols.IsVisible = false;
+        btn_filter_explanations.IsVisible = false;
+        btn_filter_reports.IsVisible = false;
+        btn_filter_medical_cert.IsVisible = false;
+        btn_filter_forensic.IsVisible = false;
+        btn_filter_resolution.IsVisible = false;
         
         switch (role)
         {
-            case UserRole.MedicalExpert:
-                btn_filter_appeals.IsVisible = false;
-                btn_filter_statements.IsVisible = false;
-                btn_filter_protocols.IsVisible = false;
-                btn_filter_explanations.IsVisible = false;
-                btn_filter_forensic.IsVisible = false;
-                btn_filter_resolution.IsVisible = false;
-                break;
-                
-            case UserRole.ForensicExpert:
-                btn_filter_all.IsVisible = false;
-                btn_filter_appeals.IsVisible = false;
-                btn_filter_statements.IsVisible = false;
-                btn_filter_protocols.IsVisible = false;
-                btn_filter_explanations.IsVisible = false;
-                btn_filter_reports.IsVisible = false;
-                btn_filter_medical_cert.IsVisible = false;
-                btn_filter_resolution.IsVisible = false;
-                btn_filter_forensic.IsVisible = true;
-                break;
-                
-            case UserRole.Judge:
+            case UserRole.PoliceOfficer:
+            case UserRole.AdminInspector:
+            case UserRole.ChiefOfPolice:
+                // Полицейский, инспектор, начальник — видят все типы
                 btn_filter_all.IsVisible = true;
                 btn_filter_appeals.IsVisible = true;
                 btn_filter_statements.IsVisible = true;
@@ -99,11 +81,30 @@ public partial class FavouritesWindow : Window
                 btn_filter_resolution.IsVisible = true;
                 break;
                 
-            case UserRole.PoliceOfficer:
-            case UserRole.ChiefOfPolice:
-            case UserRole.AdminInspector:
-            default:
-                // Все кнопки видны
+            case UserRole.MedicalExpert:
+                // Врач — только направления и акты
+                btn_filter_all.IsVisible = true;
+                btn_filter_reports.IsVisible = true;        // Направление на мед. освид.
+                btn_filter_medical_cert.IsVisible = true;   // Акт мед. освид.
+                break;
+                
+            case UserRole.Judge:
+                // Судья — все типы
+                btn_filter_all.IsVisible = true;
+                btn_filter_appeals.IsVisible = true;
+                btn_filter_statements.IsVisible = true;
+                btn_filter_protocols.IsVisible = true;
+                btn_filter_explanations.IsVisible = true;
+                btn_filter_reports.IsVisible = true;
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = true;
+                break;
+                
+            case UserRole.ForensicExpert:
+                // Судмедэксперт — только экспертизы
+                btn_filter_all.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
                 break;
         }
     }
@@ -166,6 +167,7 @@ public partial class FavouritesWindow : Window
             
             if (rawFavorites.Count == 0)
             {
+                _allFavorites.Clear();
                 documentsContainer.ItemsSource = null;
                 emptyStateBorder.IsVisible = true;
                 return;
@@ -196,16 +198,17 @@ public partial class FavouritesWindow : Window
     {
         var filtered = _allFavorites.AsEnumerable();
         
-        // Фильтр по типу
         if (_selectedFilterType != "Все")
         {
             filtered = filtered.Where(d => d.DocumentType == _selectedFilterType);
         }
         
-        documentsContainer.ItemsSource = filtered.ToList();
-        emptyStateBorder.IsVisible = filtered.Count() == 0;
+        var filteredList = filtered.ToList();
+        documentsContainer.ItemsSource = filteredList;
+        emptyStateBorder.IsVisible = filteredList.Count == 0;
         
-        SubscribeToButtons();
+        // Даём время на отрисовку
+        Dispatcher.UIThread.Post(() => SubscribeToButtons(), DispatcherPriority.Render);
     }
 
     private string GetTableName(string documentType)
@@ -227,58 +230,111 @@ public partial class FavouritesWindow : Window
 
     private void SubscribeToButtons()
     {
-        var buttons = documentsContainer.GetVisualDescendants()
-            .OfType<Button>()
-            .ToList();
-            
-        foreach (var button in buttons)
+        try
         {
-            if (button.Name == "FavoriteButton")
+            var allButtons = this.GetVisualDescendants()
+                .OfType<Button>()
+                .ToList();
+                
+            foreach (var button in allButtons)
             {
-                button.Click -= OnRemoveFromFavorites;
-                button.Click += OnRemoveFromFavorites;
-                button.Content = "★";
-                button.Foreground = new SolidColorBrush(Color.Parse("#FFB800"));
+                if (button.Name == "FavoriteButton")
+                {
+                    button.Click -= OnRemoveFromFavorites;
+                    button.Click += OnRemoveFromFavorites;
+                    
+                    var doc = button.DataContext as MyDocument;
+                    if (doc != null)
+                    {
+                        button.Tag = doc;
+                    }
+                    
+                    button.Content = "★";
+                    button.Foreground = new SolidColorBrush(Color.Parse("#FFB800"));
+                }
+                else if (button.Name == "OpenButton")
+                {
+                    button.Click -= OnOpenClick;
+                    button.Click += OnOpenClick;
+                    
+                    var doc = button.DataContext as MyDocument;
+                    if (doc != null)
+                    {
+                        button.Tag = doc;
+                    }
+                }
             }
-            else if (button.Name == "OpenButton")
-            {
-                button.Click -= OnOpenClick;
-                button.Click += OnOpenClick;
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] SubscribeToButtons: {ex.Message}");
         }
     }
 
     private async void OnRemoveFromFavorites(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Tag is MyDocument doc)
+        if (sender is Button button)
         {
-            try
+            // Пробуем взять Tag, если нет - из DataContext
+            var doc = button.Tag as MyDocument ?? button.DataContext as MyDocument;
+            
+            if (doc != null)
             {
-                await _db.RemoveFromFavoritesAsync(_currentUserId, doc.TableName, doc.Id);
-                await LoadFavoritesAsync();
+                try
+                {
+                    await _db.RemoveFromFavoritesAsync(_currentUserId, doc.TableName, doc.Id);
+                    
+                    // Удаляем из локального списка
+                    _allFavorites.RemoveAll(d => d.Id == doc.Id && d.TableName == doc.TableName);
+                    
+                    // Обновляем UI
+                    ApplyFilters();
+                    
+                    NotificationsControl.ShowSuccess("Успех", "Документ удалён из избранного");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ERROR] RemoveFromFavorites: {ex.Message}");
+                    NotificationsControl.ShowError("Ошибка", $"Не удалось удалить из избранного: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"[ERROR] RemoveFromFavorites: {ex.Message}");
-                NotificationsControl.ShowError("Ошибка", $"Не удалось удалить из избранного: {ex.Message}");
+                NotificationsControl.ShowError("Ошибка", "Не удалось определить документ");
             }
         }
     }
 
     private async void OnOpenClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Tag is MyDocument doc)
+        if (sender is Button button)
         {
-            try
+            var doc = button.Tag as MyDocument ?? button.DataContext as MyDocument;
+            
+            if (doc != null)
             {
-                var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                var viewer = new DocumentViewerWindow(_currentUserId, fullDoc, this);
-                viewer.Show();
-                this.Hide();
+                try
+                {
+                    var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
+                    
+                    if (fullDoc == null)
+                    {
+                        NotificationsControl.ShowError("Ошибка", "Документ не найден");
+                        return;
+                    }
+                    
+                    var viewer = new DocumentViewerWindow(_currentUserId, fullDoc, this);
+                    viewer.Show();
+                    this.Hide();
+                }
+                catch (Exception ex)
+                {
+                    NotificationsControl.ShowError("Ошибка", ex.Message);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                NotificationsControl.ShowError("Ошибка", ex.Message);
+                NotificationsControl.ShowError("Ошибка", "Не удалось определить документ");
             }
         }
     }

@@ -1,0 +1,308 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CourseWork.Views.NewCitizen"
+        Title="Создание гражданина"
+        WindowState="Maximized"
+        Icon="/Assets/flag.png"
+        xmlns:controls="using:CourseWork.Controls"
+        Background="#F5F7FA">
+
+    <Grid RowDefinitions="*, Auto" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                            Grid.Column="0" 
+                            Grid.Row="0" 
+                            Grid.RowSpan="2"/>
+
+        <ScrollViewer Grid.Column="1" Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <Border Background="#F8F9FA" Padding="40">
+                
+                <StackPanel Spacing="32" MaxWidth="700" HorizontalAlignment="Left">
+                    
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Создание гражданина" 
+                                   FontSize="32" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#1E2A3A"/>
+                        <TextBlock Text="Заполните форму для добавления нового гражданина" 
+                                   FontSize="14" 
+                                   Foreground="#6C757D"/>
+                    </StackPanel>
+
+                    <!-- ФИО (ширина 300) -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="ФИО *" FontSize="14" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                        <Grid ColumnDefinitions="300, 300, 300" ColumnSpacing="12">
+                            <TextBox x:Name="txt_last_name" 
+                                     Height="44" 
+                                     Width="300"
+                                     Watermark="Фамилия"
+                                     FontSize="14"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"/>
+                            <TextBox x:Name="txt_first_name" 
+                                     Grid.Column="1"
+                                     Height="44" 
+                                     Width="300"
+                                     Watermark="Имя"
+                                     FontSize="14"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"/>
+                            <TextBox x:Name="txt_patronymic" 
+                                     Grid.Column="2"
+                                     Height="44" 
+                                     Width="300"
+                                     Watermark="Отчество"
+                                     FontSize="14"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Дата рождения -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Дата рождения *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <DatePicker x:Name="dp_birthday" 
+                                    Height="44"
+                                    FontSize="14"
+                                    CornerRadius="8"
+                                    Width="250"
+                                    HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <!-- Город рождения -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Город рождения *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_birth_city" 
+                                 Height="44" 
+                                 Watermark="Например: Москва"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Место работы -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Место работы" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_work_place" 
+                                 Height="44" 
+                                 Watermark="Наименование организации"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Должность -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Должность" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_post" 
+                                 Height="44" 
+                                 Watermark="Должность"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Адрес регистрации -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Адрес регистрации *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_address" 
+                                 Height="44" 
+                                 Watermark="Полный адрес регистрации"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Паспорт -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Паспортные данные *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_passport" 
+                                 Height="44" 
+                                 Watermark="Серия и номер паспорта"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Телефон -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Телефон" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_phone" 
+                                 Height="44" 
+                                 Watermark="+7 999 123-45-67"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Судимость -->
+                    <StackPanel Spacing="8">
+                        <CheckBox x:Name="chk_criminal_record" 
+                                  Content="Наличие судимости"
+                                  FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Количество судимостей -->
+                    <StackPanel Spacing="8" x:Name="panel_count_record" IsVisible="False">
+                        <TextBlock Text="Количество судимостей" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_count_record" 
+                                 Height="44" 
+                                 Watermark="Введите количество"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"
+                                 Width="200"
+                                 HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                    <!-- Семейный статус -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Семейное положение" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <ComboBox x:Name="cmb_family_status" 
+                                  Height="44"
+                                  FontSize="14"
+                                  CornerRadius="8"
+                                  Width="250"
+                                  HorizontalAlignment="Left"
+                                  SelectedIndex="0">
+                            <ComboBoxItem Content="Не указано"/>
+                            <ComboBoxItem Content="Холост/Не замужем"/>
+                            <ComboBoxItem Content="Женат/Замужем"/>
+                            <ComboBoxItem Content="Разведен(а)"/>
+                            <ComboBoxItem Content="Вдовец/Вдова"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Образование -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Образование" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <ComboBox x:Name="cmb_education" 
+                                  Height="44"
+                                  FontSize="14"
+                                  CornerRadius="8"
+                                  Width="250"
+                                  HorizontalAlignment="Left"
+                                  SelectedIndex="0">
+                            <ComboBoxItem Content="Не указано"/>
+                            <ComboBoxItem Content="Начальное"/>
+                            <ComboBoxItem Content="Среднее"/>
+                            <ComboBoxItem Content="Среднее специальное"/>
+                            <ComboBoxItem Content="Неоконченное высшее"/>
+                            <ComboBoxItem Content="Высшее"/>
+                            <ComboBoxItem Content="Ученая степень"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Гражданство (чекбоксы + текстовое поле) -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Гражданство" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        
+                        <CheckBox x:Name="chk_russian_citizenship" 
+                                  Content="Российское гражданство"
+                                  FontSize="14"
+                                  IsChecked="True"/>
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <CheckBox x:Name="chk_other_citizenship" 
+                                      Content="Другое гражданство"
+                                      FontSize="14"/>
+                            <TextBox x:Name="txt_other_citizenship" 
+                                     Height="40" 
+                                     Width="200"
+                                     Watermark="Укажите страну"
+                                     FontSize="14"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"
+                                     IsEnabled="False"
+                                     IsVisible="False"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Кнопки -->
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
+                                Spacing="16"
+                                Margin="0,16,0,0">
+                        
+                        <Button Content="Отмена" 
+                                Width="120" 
+                                Height="44" 
+                                Background="#6C757D" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                x:Name="btn_cancel"/>
+                        
+                        <Button Content="Сохранить как черновик" 
+                                Width="195" 
+                                Height="44" 
+                                Background="#6C757D" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                x:Name="btn_save_draft"/>
+                        
+                        <Button Content="Создать" 
+                                Width="120" 
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                Height="44" 
+                                Background="#0F4B5E" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                x:Name="btn_create"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                                       Grid.Column="0" 
+                                       Grid.ColumnSpan="2"
+                                       Grid.Row="1"      
+                                       VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

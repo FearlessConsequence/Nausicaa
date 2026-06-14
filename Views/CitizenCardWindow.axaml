@@ -4,6 +4,7 @@
         x:Class="CourseWork.Views.CitizenCardWindow"
         Title="Карточка гражданина"
         Width="850" 
+        Icon="/Assets/flag.png"
         Height="900"
         WindowStartupLocation="CenterOwner"
         Background="#F5F7FA">

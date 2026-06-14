@@ -102,10 +102,16 @@ public partial class NewMedicalCertificate : Window
 
             NotificationsControl.ShowSuccess("Успех", "Акт медицинского освидетельствования успешно создан!");
             
-            // ✅ Возврат в предыдущее окно
-            if (_previousWindow != null)
+            try
             {
-                _previousWindow.Show();
+                if (_previousWindow != null)
+                {
+                    _previousWindow.Show();
+                }
+            }
+            catch
+            {
+                new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
             }
             this.Close();
         }

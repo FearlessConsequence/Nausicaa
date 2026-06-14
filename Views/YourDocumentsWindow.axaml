@@ -4,6 +4,7 @@
         Title="Мои документы"
         WindowState="Maximized"
         xmlns:controls="using:CourseWork.Controls"
+        Icon="/Assets/flag.png"
         xmlns:models="using:CourseWork.Models"
         Background="#F5F7FA">
 

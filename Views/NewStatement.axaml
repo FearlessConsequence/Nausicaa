@@ -4,6 +4,7 @@
         Title="Создание заявления"
         xmlns:controls="using:CourseWork.Controls"
         WindowState="Maximized"
+        Icon="/Assets/flag.png"
         Background="#F5F7FA">
     
     <Window.Styles>

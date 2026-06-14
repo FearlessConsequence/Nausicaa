@@ -162,7 +162,7 @@ public partial class NewExaminationReport : Window
             // ✅ Возврат в предыдущее окно
             if (_previousWindow != null)
             {
-                _previousWindow.Show();
+                new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
             }
             this.Close();
         }

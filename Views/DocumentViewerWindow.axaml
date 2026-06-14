@@ -3,6 +3,7 @@
         x:Class="CourseWork.Views.DocumentViewerWindow"
         Title="Просмотр документа"
         WindowState="Maximized"
+        Icon="/Assets/flag.png"
         xmlns:controls="using:CourseWork.Controls"
         Background="#F5F7FA">
 
@@ -34,7 +35,7 @@
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Гражданин:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
                                 <TextBlock Grid.Row="1" Grid.Column="1" x:Name="txt_citizenName" Foreground="#1E2A3A"/>
                                 
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Дело №:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" x:Name="txbl_dealNumber" Text="Дело №:" FontWeight="SemiBold" Foreground="#0F4B5E"/>
                                 <TextBlock Grid.Row="2" Grid.Column="1" x:Name="txt_dealNumber" Foreground="#1E2A3A"/>
                                 
                                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Статья:" FontWeight="SemiBold" Foreground="#0F4B5E"/>

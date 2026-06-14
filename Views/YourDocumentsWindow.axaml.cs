@@ -9,34 +9,58 @@ using Avalonia.Media;
 using CourseWork.Controls;
 using CourseWork.Data;
 using CourseWork.Models;
+using Avalonia.Threading;
 
 namespace CourseWork.Views;
 
 public partial class YourDocumentsWindow : Window
 {
-    private readonly DatabaseHelper? _db;
+    private readonly DatabaseHelper _db;
     private readonly int _currentUserId;
     private readonly Window? _previousWindow;
     private List<MyDocument> _allDocuments = new();
-    private List<MyDocument> _currentDocuments = new();
+    private List<MyDocument> _filteredDocuments = new();
     
     private string _selectedFilterType = "Все";
-    private CitizenSearchParams? _citizenSearchParams;
 
-    public YourDocumentsWindow(Window? previousWindow, int currentUserId, string searchValue = "", 
-    DateTime? date = null, CitizenSearchParams? citizenParams = null, string documentType = "")
+    public YourDocumentsWindow(Window? previousWindow, int currentUserId, 
+        string searchNumber = "", DateTime? date = null, 
+        CitizenSearchParams? citizenParams = null, string documentType = "")
     {
         InitializeComponent();
         _currentUserId = currentUserId;
-        _citizenSearchParams = citizenParams;
         _previousWindow = previousWindow;
-        
+        _db = new DatabaseHelper();
+
         var leftPanel = this.FindControl<LeftPanel>("LeftPanelControl");
         leftPanel?.SetUserId(App.CurrentUserId, App.CurrentUserRole);
+
+        SetupFilterButtons();
+        ConfigureByRole();
         
-        _db = new DatabaseHelper();
+        if (!string.IsNullOrWhiteSpace(searchNumber))
+            txt_document_number.Text = searchNumber;
         
-        // Настройка кнопок фильтрации
+        if (date.HasValue)
+        {
+            dp_date_from.SelectedDate = date.Value;
+            dp_date_to.SelectedDate = date.Value;
+        }
+        
+        if (!string.IsNullOrWhiteSpace(documentType) && documentType != "Все" && documentType != "Любой")
+            SelectFilter(documentType);
+        
+        if (citizenParams != null && !string.IsNullOrWhiteSpace(citizenParams.FullName))
+            txt_citizen.Text = citizenParams.FullName;
+        
+        btn_search.Click += OnSearchClick;
+        btn_select_citizen.Click += OnSelectCitizenClick;
+        
+        // this.Opened += async (s, e) => await LoadDocumentsAsync();
+    }
+
+    private void SetupFilterButtons()
+    {
         btn_filter_all.Click += (s, e) => SelectFilter("Все");
         btn_filter_appeals.Click += (s, e) => SelectFilter("Обращение");
         btn_filter_statements.Click += (s, e) => SelectFilter("Заявление");
@@ -46,110 +70,15 @@ public partial class YourDocumentsWindow : Window
         btn_filter_medical_cert.Click += (s, e) => SelectFilter("Акт медицинского освидетельствования");
         btn_filter_forensic.Click += (s, e) => SelectFilter("Судебно-медицинская экспертиза");
         btn_filter_resolution.Click += (s, e) => SelectFilter("Постановление");
-        
-        btn_search.Click += OnSearchClick;
-        btn_select_citizen.Click += Btn_select_citizen_Click;
-        
-        ConfigureFiltersByRole();
-        
-        // Заполняем поле номера документа
-        if (!string.IsNullOrWhiteSpace(searchValue))
-        {
-            txt_document_number.Text = searchValue;
-        }
-        
-        // ✅ ПРИМЕНЯЕМ ТИП ДОКУМЕНТА ДЛЯ ВСЕХ РОЛЕЙ
-        if (!string.IsNullOrWhiteSpace(documentType) && documentType != "Все" && documentType != "Любой")
-        {
-            SelectFilter(documentType);
-        }
-        
-        // Для судьи - применяем тип документа из ComboBox (дублируем на всякий случай)
-        if (App.CurrentUserRole == UserRole.Judge && !string.IsNullOrWhiteSpace(documentType) && documentType != "Все")
-        {
-            SelectFilter(documentType);
-        }
-        
-        // Для врача - применяем тип документа
-        if (App.CurrentUserRole == UserRole.MedicalExpert && !string.IsNullOrWhiteSpace(documentType) && documentType != "Все")
-        {
-            SelectFilter(documentType);
-        }
-        
-        if (date.HasValue)
-        {
-            dp_date_from.SelectedDate = date.Value;
-            dp_date_to.SelectedDate = date.Value;
-        }
-        
-        if (_citizenSearchParams != null)
-        {
-            string citizenName = _citizenSearchParams.FullName ?? _citizenSearchParams.LastName ?? "";
-            if (!string.IsNullOrWhiteSpace(citizenName))
-            {
-                txt_citizen.Text = citizenName;
-            }
-        }
-        
-        this.Opened += async (s, e) => 
-        {
-            await LoadDocumentsAsync();
-        };
     }
-    
-    private void ConfigureFiltersByRole()
-    {
-        var role = App.CurrentUserRole;
-        
-        // Скрываем дополнительные кнопки по умолчанию
-        btn_filter_medical_cert.IsVisible = false;
-        btn_filter_forensic.IsVisible = false;
-        btn_filter_resolution.IsVisible = false;
-        
-        // Скрываем панель выбора гражданина
-        SelectCitizenPanel.IsVisible = false;
-        
-        // По умолчанию фильтр по типу виден
-        FilterTypeBorder.IsVisible = true;
-        
-        switch (role)
-        {
-            case UserRole.PoliceOfficer:
-                btn_filter_medical_cert.IsVisible = true;
-                btn_filter_forensic.IsVisible = true;
-                btn_filter_resolution.IsVisible = true;
-                SelectCitizenPanel.IsVisible = true;
-                break;
-                
-            case UserRole.MedicalExpert:
-                btn_filter_appeals.IsVisible = false;
-                btn_filter_statements.IsVisible = false;
-                btn_filter_protocols.IsVisible = false;
-                btn_filter_explanations.IsVisible = false;
-                btn_filter_medical_cert.IsVisible = true;
-                SelectCitizenPanel.IsVisible = true;
-                break;
-                
-            case UserRole.Judge:
-                btn_filter_medical_cert.IsVisible = true;
-                btn_filter_forensic.IsVisible = true;
-                btn_filter_resolution.IsVisible = true;
-                SelectCitizenPanel.IsVisible = true;
-                break;
-                
-            case UserRole.ForensicExpert:
-                FilterTypeBorder.IsVisible = false;
-                SelectCitizenPanel.IsVisible = true;
-                break;
-        }
-    }
-    
+
     private void SelectFilter(string filterType)
     {
         _selectedFilterType = filterType;
         UpdateFilterButtonsUI(filterType);
+        ApplyFilters();
     }
-    
+
     private void UpdateFilterButtonsUI(string filterType)
     {
         var activeColor = new SolidColorBrush(Color.Parse("#0F4B5E"));
@@ -186,197 +115,339 @@ public partial class YourDocumentsWindow : Window
             }
         }
     }
-    
+
+    private void ConfigureByRole()
+    {
+        var role = App.CurrentUserRole;
+        
+        btn_filter_medical_cert.IsVisible = false;
+        btn_filter_forensic.IsVisible = false;
+        btn_filter_resolution.IsVisible = false;
+        SelectCitizenPanel.IsVisible = false;
+        
+        switch (role)
+        {
+            case UserRole.PoliceOfficer:
+            case UserRole.ChiefOfPolice:
+            case UserRole.AdminInspector:
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = true;
+                SelectCitizenPanel.IsVisible = true;
+                break;
+                
+            case UserRole.MedicalExpert:
+                btn_filter_appeals.IsVisible = false;
+                btn_filter_statements.IsVisible = false;
+                btn_filter_protocols.IsVisible = false;
+                btn_filter_explanations.IsVisible = false;
+                btn_filter_medical_cert.IsVisible = true;
+                SelectCitizenPanel.IsVisible = true;
+                break;
+                
+            case UserRole.Judge:
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = true;
+                SelectCitizenPanel.IsVisible = true;
+                break;
+                
+            case UserRole.ForensicExpert:
+                FilterTypeBorder.IsVisible = false;
+                SelectCitizenPanel.IsVisible = true;
+                break;
+        }
+    }
+
     private async Task LoadDocumentsAsync()
     {
         try
         {
-            if (_db == null) return;
+
+            if (App.CurrentUserRole != UserRole.ChiefOfPolice)
+            {
+                _allDocuments = await _db.GetUserDocumentsAsync(_currentUserId, App.CurrentUserRole);
+            }
+
+            else
+            {
+                _allDocuments = await _db.GetChiefDocumentsAsync(_currentUserId);
+            }
             
-            _allDocuments = await _db.GetUserDocumentsAsync(App.CurrentUserId);
             
-            NotificationsControl.ShowInfo("Отладка", $"Загружено документов: {_allDocuments.Count}");
+            var grouped = _allDocuments.GroupBy(d => d.DocumentType)
+                .Select(g => $"{g.Key}: {g.Count()}");
+            for (int i = 0; i < _allDocuments.Count; i++)
+            {
+                var doc = _allDocuments[i];
+                doc.IsFavorite = await _db.IsFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
+            }
             
-            // Показываем все документы
-            documentsContainer.ItemsSource = _allDocuments;
-            emptyStateBorder.IsVisible = _allDocuments.Count == 0;
+            _filteredDocuments = _allDocuments.ToList();
+            documentsContainer.ItemsSource = _filteredDocuments;
+            UpdateEmptyState();
+            emptyStateBorder.IsVisible = _filteredDocuments.Count == 0;
             
-            await Task.Delay(100);
             SubscribeToButtons();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] LoadDocumentsAsync: {ex.Message}");
-            NotificationsControl.ShowError("Ошибка загрузки", ex.Message);
+            NotificationsControl.ShowError("ОШИБКА", $"LoadDocumentsAsync: {ex.Message}");
         }
     }
-    
-    private async void OnSearchClick(object? sender, RoutedEventArgs e)
+
+    private void ApplyFilters()
     {
-        await PerformSearch();
-    }
-    
-    private async Task PerformSearch()
-    {
-        // Получаем значения полей
-        string docNumber = txt_document_number.Text?.Trim() ?? "";
-        string citizenName = txt_citizen.Text?.Trim() ?? "";
-        
-        // Если ничего не введено - показываем все документы
-        if (string.IsNullOrWhiteSpace(docNumber) && string.IsNullOrWhiteSpace(citizenName))
+        if (_allDocuments.Count == 0)
         {
-            documentsContainer.ItemsSource = _allDocuments;
-            emptyStateBorder.IsVisible = _allDocuments.Count == 0;
-            NotificationsControl.ShowInfo("Поиск", "Введите номер документа для поиска");
+            documentsContainer.ItemsSource = null;
+            emptyStateBorder.IsVisible = true;
             return;
         }
         
-        var filtered = _allDocuments;
+        var filtered = _allDocuments.AsEnumerable();
         
-        // Фильтр по типу
         if (_selectedFilterType != "Все")
         {
-            filtered = filtered.Where(d => d.DocumentType == _selectedFilterType).ToList();
+            filtered = filtered.Where(d => d.DocumentType == _selectedFilterType);
         }
         
-        // Фильтр по дате
         if (dp_date_from.SelectedDate.HasValue)
         {
             var dateFrom = dp_date_from.SelectedDate.Value.Date;
-            filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom).ToList();
+            filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom);
         }
         
         if (dp_date_to.SelectedDate.HasValue)
         {
             var dateTo = dp_date_to.SelectedDate.Value.Date;
-            filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo).ToList();
+            filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo);
         }
         
-        // Поиск по номеру документа
-        if (!string.IsNullOrWhiteSpace(docNumber))
+        string searchNumber = txt_document_number.Text?.Trim() ?? "";
+        if (!string.IsNullOrWhiteSpace(searchNumber))
         {
-            int beforeCount = filtered.Count();
-            filtered = filtered.Where(d => 
-                (d.Number?.ToString().Contains(docNumber) ?? false)
-            ).ToList();
-            NotificationsControl.ShowInfo("Отладка", $"Поиск по номеру '{docNumber}': было {beforeCount}, стало {filtered.Count()}");
+            filtered = filtered.Where(d => (d.Number?.ToString()?.Contains(searchNumber) ?? false));
         }
         
-        // Поиск по гражданину
+        string citizenName = txt_citizen.Text?.Trim() ?? "";
         if (!string.IsNullOrWhiteSpace(citizenName))
         {
-            filtered = filtered.Where(d => 
-                d.CitizenFullName?.ToLower().Contains(citizenName.ToLower()) == true
-            ).ToList();
+            filtered = filtered.Where(d => d.CitizenFullName?.ToLower().Contains(citizenName.ToLower()) == true);
         }
         
-        _currentDocuments = filtered.ToList();
-        documentsContainer.ItemsSource = _currentDocuments;
-        emptyStateBorder.IsVisible = _currentDocuments.Count == 0;
+        _filteredDocuments = filtered.ToList();
+        documentsContainer.ItemsSource = _filteredDocuments;
+        emptyStateBorder.IsVisible = _filteredDocuments.Count == 0;
         
-        if (_currentDocuments.Count == 0 && !string.IsNullOrWhiteSpace(docNumber))
-        {
-            NotificationsControl.ShowInfo("Результаты поиска", 
-                $"Документы с номером '{docNumber}' не найдены");
-        }
-        
-        await Task.Delay(100);
+        UpdateEmptyState();
         SubscribeToButtons();
     }
-    
+
+    private async void OnSearchClick(object? sender, RoutedEventArgs e)
+    {
+        // Если документы ещё не загружены — загружаем
+        if (_allDocuments.Count == 0)
+        {
+            await LoadDocumentsAsync();
+        }
+        
+        // ✅ Проверка на пустой поиск
+        if (string.IsNullOrWhiteSpace(txt_document_number.Text) && 
+            string.IsNullOrWhiteSpace(txt_citizen.Text))
+        {
+            NotificationsControl.ShowWarning("Внимание", "Введите номер документа или выберите гражданина для поиска");
+            return;
+        }
+        
+        if (string.IsNullOrWhiteSpace(txt_document_number.Text) && 
+            string.IsNullOrWhiteSpace(txt_citizen.Text))
+        {
+            _filteredDocuments = _allDocuments.ToList();
+            documentsContainer.ItemsSource = _filteredDocuments;
+            emptyStateBorder.IsVisible = _filteredDocuments.Count == 0;
+        }
+        else
+        {
+            ApplyFilters();
+        }
+        
+        SubscribeToButtons();
+    }
+
     private void SubscribeToButtons()
     {
-        var buttons = documentsContainer.GetVisualDescendants()
-            .OfType<Button>()
-            .ToList();
-            
-        foreach (var button in buttons)
+        Dispatcher.UIThread.Post(() =>
         {
-            if (button.Name == "FavoriteButton")
+            try
             {
-                button.Click -= OnFavoriteClick;
-                button.Click += OnFavoriteClick;
+                var allButtons = this.GetVisualDescendants()
+                    .OfType<Button>()
+                    .ToList();
                 
-                if (button.DataContext is MyDocument doc)
+                foreach (var button in allButtons)
                 {
-                    button.Content = doc.IsFavorite ? "★" : "☆";
-                    button.Foreground = doc.IsFavorite 
-                        ? new SolidColorBrush(Color.Parse("#FFB800")) 
-                        : new SolidColorBrush(Color.Parse("#CCCCCC"));
+                    if (button.Name == "FavoriteButton")
+                    {
+                        button.Click -= OnFavoriteClick;
+                        button.Click += OnFavoriteClick;
+                        
+                        var doc = button.DataContext as MyDocument;
+                        if (doc != null)
+                        {
+                            button.Tag = doc;
+                            // ✅ Устанавливаем правильное отображение звезды
+                            button.Content = doc.IsFavorite ? "★" : "☆";
+                            button.Foreground = doc.IsFavorite 
+                                ? new SolidColorBrush(Color.Parse("#FFB800")) 
+                                : new SolidColorBrush(Color.Parse("#CCCCCC"));
+                        }
+                    }
+                    else if (button.Name == "OpenButton")
+                    {
+                        button.Click -= OnOpenClick;
+                        button.Click += OnOpenClick;
+                        
+                        var doc = button.DataContext as MyDocument;
+                        if (doc != null)
+                        {
+                            button.Tag = doc;
+                        }
+                    }
                 }
             }
-            else if (button.Name == "OpenButton")
+            catch (Exception ex)
             {
-                button.Click -= OnOpenClick;
-                button.Click += OnOpenClick;
+                Console.WriteLine($"[ERROR] SubscribeToButtons: {ex.Message}");
             }
-        }
+        });
     }
-    
+
     private async void OnFavoriteClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Tag is MyDocument doc)
+        if (sender is Button button)
         {
-            try
+            var doc = button.Tag as MyDocument ?? button.DataContext as MyDocument;
+            
+            if (doc != null)
             {
-                if (_db == null) return;
-                await _db.ToggleFavoriteAsync(App.CurrentUserId, doc.TableName, doc.Id);
-                bool isFavorite = await _db.IsFavoriteAsync(App.CurrentUserId, doc.TableName, doc.Id);
-                
-                button.Content = isFavorite ? "★" : "☆";
-                button.Foreground = isFavorite 
-                    ? new SolidColorBrush(Color.Parse("#FFB800")) 
-                    : new SolidColorBrush(Color.Parse("#CCCCCC"));
-                
-                var existingDoc = _currentDocuments.FirstOrDefault(d => d.Id == doc.Id && d.TableName == doc.TableName);
-                if (existingDoc != null)
+                try
                 {
-                    existingDoc.IsFavorite = isFavorite;
+                    await _db.ToggleFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
+                    bool isFavorite = await _db.IsFavoriteAsync(_currentUserId, doc.TableName, doc.Id);
+                    
+                    button.Content = isFavorite ? "★" : "☆";
+                    button.Foreground = isFavorite 
+                        ? new SolidColorBrush(Color.Parse("#FFB800")) 
+                        : new SolidColorBrush(Color.Parse("#CCCCCC"));
+                    
+                    doc.IsFavorite = isFavorite;
+                    
+                    var existingDoc = _filteredDocuments.FirstOrDefault(d => d.Id == doc.Id && d.TableName == doc.TableName);
+                    if (existingDoc != null)
+                    {
+                        existingDoc.IsFavorite = isFavorite;
+                    }
+                    
+                    var allDoc = _allDocuments.FirstOrDefault(d => d.Id == doc.Id && d.TableName == doc.TableName);
+                    if (allDoc != null)
+                    {
+                        allDoc.IsFavorite = isFavorite;
+                    }
+                    if (isFavorite)
+                    {
+                        NotificationsControl.ShowSuccess("Избранное", $"Документ «{doc.DocumentType}» добавлен в избранное");
+                    }
+                    else
+                    {
+                        NotificationsControl.ShowSuccess("Избранное", $"Документ «{doc.DocumentType}» удалён из избранного");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    NotificationsControl.ShowError("Ошибка", ex.Message);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"[ERROR] OnFavoriteClick: {ex.Message}");
-                NotificationsControl.ShowError("Ошибка", ex.Message);
+                NotificationsControl.ShowError("Ошибка", "Не удалось определить документ");
             }
         }
     }
-    
+
     private async void OnOpenClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Tag is MyDocument doc)
+        if (sender is Button button)
         {
-            try
+            var doc = button.Tag as MyDocument ?? button.DataContext as MyDocument;
+            
+            if (doc != null)
             {
-                if (_db == null) return;
-                var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
-                var viewer = new DocumentViewerWindow(App.CurrentUserId, fullDoc, this);
-                viewer.Show();
-                this.Hide();
+                try
+                {
+                    var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
+                    
+                    if (fullDoc == null)
+                    {
+                        NotificationsControl.ShowError("Ошибка", "Документ не найден");
+                        return;
+                    }
+                    
+                    var viewer = new DocumentViewerWindow(_currentUserId, fullDoc, this);
+                    viewer.Show();
+                    this.Hide();
+                }
+                catch (Exception ex)
+                {
+                    NotificationsControl.ShowError("Ошибка", ex.Message);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                NotificationsControl.ShowError("Ошибка", ex.Message);
+                NotificationsControl.ShowError("Ошибка", "Не удалось определить документ");
             }
         }
     }
-    
-    private async void Btn_select_citizen_Click(object? sender, RoutedEventArgs e)
+
+    private async void OnSelectCitizenClick(object? sender, RoutedEventArgs e)
     {
-        var citizensWindow = new SelectCitizenWindow(App.CurrentUserId, this);
+        var citizensWindow = new SelectCitizenWindow(_currentUserId, this);
         citizensWindow.Closed += (s, args) =>
         {
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            Dispatcher.UIThread.Post(() =>
             {
                 var selectedCitizen = citizensWindow.SelectedCitizen;
                 if (selectedCitizen != null)
                 {
                     txt_citizen.Text = selectedCitizen.FullName;
-                    txt_citizen.Tag = selectedCitizen.Id;
+                    ApplyFilters();
                 }
                 Activate();
             });
         };
         citizensWindow.Show();
+    }
+
+    private void UpdateEmptyState()
+    {
+        if (_allDocuments.Count == 0 && string.IsNullOrWhiteSpace(txt_document_number.Text) && string.IsNullOrWhiteSpace(txt_citizen.Text))
+        {
+            // Ничего не загружено и поиск не выполнялся
+            emptyStateText.Text = "Введите номер документа и нажмите 'Найти'";
+            emptyStateBorder.IsVisible = true;
+            documentsContainer.IsVisible = false;
+        }
+        else if (_filteredDocuments.Count == 0)
+        {
+            // Результатов нет
+            emptyStateText.Text = "Документы не найдены";
+            emptyStateBorder.IsVisible = true;
+            documentsContainer.IsVisible = false;
+        }
+        else
+        {
+            emptyStateBorder.IsVisible = false;
+            documentsContainer.IsVisible = true;
+        }
     }
 }

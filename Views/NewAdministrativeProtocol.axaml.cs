@@ -161,11 +161,7 @@ public partial class NewAdministrativeProtocol : Window
             
             NotificationsControl.ShowSuccess("Успех", "Административный протокол успешно создан!");
             
-            // ✅ Возврат в предыдущее окно
-            if (_previousWindow != null)
-            {
-                _previousWindow.Show();
-            }
+            new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
             this.Close();
         }
         catch (Exception ex)

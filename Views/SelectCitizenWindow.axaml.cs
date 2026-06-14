@@ -69,12 +69,6 @@ public partial class SelectCitizenWindow : Window
                 hasError = true;
             }
             
-            if (string.IsNullOrWhiteSpace(patronymic))
-            {
-                txt_patronymic_error.IsVisible = true;
-                hasError = true;
-            }
-            
             if (hasError)
             {
                 return;

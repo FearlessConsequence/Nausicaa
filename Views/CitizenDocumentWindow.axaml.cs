@@ -62,7 +62,11 @@ public partial class CitizenDocumentsWindow : Window
         btn_filter_protocols.Click += (s, e) => SelectFilter("Административный протокол");
         btn_filter_explanations.Click += (s, e) => SelectFilter("Протокол объяснения");
         btn_filter_reports.Click += (s, e) => SelectFilter("Направление на мед. освид.");
+        btn_filter_medical_cert.Click += (s, e) => SelectFilter("Акт медицинского освидетельствования");
+        btn_filter_forensic.Click += (s, e) => SelectFilter("Судебно-медицинская экспертиза");
+        btn_filter_resolution.Click += (s, e) => SelectFilter("Постановление");
         
+        ConfigureFiltersByRole();
         UpdateFilterButtonsUI("Все");
     }
     
@@ -88,11 +92,16 @@ public partial class CitizenDocumentsWindow : Window
             {"Заявление", btn_filter_statements},
             {"Административный протокол", btn_filter_protocols},
             {"Протокол объяснения", btn_filter_explanations},
-            {"Направление на мед. освид.", btn_filter_reports}
+            {"Направление на мед. освид.", btn_filter_reports},
+            {"Акт медицинского освидетельствования", btn_filter_medical_cert},
+            {"Судебно-медицинская экспертиза", btn_filter_forensic},
+            {"Постановление", btn_filter_resolution}
         };
         
         foreach (var btn in buttons)
         {
+            if (!btn.Value.IsVisible) continue;
+            
             if (btn.Key == filterType)
             {
                 btn.Value.Background = activeColor;
@@ -131,10 +140,10 @@ public partial class CitizenDocumentsWindow : Window
     {
         _searchText = txt_search.Text?.Trim() ?? "";
         
-        // ✅ Проверка: текст должен быть обязательно
         if (string.IsNullOrWhiteSpace(_searchText))
         {
-            NotificationsControl.ShowWarning("Введите номер документа", "Для поиска необходимо ввести номер документа в текстовое поле");
+            NotificationsControl.ShowWarning("Введите номер документа", 
+                "Для поиска необходимо ввести номер документа в текстовое поле");
             return;
         }
         
@@ -152,47 +161,43 @@ public partial class CitizenDocumentsWindow : Window
             return;
         }
         
-        var filtered = _allDocuments;
+        var filtered = _allDocuments.AsEnumerable();
         
         // Фильтр по типу
         if (_selectedFilterType != "Все")
         {
-            filtered = filtered.Where(d => d.DocumentType == _selectedFilterType).ToList();
+            filtered = filtered.Where(d => d.DocumentType == _selectedFilterType);
         }
         
         // Фильтр по дате "от"
         if (dp_date_from.SelectedDate.HasValue)
         {
             var dateFrom = dp_date_from.SelectedDate.Value.Date;
-            filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom).ToList();
+            filtered = filtered.Where(d => d.CreatedAt.Date >= dateFrom);
         }
         
         // Фильтр по дате "до"
         if (dp_date_to.SelectedDate.HasValue)
         {
             var dateTo = dp_date_to.SelectedDate.Value.Date;
-            filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo).ToList();
+            filtered = filtered.Where(d => d.CreatedAt.Date <= dateTo);
         }
         
-        // Текстовый поиск
+        // ✅ Текстовый поиск (без ошибки приведения типов)
         if (!string.IsNullOrWhiteSpace(_searchText))
         {
             filtered = filtered.Where(d => 
-                (d.Number?.ToString().Contains(_searchText) ?? false) ||
-                d.Content?.ToLower().Contains(_searchText.ToLower()) == true ||
-                d.DocumentType?.ToLower().Contains(_searchText.ToLower()) == true
-            ).ToList();
+                (d.Number?.ToString()?.Contains(_searchText) ?? false) ||
+                (d.Content?.ToLower().Contains(_searchText.ToLower()) == true) ||
+                (d.DocumentType?.ToLower().Contains(_searchText.ToLower()) == true)
+            );
         }
         
-        _currentDocuments = filtered;
+        _currentDocuments = filtered.ToList();
         documentsContainer.ItemsSource = _currentDocuments;
         txtNoDocuments.IsVisible = _currentDocuments.Count == 0;
         
-        // Переподписываем кнопки после обновления списка
-        Task.Delay(100).ContinueWith(_ => 
-        {
-            Dispatcher.UIThread.InvokeAsync(() => SubscribeToButtons());
-        });
+        SubscribeToButtons();
     }
 
     // Обработчик кнопки "Назад"
@@ -206,16 +211,25 @@ public partial class CitizenDocumentsWindow : Window
     // Подписка на кнопки "Открыть"
     private void SubscribeToButtons()
     {
-        var buttons = documentsContainer.GetVisualDescendants()
-            .OfType<Button>()
-            .Where(b => b.Name == "OpenButton")
-            .ToList();
-        
-        foreach (var button in buttons)
+        Dispatcher.UIThread.Post(() =>
         {
-            button.Click -= OnOpenClick;
-            button.Click += OnOpenClick;
-        }
+            var buttons = documentsContainer.GetVisualDescendants()
+                .OfType<Button>()
+                .Where(b => b.Name == "OpenButton")
+                .ToList();
+            
+            foreach (var button in buttons)
+            {
+                button.Click -= OnOpenClick;
+                button.Click += OnOpenClick;
+                
+                var doc = button.DataContext as MyDocument;
+                if (doc != null)
+                {
+                    button.Tag = doc;
+                }
+            }
+        });
     }
 
     // Открытие документа
@@ -227,18 +241,65 @@ public partial class CitizenDocumentsWindow : Window
             {
                 var fullDoc = await _db.GetFullDocumentAsync(doc.TableName, doc.Id);
                 
-                this.Hide();  // ← сначала прячем текущее окно
+                this.Hide();
                 
                 var viewer = new DocumentViewerWindow(App.CurrentUserId, fullDoc, this);
-                viewer.Show();  // ← открываем просмотр
-                
-                // Не закрываем текущее окно, оно просто скрыто
+                viewer.Show();
             }
             catch (Exception ex)
             {
                 NotificationsControl.ShowError("Ошибка", ex.Message);
-                this.Show();  // ← если ошибка, показываем окно обратно
+                this.Show();
             }
+        }
+    }
+
+    private void ConfigureFiltersByRole()
+    {
+        var role = App.CurrentUserRole;
+        
+        // Скрываем все кнопки фильтров по умолчанию
+        btn_filter_all.IsVisible = false;
+        btn_filter_appeals.IsVisible = false;
+        btn_filter_statements.IsVisible = false;
+        btn_filter_protocols.IsVisible = false;
+        btn_filter_explanations.IsVisible = false;
+        btn_filter_reports.IsVisible = false;
+        btn_filter_medical_cert.IsVisible = false;
+        btn_filter_forensic.IsVisible = false;
+        btn_filter_resolution.IsVisible = false;
+        
+        switch (role)
+        {
+            case UserRole.MedicalExpert:
+                // Врач - Все, Направления, Акты
+                btn_filter_all.IsVisible = true;
+                btn_filter_reports.IsVisible = true;           // Направление на мед. освид.
+                btn_filter_medical_cert.IsVisible = true;      // Акт медицинского освидетельствования
+                break;
+                
+            case UserRole.ForensicExpert:
+                // Судмедэксперт - Все и Экспертиза
+                btn_filter_all.IsVisible = false;
+                btn_filter_forensic.IsVisible = true;          // Судебно-медицинская экспертиза
+                break;
+                
+            case UserRole.PoliceOfficer:
+            case UserRole.Judge:
+            case UserRole.ChiefOfPolice:
+            case UserRole.AdminInspector:
+            default:
+                // Все остальные видят все типы документов
+                btn_filter_all.IsVisible = true;
+                btn_filter_appeals.IsVisible = true;
+                btn_filter_statements.IsVisible = true;
+                btn_filter_protocols.IsVisible = true;
+                btn_filter_explanations.IsVisible = true;
+                btn_filter_reports.IsVisible = true;
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = true;
+                break;
         }
     }
 }

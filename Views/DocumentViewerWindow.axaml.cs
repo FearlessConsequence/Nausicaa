@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CourseWork.Controls;
@@ -44,7 +45,6 @@ public partial class DocumentViewerWindow : Window
         txt_docNumber.Text = $"№ {doc.Number}";
         txt_docDate.Text = doc.CreatedAt.ToString("dd.MM.yyyy HH:mm");
         txt_citizenName.Text = doc.CitizenFullName;
-        txt_dealNumber.Text = doc.DealNumber;
         txt_article.Text = doc.ArticleName;
         txt_officer.Text = doc.OfficerName;
         txt_description.Text = doc.Description;
@@ -52,5 +52,18 @@ public partial class DocumentViewerWindow : Window
         txt_firstWitness.Text = doc.FirstWitnessName;
         txt_secondWitness.Text = doc.SecondWitnessName;
         chk_signature.IsChecked = doc.SignatureForKnowing;
+        
+        // Скрываем строку "Дело №" для документа типа "Дело"
+        if (doc.DocumentType == "Дело")
+        {
+            txt_dealNumber.IsVisible = false;
+            // Также нужно скрыть label "Дело №:"
+            var parentGrid = txt_dealNumber.Parent as Grid;
+            if (parentGrid != null)
+            {
+                var label = parentGrid.Children.OfType<TextBlock>().FirstOrDefault(t => t.Text == "Дело №:");
+                if (label != null) label.IsVisible = false;
+            }
+        }
     }
 }

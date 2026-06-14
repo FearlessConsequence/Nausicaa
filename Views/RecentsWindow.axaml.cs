@@ -53,6 +53,13 @@ public partial class RecentsWindow : Window
     {
         var role = App.CurrentUserRole;
         
+        // Скрываем все кнопки по умолчанию
+        btn_filter_all.IsVisible = false;
+        btn_filter_appeals.IsVisible = false;
+        btn_filter_statements.IsVisible = false;
+        btn_filter_protocols.IsVisible = false;
+        btn_filter_explanations.IsVisible = false;
+        btn_filter_reports.IsVisible = false;
         btn_filter_medical_cert.IsVisible = false;
         btn_filter_forensic.IsVisible = false;
         btn_filter_resolution.IsVisible = false;
@@ -60,26 +67,66 @@ public partial class RecentsWindow : Window
         switch (role)
         {
             case UserRole.PoliceOfficer:
-                btn_filter_medical_cert.IsVisible = true;
-                btn_filter_forensic.IsVisible = true;
-                btn_filter_resolution.IsVisible = true;
+                // Полицейский — все типы
+                btn_filter_all.IsVisible = true;
+                btn_filter_appeals.IsVisible = true;
+                btn_filter_statements.IsVisible = true;
+                btn_filter_protocols.IsVisible = true;
+                btn_filter_explanations.IsVisible = true;
+                btn_filter_reports.IsVisible = true;
+                btn_filter_medical_cert.IsVisible = false;
+                btn_filter_forensic.IsVisible = false;
+                btn_filter_resolution.IsVisible = false;
+                break;
+                
+            case UserRole.AdminInspector:
+                // Инспектор — все типы
+                btn_filter_all.IsVisible = true;
+                btn_filter_appeals.IsVisible = true;
+                btn_filter_statements.IsVisible = true;
+                btn_filter_protocols.IsVisible = true;
+                btn_filter_explanations.IsVisible = true;
+                btn_filter_reports.IsVisible = true;
+                btn_filter_medical_cert.IsVisible = false;
+                btn_filter_forensic.IsVisible = false;
+                btn_filter_resolution.IsVisible = false;
+                break;
+                
+            case UserRole.ChiefOfPolice:
+                // Начальник — все типы
+                btn_filter_all.IsVisible = true;
+                btn_filter_appeals.IsVisible = true;
+                btn_filter_statements.IsVisible = true;
+                btn_filter_protocols.IsVisible = true;
+                btn_filter_explanations.IsVisible = true;
+                btn_filter_reports.IsVisible = true;
+                btn_filter_medical_cert.IsVisible = false;
+                btn_filter_forensic.IsVisible = false;
+                btn_filter_resolution.IsVisible = false;
                 break;
                 
             case UserRole.MedicalExpert:
-                btn_filter_appeals.IsVisible = false;
-                btn_filter_statements.IsVisible = false;
-                btn_filter_protocols.IsVisible = false;
-                btn_filter_explanations.IsVisible = false;
+                // Врач — только направления и акты
+                btn_filter_all.IsVisible = true;
+                btn_filter_reports.IsVisible = true;
                 btn_filter_medical_cert.IsVisible = true;
                 break;
                 
             case UserRole.Judge:
-                btn_filter_medical_cert.IsVisible = true;
-                btn_filter_forensic.IsVisible = true;
+                // Судья — все типы
+                btn_filter_all.IsVisible = false;
+                btn_filter_appeals.IsVisible = false;
+                btn_filter_statements.IsVisible = false;
+                btn_filter_protocols.IsVisible = false;
+                btn_filter_explanations.IsVisible = false;
+                btn_filter_reports.IsVisible = false;
+                btn_filter_medical_cert.IsVisible = false;
+                btn_filter_forensic.IsVisible = false;
                 btn_filter_resolution.IsVisible = true;
                 break;
                 
             case UserRole.ForensicExpert:
+                // Судмедэксперт — только экспертизы
                 btn_filter_all.IsVisible = false;
                 btn_filter_forensic.IsVisible = true;
                 break;
@@ -209,6 +256,7 @@ public partial class RecentsWindow : Window
             "Акт медицинского освидетельствования" => "medical_examination_certificate", // ← правильное имя!
             "Судебно-медицинская экспертиза" => "forensic_medical_examination",
             "Постановление" => "resolution",
+            "Дело" => "deal",
             _ => "unknown"
         };
     }
@@ -285,6 +333,14 @@ public partial class RecentsWindow : Window
                 if (allDoc != null)
                 {
                     allDoc.IsFavorite = isFavorite;
+                }
+                if (isFavorite)
+                {
+                    NotificationsControl.ShowSuccess("Избранное", $"Документ «{doc.DocumentType}» добавлен в избранное");
+                }
+                else
+                {
+                    NotificationsControl.ShowSuccess("Избранное", $"Документ «{doc.DocumentType}» удалён из избранного");
                 }
             }
             catch (Exception ex)

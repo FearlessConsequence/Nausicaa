@@ -1,0 +1,220 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CourseWork.Views.NewDeal"
+        Title="Создание дела"
+        Icon="/Assets/flag.png"
+        WindowState="Maximized"
+        xmlns:controls="using:CourseWork.Controls"
+        Background="#F5F7FA">
+
+    <Grid RowDefinitions="*" ColumnDefinitions="200, *">
+        
+        <controls:LeftPanel x:Name="LeftPanelControl" 
+                            Grid.Column="0" 
+                            Grid.Row="0" 
+                            Grid.RowSpan="2"/>
+
+        <ScrollViewer Grid.Column="1" Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <Border Background="#F8F9FA" Padding="40">
+                
+                <StackPanel Spacing="32" MaxWidth="700" HorizontalAlignment="Left">
+                    
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Создание дела" 
+                                   FontSize="32" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#1E2A3A"/>
+                        <TextBlock Text="Заполните форму для создания нового дела" 
+                                   FontSize="14" 
+                                   Foreground="#6C757D"/>
+                    </StackPanel>
+
+                    <!-- Номер дела -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Номер дела *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_deal_number" 
+                                 Height="44" 
+                                 Watermark="Введите номер дела"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Город/Населенный пункт -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Город/Населенный пункт *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_city" 
+                                 Height="44" 
+                                 Watermark="Например: Москва"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Нарушитель -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Нарушитель *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                            <TextBox x:Name="txt_offender" 
+                                     Height="44" 
+                                     Watermark="Нарушитель не выбран..."
+                                     FontSize="14"
+                                     IsReadOnly="True"
+                                     Background="White"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"
+                                     Grid.Column="0"/>
+                            <Button Content="Выбрать гражданина" 
+                                    Height="44" 
+                                    Background="#0F4B5E" 
+                                    Foreground="White"
+                                    FontSize="13"
+                                    CornerRadius="8"
+                                    Grid.Column="1"
+                                    Padding="20,0"
+                                    x:Name="btn_select_offender"
+                                    VerticalContentAlignment="Center"
+                                    HorizontalContentAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Свидетель 1 -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Свидетель 1" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                            <TextBox x:Name="txt_witness1" 
+                                     Height="44" 
+                                     Watermark="Свидетель не выбран..."
+                                     FontSize="14"
+                                     IsReadOnly="True"
+                                     Background="White"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"
+                                     Grid.Column="0"/>
+                            <Button Content="Выбрать свидетеля" 
+                                    Height="44" 
+                                    Background="#0F4B5E" 
+                                    Foreground="White"
+                                    FontSize="13"
+                                    CornerRadius="8"
+                                    Grid.Column="1"
+                                    Padding="20,0"
+                                    VerticalContentAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    x:Name="btn_select_witness1"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Свидетель 2 -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Свидетель 2" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                            <TextBox x:Name="txt_witness2" 
+                                     Height="44" 
+                                     Watermark="Свидетель не выбран..."
+                                     FontSize="14"
+                                     IsReadOnly="True"
+                                     Background="White"
+                                     BorderBrush="#E9ECEF"
+                                     CornerRadius="8"
+                                     Grid.Column="0"/>
+                            <Button Content="Выбрать свидетеля" 
+                                    Height="44" 
+                                    Background="#0F4B5E" 
+                                    Foreground="White"
+                                    FontSize="13"
+                                    CornerRadius="8"
+                                    Grid.Column="1"
+                                    Padding="20,0"
+                                    VerticalContentAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    x:Name="btn_select_witness2"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Статья -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Статья *" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_article" 
+                                 Height="44" 
+                                 Watermark="Например: 12.8"
+                                 FontSize="14"
+                                 BorderBrush="#E9ECEF"
+                                 CornerRadius="8"/>
+                    </StackPanel>
+
+                   <!-- Ответственность -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Ответственность" 
+                                FontSize="14" 
+                                FontWeight="SemiBold" 
+                                Foreground="#0F4B5E"/>
+                        <TextBox x:Name="txt_responsibility" 
+                                Height="44" 
+                                FontSize="14"
+                                Text="Административная"
+                                IsReadOnly="True"
+                                BorderBrush="#E9ECEF"
+                                CornerRadius="8"/>
+                    </StackPanel>
+
+                    <!-- Кнопки -->
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
+                                Spacing="16"
+                                Margin="0,16,0,0">
+                        
+                        <Button Content="Отмена" 
+                                Width="120" 
+                                Height="44" 
+                                Background="#6C757D" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                x:Name="btn_cancel"/>
+                        
+                        <Button Content="Создать" 
+                                Width="120" 
+                                Height="44" 
+                                Background="#0F4B5E" 
+                                Foreground="White"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                CornerRadius="8"
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                x:Name="btn_create"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+
+        <controls:NotificationsControl x:Name="NotificationsControl" 
+                                       Grid.Column="0" 
+                                       Grid.ColumnSpan="2"
+                                       Grid.Row="1"      
+                                       VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

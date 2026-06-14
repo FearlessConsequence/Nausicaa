@@ -3,6 +3,7 @@
         x:Class="CourseWork.Views.NewExaminationReport"
         Title="Направление на медицинское освидетельствование"
         WindowState="Maximized"
+        Icon="/Assets/flag.png"
         xmlns:controls="using:CourseWork.Controls"
         Background="#F5F7FA">
 

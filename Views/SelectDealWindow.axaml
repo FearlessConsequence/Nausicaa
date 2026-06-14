@@ -3,6 +3,7 @@
         x:Class="CourseWork.Views.SelectDealWindow"
         Title="Выбор дела"
         Width="800" 
+        Icon="/Assets/flag.png"
         Height="600"
         xmlns:controls="using:CourseWork.Controls"
         WindowStartupLocation="CenterOwner"

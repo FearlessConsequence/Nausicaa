@@ -3,11 +3,13 @@
         xmlns:controls="using:CourseWork.Controls"
         x:Class="CourseWork.Views.NewResolution"
         Title="Создание постановления"
+        Icon="/Assets/flag.png"
         WindowState="Maximized"
         Background="#F5F7FA">
 
     <Grid RowDefinitions="*, Auto" ColumnDefinitions="200, *">
         
+        <!-- UserControl левой панели -->
         <controls:LeftPanel x:Name="LeftPanelControl" 
                             Grid.Column="0" 
                             Grid.Row="0" 
@@ -119,7 +121,8 @@
                 </StackPanel>
             </Border>
         </ScrollViewer>
-
+        
+        <!-- UserControl левой панели уведомлений -->
         <controls:NotificationsControl x:Name="NotificationsControl" 
                                        Grid.Column="0" 
                                        Grid.ColumnSpan="2"

@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="CourseWork.Views.SelectCitizenWindow"
         Title="Выбор гражданина"
+        Icon="/Assets/flag.png"
         Width="900" 
         Height="700"
         xmlns:controls="using:CourseWork.Controls"

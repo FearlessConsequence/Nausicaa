@@ -3,6 +3,7 @@
         x:Class="CourseWork.Views.RequestReasonWindow"
         Title="Запрос доступа"
         Width="450" 
+        Icon="/Assets/flag.png"
         xmlns:controls="using:CourseWork.Controls"
         Height="250"
         WindowStartupLocation="CenterOwner"

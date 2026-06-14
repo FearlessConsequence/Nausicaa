@@ -105,6 +105,22 @@ public partial class OtherDocumentsWindow : Window
                 FilterTypeBorder.IsVisible = false;
                 SelectCitizenPanel.IsVisible = true;
                 break;
+                
+            case UserRole.AdminInspector:
+                // Инспектор — все типы документов
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = true;
+                SelectCitizenPanel.IsVisible = true;
+                break;
+                
+            case UserRole.ChiefOfPolice:
+                // Начальник — все типы документов
+                btn_filter_medical_cert.IsVisible = true;
+                btn_filter_forensic.IsVisible = true;
+                btn_filter_resolution.IsVisible = true;
+                SelectCitizenPanel.IsVisible = true;
+                break;
         }
     }
     

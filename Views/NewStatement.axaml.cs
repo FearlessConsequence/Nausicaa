@@ -123,10 +123,16 @@ public partial class NewStatement : Window
 
             NotificationsControl.ShowSuccess("Успех", "Заявление успешно создано!");
             
-            // ✅ Возврат в предыдущее окно
-            if (_previousWindow != null)
+            try
             {
-                _previousWindow.Show();
+                if (_previousWindow != null)
+                {
+                    _previousWindow.Show();
+                }
+            }
+            catch
+            {
+                new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
             }
             this.Close();
         }

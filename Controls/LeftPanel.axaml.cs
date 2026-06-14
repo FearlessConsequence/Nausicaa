@@ -24,12 +24,71 @@ public partial class LeftPanel : UserControl
         _currentUserRole = role;
         _currentDraftId = currentDraftId;
         SetupButtons();
-        ConfigurePopupByRole();
+        ConfigurePopupButtons();
         
+        btn_statistics.IsVisible = App.IsChief;
+        btn_statistics.Click += OnStatisticsClick;
         btn_createNewDocument.IsVisible = true;
         btn_yourDocuments.IsVisible = true;
         btn_otherDocuments.IsVisible = true;
         btn_drafts.IsVisible = true;
+    }
+
+    private void OnStatisticsClick(object? sender, RoutedEventArgs e)
+    {
+        var currentWindow = this.VisualRoot as Window;
+        var statisticsWindow = new StatisticsWindow();
+        statisticsWindow.Show();
+        currentWindow?.Close();
+    }
+    
+    private void ConfigurePopupButtons()
+    {
+        // Скрываем все кнопки по умолчанию
+        pop_documentType_btn_appel.IsVisible = false;
+        pop_documentType_btn_statement.IsVisible = false;
+        pop_documentType_btn_explanation_protocol.IsVisible = false;
+        pop_documentType_btn_administrative_protocol.IsVisible = false;
+        pop_documentType_btn_examination_report.IsVisible = false;
+        pop_documentType_btn_medical_certificate.IsVisible = false;
+        pop_documentType_btn_forensic_examination.IsVisible = false;
+        pop_documentType_btn_resolution.IsVisible = false;
+        pop_documentType_btn_deal.IsVisible = false;
+        pop_documentType_btn_citizen.IsVisible = false;
+        
+        switch (_currentUserRole)
+        {
+            case UserRole.AdminInspector:
+                pop_documentType_btn_deal.IsVisible = true;
+                pop_documentType_btn_citizen.IsVisible = true;
+                pop_documentType_btn_appel.IsVisible = true;
+                pop_documentType_btn_statement.IsVisible = true;
+                pop_documentType_btn_explanation_protocol.IsVisible = true;
+                pop_documentType_btn_administrative_protocol.IsVisible = true;
+                pop_documentType_btn_examination_report.IsVisible = true;
+                break;
+                
+            case UserRole.MedicalExpert:
+                pop_documentType_btn_medical_certificate.IsVisible = true;
+                break;
+                
+            case UserRole.Judge:
+                pop_documentType_btn_resolution.IsVisible = true;
+                break;
+                
+            case UserRole.ForensicExpert:
+                pop_documentType_btn_forensic_examination.IsVisible = true;
+                break;
+                
+            case UserRole.PoliceOfficer:
+            default:
+                pop_documentType_btn_appel.IsVisible = true;
+                pop_documentType_btn_statement.IsVisible = true;
+                pop_documentType_btn_explanation_protocol.IsVisible = true;
+                pop_documentType_btn_administrative_protocol.IsVisible = true;
+                pop_documentType_btn_examination_report.IsVisible = true;
+                break;
+        }
     }
     
     private void SetupButtons()
@@ -51,84 +110,118 @@ public partial class LeftPanel : UserControl
         pop_documentType_btn_explanation_protocol.Click += OnExplanationProtocolClick;
         pop_documentType_btn_medical_certificate.Click += OnMedicalCertificateClick;
         pop_documentType_btn_resolution.Click += OnResolutionClick;
-        pop_documentType_btn_forensic_expertise.Click += OnForensicExpertiseClick;
+        pop_documentType_btn_forensic_examination.Click += OnForensicExpertiseClick;
+        pop_documentType_btn_deal.Click += OnDealClick;
+        pop_documentType_btn_citizen.Click += OnCitizenCreateClick;
+    }
+
+    private void OnDealClick(object? sender, RoutedEventArgs e)
+    {
+        pop_documentType.IsOpen = false;
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewDeal(App.CurrentUserId, App.CurrentUserRole);
+        newWindow.Show();
+        currentWindow?.Close();
+    }
+
+    private void OnCitizenCreateClick(object? sender, RoutedEventArgs e)
+    {
+        pop_documentType.IsOpen = false;
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewCitizen(App.CurrentUserId, App.CurrentUserRole);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnMedicalCertificateClick(object? sender, RoutedEventArgs e)
     {
         pop_documentType.IsOpen = false;
-        var window = this.VisualRoot as Window;
-        var newCertWindow = new NewMedicalCertificate(_currentUserId, window);
-        newCertWindow.Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewMedicalCertificate(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
 
     private void OnResolutionClick(object? sender, RoutedEventArgs e)
     {
         pop_documentType.IsOpen = false;
-        var window = this.VisualRoot as Window;
-        var newResolutionWindow = new NewResolution(_currentUserId, window);
-        newResolutionWindow.Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewResolution(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
 
     private void OnForensicExpertiseClick(object? sender, RoutedEventArgs e)
     {
         pop_documentType.IsOpen = false;
-        var window = this.VisualRoot as Window;
-        var newExpertiseWindow = new NewForensicExpertise(_currentUserId, window);
-        newExpertiseWindow.Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewForensicExpertise(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
+    
     private void OnMainClick(object? sender, RoutedEventArgs e)
     {
-        new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
-        CloseParent();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new MainWindow(App.CurrentUserId, App.CurrentUserRole);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnFavoritesClick(object? sender, RoutedEventArgs e)
     {
-        new FavouritesWindow(App.CurrentUserId).Show();
-        CloseParent();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new FavouritesWindow(App.CurrentUserId);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnRecentsClick(object? sender, RoutedEventArgs e)
     {
-        new RecentsWindow(App.CurrentUserId).Show();
-        CloseParent();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new RecentsWindow(App.CurrentUserId);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnReferenceBooksClick(object? sender, RoutedEventArgs e)
     {
-        new ReferenceBooksWindow(App.CurrentUserId).Show();
-        CloseParent();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new ReferenceBooksWindow(App.CurrentUserId);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnCitizensClick(object? sender, RoutedEventArgs e)
     {
-        new SearchCitizensWindow(App.CurrentUserId).Show();
-        CloseParent();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new SearchCitizensWindow(App.CurrentUserId);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnYourDocumentsClick(object? sender, RoutedEventArgs e)
     {
-        var window = this.VisualRoot as Window;
-        new YourDocumentsWindow(null, App.CurrentUserId).Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new YourDocumentsWindow(null, App.CurrentUserId);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnOtherDocumentsClick(object? sender, RoutedEventArgs e)
     {
-        var window = this.VisualRoot as Window;
-        new OtherDocumentsWindow(App.CurrentUserId, window).Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new OtherDocumentsWindow(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnDraftsClick(object? sender, RoutedEventArgs e)
     {
-        var window = this.VisualRoot as Window;
-        new DraftsWindow(App.CurrentUserId, window).Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new DraftsWindow(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnCreateNewDocumentClick(object? sender, RoutedEventArgs e)
@@ -139,87 +232,51 @@ public partial class LeftPanel : UserControl
     private void OnAppelClick(object? sender, RoutedEventArgs e)
     {
         pop_documentType.IsOpen = false;
-        var window = this.VisualRoot as Window;
-        new NewAppel(App.CurrentUserId, window).Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewAppel(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnStatementClick(object? sender, RoutedEventArgs e)
     {
         pop_documentType.IsOpen = false;
-        var window = this.VisualRoot as Window;
-        new NewStatement(App.CurrentUserId, window).Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewStatement(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnAdministrativeProtocolClick(object? sender, RoutedEventArgs e)
     {
         pop_documentType.IsOpen = false;
-        var window = this.VisualRoot as Window;
-        new NewAdministrativeProtocol(App.CurrentUserId, window).Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewAdministrativeProtocol(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnExaminationReportClick(object? sender, RoutedEventArgs e)
     {
         pop_documentType.IsOpen = false;
-        var window = this.VisualRoot as Window;
-        new NewExaminationReport(App.CurrentUserId, window).Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewExaminationReport(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void OnExplanationProtocolClick(object? sender, RoutedEventArgs e)
     {
         pop_documentType.IsOpen = false;
-        var window = this.VisualRoot as Window;
-        new NewExplanationProtocol(App.CurrentUserId, window).Show();
-        window?.Close();
+        var currentWindow = this.VisualRoot as Window;
+        var newWindow = new NewExplanationProtocol(App.CurrentUserId, currentWindow);
+        newWindow.Show();
+        currentWindow?.Close();
     }
     
     private void CloseParent()
     {
         var window = this.VisualRoot as Window;
         window?.Close();
-    }
-
-    private void ConfigurePopupByRole()
-    {
-        // Скрываем все кнопки по умолчанию
-        pop_documentType_btn_appel.IsVisible = false;
-        pop_documentType_btn_statement.IsVisible = false;
-        pop_documentType_btn_explanation_protocol.IsVisible = false;
-        pop_documentType_btn_examination_report.IsVisible = false;
-        pop_documentType_btn_administrative_protocol.IsVisible = false;
-        pop_documentType_btn_medical_certificate.IsVisible = false;
-        pop_documentType_btn_resolution.IsVisible = false;
-        pop_documentType_btn_forensic_expertise.IsVisible = false;
-        
-        switch (_currentUserRole)
-        {
-            case UserRole.PoliceOfficer:
-            case UserRole.AdminInspector:
-                // Полицейский и инспектор - все основные типы
-                pop_documentType_btn_appel.IsVisible = true;
-                pop_documentType_btn_statement.IsVisible = true;
-                pop_documentType_btn_explanation_protocol.IsVisible = true;
-                pop_documentType_btn_examination_report.IsVisible = true;
-                pop_documentType_btn_administrative_protocol.IsVisible = true;
-                break;
-                
-            case UserRole.MedicalExpert:
-                // Врач - только акт мед. освидетельствования
-                pop_documentType_btn_medical_certificate.IsVisible = true;
-                break;
-                
-            case UserRole.Judge:
-                // Судья - только постановление
-                pop_documentType_btn_resolution.IsVisible = true;
-                break;
-                
-            case UserRole.ForensicExpert:
-                // Эксперт - только экспертиза
-                pop_documentType_btn_forensic_expertise.IsVisible = true;
-                break;
-        }
     }
 }

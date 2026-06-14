@@ -3,6 +3,7 @@
         xmlns:models="using:CourseWork.Models"
         x:Class="CourseWork.Views.DraftsWindow"
         Title="Черновики"
+        Icon="/Assets/flag.png"
         xmlns:controls="using:CourseWork.Controls"
         WindowState="Maximized">
 

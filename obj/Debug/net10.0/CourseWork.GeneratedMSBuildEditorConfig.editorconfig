@@ -59,6 +59,12 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [C:/Users/ggg84/OneDrive/Desktop/Difference/AvaloniaProjects/CourseWork/Views/NewAppel.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/ggg84/OneDrive/Desktop/Difference/AvaloniaProjects/CourseWork/Views/NewCitizen.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/ggg84/OneDrive/Desktop/Difference/AvaloniaProjects/CourseWork/Views/NewDeal.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/ggg84/OneDrive/Desktop/Difference/AvaloniaProjects/CourseWork/Views/NewExaminationReport.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
@@ -99,6 +105,12 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/ggg84/OneDrive/Desktop/Difference/AvaloniaProjects/CourseWork/Views/SelectMedicalReport.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/ggg84/OneDrive/Desktop/Difference/AvaloniaProjects/CourseWork/Views/SelectOfficerWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/ggg84/OneDrive/Desktop/Difference/AvaloniaProjects/CourseWork/Views/StatisticsWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/Users/ggg84/OneDrive/Desktop/Difference/AvaloniaProjects/CourseWork/Views/YourDocumentsWindow.axaml]

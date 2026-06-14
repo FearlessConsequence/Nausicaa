@@ -5,6 +5,7 @@
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
         x:Class="CourseWork.Views.FavouritesWindow"
         Title="Избранные документы"
+        Icon="/Assets/flag.png"
         xmlns:controls="using:CourseWork.Controls"
         WindowState="Maximized">
 

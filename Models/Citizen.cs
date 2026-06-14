@@ -19,6 +19,7 @@ public class Citizen
     public int? Education { get; set; }       // образование (id)
     public int? FamilyStatus { get; set; }    // семейное положение (id)
     public int? Citizenship { get; set; }     // гражданство (id)
+    public int? SettlementOfBirth { get; set; } // место рождения (id из settlements) ← добавить
     
     // Для отображения названий (заполняются из JOIN)
     public string? Phone { get; set; }

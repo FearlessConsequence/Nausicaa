@@ -133,7 +133,7 @@ public partial class NewResolution : Window
             // ✅ Возврат в предыдущее окно
             if (_previousWindow != null)
             {
-                _previousWindow.Show();
+                new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
             }
             this.Close();
         }
@@ -194,7 +194,7 @@ public partial class NewResolution : Window
             // ✅ Возврат в предыдущее окно
             if (_previousWindow != null)
             {
-                _previousWindow.Show();
+                new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
             }
         }
         catch

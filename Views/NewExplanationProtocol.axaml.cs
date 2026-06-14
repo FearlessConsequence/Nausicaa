@@ -141,10 +141,16 @@ public partial class NewExplanationProtocol : Window
 
             NotificationsControl.ShowSuccess("Успех", "Протокол объяснения успешно создан!");
             
-            // ✅ Возврат в предыдущее окно
-            if (_previousWindow != null)
+            try
             {
-                _previousWindow.Show();
+                if (_previousWindow != null)
+                {
+                    _previousWindow.Show();
+                }
+            }
+            catch
+            {
+                new MainWindow(App.CurrentUserId, App.CurrentUserRole).Show();
             }
             this.Close();
         }

@@ -4,6 +4,7 @@
         x:Class="CourseWork.Views.SelectMedicalReport"
         Title="Выбор направления на медосвидетельствование"
         WindowState="Maximized"
+        Icon="/Assets/flag.png"
         Background="#F5F7FA">
 
     <Grid Margin="20">

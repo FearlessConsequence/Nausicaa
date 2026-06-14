@@ -3,6 +3,7 @@
         x:Class="CourseWork.Views.NewExplanationProtocol"
         Title="Создание протокола объяснения"
         WindowState="Maximized"
+        Icon="/Assets/flag.png"
         xmlns:controls="using:CourseWork.Controls"
         Background="#F5F7FA">
     

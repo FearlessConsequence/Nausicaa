@@ -9,6 +9,7 @@ public class Deal
     public string CitizenFullName { get; set; } = string.Empty;
     public DateTime DealDate { get; set; }
     public string DateFormatted => DealDate.ToString("dd.MM.yyyy");
+    public string? City { get; set; } 
 }
 
 public class DealSearchParams

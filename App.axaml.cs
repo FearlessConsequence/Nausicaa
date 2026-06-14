@@ -10,6 +10,7 @@ namespace CourseWork;
 public partial class App : Application
 {
     public static int CurrentUserId { get; set; } = 1;
+    public static bool IsChief { get; set; } = false;
     public static UserRole CurrentUserRole { get; set; } = UserRole.PoliceOfficer;
     
     public override void Initialize()

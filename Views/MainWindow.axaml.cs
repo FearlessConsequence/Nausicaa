@@ -26,6 +26,10 @@ public partial class MainWindow : Window
         _currentUserId = currentUserId;
         _db = new DatabaseHelper();
         _currentUserRole = role;
+        if (App.CurrentUserRole != role)
+        {
+            App.CurrentUserRole = role;
+        }
         ConfigureForRole();
         WindowState = WindowState.Maximized;
         
@@ -50,6 +54,8 @@ public partial class MainWindow : Window
         btn_doctor_doc_search.Click += BtnDoctorDocSearch_Click;
         btn_judge_doc_search.Click += BtnJudgeDocSearch_Click;
         btn_forensic_doc_search.Click += BtnForensicDocSearch_Click;
+        btn_newDeal.Click += btn_newDeal_Click;
+        btn_newCitizen.Click += btn_newCitizen_Click;
         
         this.Opened += async (s, e) => 
         {
@@ -112,6 +118,12 @@ public partial class MainWindow : Window
     // ==========================================
     private void BtnPoliceDocSearch_Click(object? sender, RoutedEventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(txbx_police_doc_number.Text))
+        {
+            NotificationsControl.ShowWarning("Введите номер документа", 
+                "Для поиска документов укажите номер документа");
+            return;
+        }
         bool searchByCitizen = chk_police_search_doc.IsChecked == true;
     
         string docNumber = txbx_police_doc_number.Text?.Trim() ?? "";
@@ -345,7 +357,7 @@ public partial class MainWindow : Window
         try
         {
             if (_db == null) return;
-        
+            
             
             var recentDocs = await _db.GetAllDocumentsAsync(_currentUserRole, App.CurrentUserId);
             
@@ -360,6 +372,7 @@ public partial class MainWindow : Window
         {
             NotificationsControl.ShowError("Ошибка", $"LoadRecentDocuments: {ex.Message}");
             Console.WriteLine($"[ERROR] LoadRecentDocuments: {ex.Message}");
+            Console.WriteLine($"[ERROR] StackTrace: {ex.StackTrace}");
         }
     }
         
@@ -394,6 +407,13 @@ public partial class MainWindow : Window
         {
             btn.Click -= OnRecentOpenClick;
             btn.Click += OnRecentOpenClick;
+            
+            // ✅ Добавить установку Tag
+            var doc = btn.DataContext as RecentDocument;
+            if (doc != null)
+            {
+                btn.Tag = doc;
+            }
         }
     }
 
@@ -403,6 +423,7 @@ public partial class MainWindow : Window
             .OfType<Button>()
             .Where(b => b.Name == "btnOpenDraft")
             .ToList();
+
         
         foreach (var btn in buttons)
         {
@@ -410,7 +431,6 @@ public partial class MainWindow : Window
             btn.Click += OnDraftOpenClick;
         }
     }
-
     // ==========================================
     // ОТКРЫТИЕ ДОКУМЕНТОВ ИЗ СПИСКОВ
     // ==========================================
@@ -418,16 +438,18 @@ public partial class MainWindow : Window
     {
         if (sender is Button btn && btn.Tag is RecentDocument doc)
         {
-            string tableName = doc.DocumentType switch
+            // Определяем тип документа по DocumentTypeId
+            string tableName = doc.DocumentTypeId switch
             {
-                "Заявление" => "statement",
-                "Обращение" => "appeals",
-                "Протокол объяснения" => "explanation_protocol",
-                "Направление на мед. освид." => "medical_examination_report",
-                "Административный протокол" => "administrative_protocol",
-                "Акт медицинского освидетельствования" => "medical_certificate",
-                "Судебно-медицинская экспертиза" => "forensic_medical_examination",
-                "Постановление" => "resolution",
+                1 => "statement",                      // Заявление
+                2 => "appeals",                        // Обращение
+                3 => "explanation_protocol",           // Протокол объяснения
+                4 => "medical_examination_report",     // Направление на мед. освид.
+                5 => "administrative_protocol",        // Административный протокол
+                6 => "medical_examination_certificate", // Акт медицинского освидетельствования
+                7 => "forensic_medical_examination",   // Судебно-медицинская экспертиза
+                8 => "resolution",                     // Постановление
+                13 => "deal",                          // ДЕЛО (добавлено!)
                 _ => "unknown"
             };
             
@@ -448,44 +470,70 @@ public partial class MainWindow : Window
             }
             else
             {
-                NotificationsControl.ShowWarning("Внимание", $"Неизвестный тип документа: {doc.DocumentType}");
+                NotificationsControl.ShowWarning("Внимание", $"Неизвестный тип документа: {doc.DocumentType} (ID={doc.DocumentTypeId})");
             }
         }
     }
 
     private async void OnDraftOpenClick(object? sender, RoutedEventArgs e)
-    {
-        if (sender is Button btn && btn.Tag is Draft draft)
+    {   
+        // Проверяем тип sender
+        if (sender is not Button btn)
         {
-            Window? targetWindow = draft.DocumentType switch
-            {
-                "appeals" => new NewAppel(App.CurrentUserId, this, draft.Id),
-                "statement" => new NewStatement(App.CurrentUserId, this, draft.Id),
-                "explanation_protocol" => new NewExplanationProtocol(App.CurrentUserId, this, draft.Id),
-                "medical_examination_report" => new NewExaminationReport(App.CurrentUserId, this, draft.Id),
-                "administrative_protocol" => new NewAdministrativeProtocol(App.CurrentUserId, this, draft.Id),
-                "medical_certificate" => new NewMedicalCertificate(App.CurrentUserId, this, draft.Id),
-                _ => null
-            };
-            
-            if (targetWindow != null)
-            {
-                if (targetWindow is NewAppel appel) await appel.LoadDraftAsync(draft);
-                else if (targetWindow is NewStatement statement) await statement.LoadDraftAsync(draft);
-                else if (targetWindow is NewExplanationProtocol exp) await exp.LoadDraftAsync(draft);
-                else if (targetWindow is NewExaminationReport exam) await exam.LoadDraftAsync(draft);
-                else if (targetWindow is NewAdministrativeProtocol admin) await admin.LoadDraftAsync(draft);
-                else if (targetWindow is NewMedicalCertificate cert) await cert.LoadDraftAsync(draft);
-                
-                targetWindow.Show();
-                this.Hide();  // ← Hide вместо Close
-            }
+            return;
+        }
+        
+        if (btn.Tag is not Draft draft)
+        {
+            return;
+        }
+        
+        
+
+        Window? targetWindow = draft.DocumentType switch
+        {
+            "appeals" => new NewAppel(App.CurrentUserId, this, draft.Id),
+            "statement" => new NewStatement(App.CurrentUserId, this, draft.Id),
+            "explanation_protocol" => new NewExplanationProtocol(App.CurrentUserId, this, draft.Id),
+            "medical_examination_report" => new NewExaminationReport(App.CurrentUserId, this, draft.Id),
+            "administrative_protocol" => new NewAdministrativeProtocol(App.CurrentUserId, this, draft.Id),
+            "medical_certificate" => new NewMedicalCertificate(App.CurrentUserId, this, draft.Id),
+            "forensic_expertise" => new NewForensicExpertise(App.CurrentUserId, this, draft.Id),
+            "resolution" => new NewResolution(App.CurrentUserId, this, draft.Id),
+            _ => null
+        };
+        
+        
+        if (targetWindow != null)
+        {
+            if (targetWindow is NewAppel appel) await appel.LoadDraftAsync(draft);
+            else if (targetWindow is NewStatement statement) await statement.LoadDraftAsync(draft);
+            else if (targetWindow is NewExplanationProtocol exp) await exp.LoadDraftAsync(draft);
+            else if (targetWindow is NewExaminationReport exam) await exam.LoadDraftAsync(draft);
+            else if (targetWindow is NewAdministrativeProtocol admin) await admin.LoadDraftAsync(draft);
+            else if (targetWindow is NewMedicalCertificate cert) await cert.LoadDraftAsync(draft);
+            else if (targetWindow is NewForensicExpertise forensic) await forensic.LoadDraftAsync(draft);
+            else if (targetWindow is NewResolution resolution) await resolution.LoadDraftAsync(draft);
+            targetWindow.Show();
+            this.Hide();
         }
     }
 
     // ==========================================
     // КНОПКИ БЫСТРОГО СОЗДАНИЯ ДОКУМЕНТОВ
     // ==========================================
+
+    private void btn_newDeal_Click(object? sender, RoutedEventArgs e)
+    {
+        new NewDeal(_currentUserId, _currentUserRole).Show();
+        this.Close();
+    }
+
+    private void btn_newCitizen_Click(object? sender, RoutedEventArgs e)
+    {
+        new NewCitizen(App.CurrentUserId, App.CurrentUserRole).Show();
+        this.Close();
+    }
     private void btn_newAppel_click(object? sender, RoutedEventArgs e)
     {
         new NewAppel(App.CurrentUserId, this).Show();
@@ -558,6 +606,28 @@ public partial class MainWindow : Window
         
         switch (App.CurrentUserRole)
         {
+            case UserRole.AdminInspector:
+                DocSearchPolice.IsVisible = true;
+                btn_newAppel.IsVisible = true;
+                btn_newStatement.IsVisible = true;
+                btn_newExplanationProtocol.IsVisible = true;
+                btn_newExaminationReport.IsVisible = true;
+                btn_newAdministrativeProtocol.IsVisible = true;
+                btn_newDeal.IsVisible = true;        // ← показать кнопку Дело
+                btn_newCitizen.IsVisible = true;
+                break;
+            case UserRole.ChiefOfPolice:
+                DocSearchPolice.IsVisible = true;
+                btn_newAppel.IsVisible = true;
+                btn_newStatement.IsVisible = true;
+                btn_newExplanationProtocol.IsVisible = true;
+                btn_newExaminationReport.IsVisible = true;
+                btn_newAdministrativeProtocol.IsVisible = true;
+                btn_newMedicalCertificate.IsVisible = false;
+                btn_newResolution.IsVisible = false;
+                btn_newForensicExpertise.IsVisible = false;
+                break;
+
             case UserRole.MedicalExpert:
                 DocSearchDoctor.IsVisible = true;
                 btn_newMedicalCertificate.IsVisible = true;
@@ -575,7 +645,6 @@ public partial class MainWindow : Window
                 Console.WriteLine($"[DEBUG] citizen_post_id для эксперта: {expertPostId}");
                 break;
                 
-            case UserRole.AdminInspector:
             case UserRole.PoliceOfficer:
             default:
                 DocSearchPolice.IsVisible = true;

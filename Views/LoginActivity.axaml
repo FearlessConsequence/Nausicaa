@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="CourseWork.Views.LoginActitvity"
         Title="Вход"
+        Icon="/Assets/flag.png"
         Width="400" Height="400"
         WindowStartupLocation="CenterScreen">
 
@@ -18,6 +19,7 @@
                      Height="40"
                      FontSize="14"/>
             
+            <!-- Текстовое поле пароля -->
             <TextBox x:Name="txtPassword" 
                      Watermark="Пароль" 
                      Background="White" 
@@ -25,56 +27,28 @@
                      FontSize="14"
                      PasswordChar="*"/>
             
-            <!-- Блоки для отладки -->
-            <TextBlock x:Name="txtDebug1" 
-                       Text="" 
-                       Foreground="Yellow" 
-                       FontSize="11"
-                       IsVisible="False"
-                       TextWrapping="Wrap"
-                       HorizontalAlignment="Center"/>
-            
-            <TextBlock x:Name="txtDebug2" 
-                       Text="" 
-                       Foreground="Yellow" 
-                       FontSize="11"
-                       IsVisible="False"
-                       TextWrapping="Wrap"
-                       HorizontalAlignment="Center"/>
-            
-            <TextBlock x:Name="txtDebug3" 
-                       Text="" 
-                       Foreground="Yellow" 
-                       FontSize="11"
-                       IsVisible="False"
-                       TextWrapping="Wrap"
-                       HorizontalAlignment="Center"/>
-            
-            <TextBlock x:Name="txtDebug4" 
-                       Text="" 
-                       Foreground="Yellow" 
-                       FontSize="11"
-                       IsVisible="False"
-                       TextWrapping="Wrap"
-                       HorizontalAlignment="Center"/>
-            
-            <!-- Основная ошибка -->
+            <!-- Текст ошибки -->
             <TextBlock x:Name="txtError" 
                        Text="" 
-                       Foreground="Red" 
+                       Foreground="#FF5252" 
                        IsVisible="False"
                        FontSize="12"
                        TextWrapping="Wrap"
                        HorizontalAlignment="Center"/>
-            
+
+            <!-- Кнопка "Войти" -->
             <Button x:Name="btnLogin" 
                     Content="Войти" 
+                    HorizontalAlignment="Center"
                     Height="40" 
-                    Width="120"
-                    Background="#1A6B8A" 
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Width="100"
+                    Background="#135A73" 
                     Foreground="White"
                     CornerRadius="6"
-                    FontSize="14"/>
+                    FontWeight="Medium"
+                    FontSize="15"/>
         </StackPanel>
     </Border>
 </Window>

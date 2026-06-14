@@ -45,13 +45,14 @@ public partial class SelectDealWindow : Window
                 return;
             }
             
-            // ✅ Загружаем дела ТОЛЬКО при нажатии на кнопку Найти
             if (_db == null) return;
             
-            Console.WriteLine($"[DEBUG] SelectDealWindow: Поиск дела с номером '{dealNumber}'");
-            _allDeals = await _db.GetDealsAsync();
+            
+            _allDeals = await _db.GetDealsByUserAsync(_currentUserId);
+            
             
             var filtered = _allDeals.Where(d => d.Number.Contains(dealNumber)).ToList();
+            
             
             dealsContainer.ItemsSource = filtered;
             emptyStateBorder.IsVisible = filtered.Count == 0;
@@ -65,8 +66,7 @@ public partial class SelectDealWindow : Window
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] SelectDealWindow.Btn_search_Click: {ex.Message}");
-            NotificationsControl.ShowError("Ошибка", $"Ошибка при поиске: {ex.Message}");
+            NotificationsControl.ShowError("Ошибка", ex.Message);
         }
     }
 
